@@ -76,6 +76,7 @@ wartung/models/zugang.py     Zugangsmarken — Magic Link und Ein-Klick-Abhaken
 wartung/mail.py              Mailversand in der Sprache des Empfängers
 wartung/kalender.py          ICS-Feed
 wartung/versandplan.py       Wann die Wochenmail rausgeht
+wartung/sichtbarkeit.py      Wer sieht welche Objekte
 Dockerfile                   Abbild für den Betrieb
 docker-compose.yml           Stack für Portainer
 .github/workflows/           Tests und Abbildbau bei jedem Push
@@ -97,6 +98,9 @@ locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
   keine benutzbaren Links.
 - **Links in Mails entstehen aus `DJANGO_BASIS_URL`,** nie aus dem Host-Kopf der
   Anfrage.
+- **Sichtbarkeit wird an einer Stelle entschieden.** Alle datenliefernden Pfade
+  gehen über `sichtbarkeit.py`; ein Wächter-Test geht die Routen durch und
+  besteht darauf, dass jede eingeordnet ist.
 - **Der Zeitplaner klopft nur an, er entscheidet nicht.** Die Befehle sind
   idempotent und holen einen ausgefallenen Termin nach. Ein Neustart zur
   falschen Minute kostet deshalb keine Wochenmail.

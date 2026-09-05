@@ -12,7 +12,12 @@ Klimageräte, Fassaden. Selbst bewohnt, keine Mieter.
 
 ## 2. Nutzer und Zugang
 
-- Der Eigentümer und wenige Vertraute. Alle sehen und dürfen alles, keine Rollen.
+- Der Eigentümer und wenige Vertraute.
+- **Sichtbarkeit je Objekt:** Personen werden einzelnen Objekten zugewiesen und
+  sehen nur diese samt Bereichen, Aufgaben und Ereignissen. Ohne Zuweisung ist
+  nichts sichtbar. Wer Verwaltungsberechtigung hat, sieht alles.
+- Eine Zuweisung gibt volle Rechte an diesem Objekt — sehen und eintragen. Das
+  Objekt ist der Zaun, nicht die Tätigkeit.
 - **Magic Link** als Anmeldung: E-Mail eingeben, Anmeldelink kommt, kein Passwort.
   Zugelassene Adressen sind fest hinterlegt, keine Selbstregistrierung.
 - Responsive Web-Anwendung für Handy und Schreibtisch. **Online-only**, kein
@@ -91,6 +96,7 @@ kann, entwertet alle anderen mit.
 
 - Objekte, Bereiche, Aufgaben und Ereignisse anlegen und pflegen
 - Dashboard: was ist fällig, was ist überfällig
+- Zuweisung von Personen zu Objekten in der Verwaltung
 - Historie je Bereich („wann wurde die Nordseite zuletzt gestrichen")
 - **Dreisprachiger Vorlagenkatalog**: Bereichstyp wählen (Wärmepumpe,
   Klimagerät, Fassade …) → typische Tätigkeiten mit üblichen Intervallen zur
@@ -103,7 +109,8 @@ kann, entwertet alle anderen mit.
 ### Bewusst nicht in Version 1
 
 Fotos und Rechnungsanhänge · Kostenauswertungen · Push-Benachrichtigungen ·
-Offline-Betrieb · Mieter- und Rollenverwaltung · Tabellen-Import.
+Offline-Betrieb · Rollen unterhalb der Objektzuweisung (etwa nur-lesend) ·
+Tabellen-Import.
 
 Kosten werden erfasst, nur nicht ausgewertet — der CSV-Export überbrückt das.
 Das Datenmodell wird so gebaut, dass Anhänge und Auswertungen ohne Umbau
@@ -176,3 +183,6 @@ noch laufen und die Daten von 2026 enthalten.
 | Dreifache Namensfelder (DE/EN/SV) | Verdreifacht die Eingabearbeit an der ohnehin größten Hürde; Kataloge lösen es besser |
 | Vorgelagerte Zugangssperre | Zerstört das Ein-Klick-Abhaken, ohne das reale Risiko (abgefangener Link) zu senken |
 | Tabellen-Import | Mehr Arbeit als der Vorlagenkatalog und hilft nur ein einziges Mal |
+| Rolle je Zuweisung (lesen / mitarbeiten) | Kein tatsächlicher Nur-Lesen-Fall; verdoppelt jede Zuweisungsentscheidung |
+| Eigenes Kennzeichen „sieht alle Objekte" | Bei wenigen Objekten identisch mit „allen Objekten zugewiesen" |
+| Berechtigungsbibliothek (django-guardian) | Eine Abhängigkeit auf zehn Jahre für eine Regel in dreißig Zeilen |
