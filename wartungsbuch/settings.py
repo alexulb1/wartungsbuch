@@ -85,24 +85,64 @@ TEMPLATES = [
 ]
 
 
-def datenbank_konfiguration(url: str) -> dict:
-    if not url:
-        return {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "entwicklung.sqlite3"}
-    z = urlparse(url)
-    if not z.scheme.startswith("postgres"):
-        raise ImproperlyConfigured(f"Nicht unterstuetztes Datenbankschema: {z.scheme}")
+def _postgres(name, benutzer, passwort, host, port) -> dict:
     return {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": z.path.lstrip("/"),
-        "USER": unquote(z.username or ""),
-        "PASSWORD": unquote(z.password or ""),
-        "HOST": z.hostname or "",
-        "PORT": str(z.port or ""),
+        "NAME": name,
+        "USER": benutzer,
+        "PASSWORD": passwort,
+        "HOST": host,
+        "PORT": port,
         "CONN_MAX_AGE": 60,
     }
 
 
-DATABASES = {"default": datenbank_konfiguration(umgebung("DATABASE_URL"))}
+def _aus_url(url: str) -> dict:
+    """Nur noch der Nebenweg. Eine URL zwingt dazu, Sonderzeichen im Passwort
+    zu maskieren -- vergisst man das, zerreisst sie, und die Fehlermeldung
+    zeigt auf eine Portnummer statt auf die eigentliche Ursache."""
+    zerlegt = urlparse(url)
+    if not zerlegt.scheme.startswith("postgres"):
+        raise ImproperlyConfigured(f"Nicht unterstütztes Datenbankschema: {zerlegt.scheme}")
+    try:
+        port = zerlegt.port
+    except ValueError as fehler:
+        raise ImproperlyConfigured(
+            "DATABASE_URL lässt sich nicht lesen — vermutlich enthält das Passwort "
+            "Sonderzeichen wie ':', '/', '@' oder '?', die in einer URL maskiert "
+            "werden müssten. Einfacher: statt DATABASE_URL die Einzelwerte "
+            "POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER und POSTGRES_PASSWORD setzen. "
+            f"({fehler})"
+        ) from fehler
+    return _postgres(
+        name=zerlegt.path.lstrip("/"),
+        benutzer=unquote(zerlegt.username or ""),
+        passwort=unquote(zerlegt.password or ""),
+        host=zerlegt.hostname or "",
+        port=str(port or "5432"),
+    )
+
+
+def datenbank_konfiguration(werte: dict) -> dict:
+    """Zugangsdaten aus Einzelwerten, ersatzweise aus einer URL.
+
+    Einzelwerte sind der Regelweg: Sie kennen keine Maskierung, also kann ein
+    Passwort auch beliebige Sonderzeichen enthalten (siehe test_konfiguration).
+    """
+    if werte.get("POSTGRES_HOST"):
+        return _postgres(
+            name=werte.get("POSTGRES_DB") or "wartungsbuch",
+            benutzer=werte.get("POSTGRES_USER") or "wartung",
+            passwort=werte.get("POSTGRES_PASSWORD") or "",
+            host=werte["POSTGRES_HOST"],
+            port=str(werte.get("POSTGRES_PORT") or "5432"),
+        )
+    if werte.get("DATABASE_URL"):
+        return _aus_url(werte["DATABASE_URL"])
+    return {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "entwicklung.sqlite3"}
+
+
+DATABASES = {"default": datenbank_konfiguration(os.environ)}
 
 AUTH_USER_MODEL = "wartung.Benutzer"
 LOGIN_URL = "/anmelden/"

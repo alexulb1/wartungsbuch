@@ -132,5 +132,6 @@ durch"): Er muss es nicht mehr.
 | Anmeldeformular meldet CSRF-Fehler | `DJANGO_CSRF_TRUSTED_ORIGINS` fehlt oder ohne `https://` |
 | Links in der Mail zeigen auf `localhost` | `DJANGO_BASIS_URL` nicht gesetzt |
 | Container startet nicht, „SECRET_KEY fehlt" | Absicht — ohne Schlüssel läuft nichts außerhalb des Debug-Modus |
+| `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
 | Oberfläche ohne Gestaltung | `collectstatic` lief beim Bau nicht — Abbild neu bauen |
