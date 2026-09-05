@@ -199,3 +199,68 @@ class MarkeNachEntzugTest(ZweiObjekte):
         self.betreuer.zugewiesene_objekte.clear()
         eintrag = Ereignis.objects.get(aufgabe=self.aufgabe_haus)
         self.assertEqual(eintrag.erfasst_von, self.betreuer)
+
+
+class WaechterTest(ZweiObjekte):
+    """Geht alle Adressen mit Objektbezug durch und prüft, dass ein fremdes
+    Objekt nirgends durchkommt.
+
+    Zweck ist ausdrücklich, künftige Lücken zu verhindern: Eine neue Ansicht,
+    die den Filter vergisst, lässt diesen Test umfallen, ohne dass jemand daran
+    denken muss. Kommt eine Route mit Objektbezug hinzu, gehört sie hier
+    eingetragen -- der Test besteht darauf.
+    """
+
+    #: Routenname -> Feld dieses Tests, dessen fremdes Objekt eingesetzt wird.
+    ROUTEN_MIT_OBJEKTBEZUG = {
+        "bereich": "bereich_sommer",
+        "aufgaben_ergaenzen": "bereich_sommer",
+        "ereignis_neu": "bereich_sommer",
+        "erledigen": "aufgabe_sommer",
+    }
+
+    #: Routen ohne Objektbezug -- sie brauchen diese Prüfung nicht.
+    OHNE_OBJEKTBEZUG = {
+        "dashboard",
+        "profil",
+        "anmelden",
+        "anmelden_mit_marke",
+        "abmelden",
+        "erledigt_mit_marke",
+        "kalender",
+        "export_csv",
+        "lebenszeichen",
+    }
+
+    def test_alle_routen_sind_eingeordnet(self):
+        """Neue Routen müssen bewusst zugeordnet werden."""
+        from wartung import urls
+
+        bekannt = set(self.ROUTEN_MIT_OBJEKTBEZUG) | self.OHNE_OBJEKTBEZUG
+        vorhanden = {muster.name for muster in urls.urlpatterns}
+        self.assertEqual(
+            vorhanden - bekannt,
+            set(),
+            "Neue Route gefunden: bitte in ROUTEN_MIT_OBJEKTBEZUG oder "
+            "OHNE_OBJEKTBEZUG eintragen und, falls nötig, absichern.",
+        )
+
+    def test_fremdes_objekt_kommt_nirgends_durch(self):
+        for route, feld in self.ROUTEN_MIT_OBJEKTBEZUG.items():
+            fremdes = getattr(self, feld)
+            adresse = reverse(f"wartung:{route}", args=[fremdes.pk])
+            with self.subTest(route=route, methode="GET"):
+                antwort = self.client.get(adresse)
+                self.assertEqual(antwort.status_code, 404)
+                self.assertNotIn(b"Sommerhaus", antwort.content)
+            with self.subTest(route=route, methode="POST"):
+                antwort = self.client.post(adresse, {"datum": "2026-03-12"})
+                self.assertEqual(antwort.status_code, 404)
+
+    def test_ohne_zuweisung_kommt_auch_eigenes_nicht_durch(self):
+        self.betreuer.zugewiesene_objekte.clear()
+        for route, feld in self.ROUTEN_MIT_OBJEKTBEZUG.items():
+            eigenes = getattr(self, feld.replace("sommer", "haus"))
+            with self.subTest(route=route):
+                antwort = self.client.get(reverse(f"wartung:{route}", args=[eigenes.pk]))
+                self.assertEqual(antwort.status_code, 404)
