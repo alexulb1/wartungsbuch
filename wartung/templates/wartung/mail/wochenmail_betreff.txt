@@ -1,0 +1,1 @@
+{% load i18n %}{% blocktranslate count zahl=anzahl %}Wartungsbuch: 1 Aufgabe{% plural %}Wartungsbuch: {{ zahl }} Aufgaben{% endblocktranslate %}

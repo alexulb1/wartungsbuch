@@ -1,0 +1,10 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{% translate "Link nicht mehr gültig" %}{% endblock %}
+
+{% block inhalt %}
+<h1>{% translate "Link nicht mehr gültig" %}</h1>
+<p class="hinweis">{% translate "Dieser Link ist abgelaufen oder wurde schon benutzt. Anmeldelinks gelten nur einmal." %}</p>
+<p><a class="knopf" href="{% url 'wartung:anmelden' %}">{% translate "Neuen Link anfordern" %}</a></p>
+{% endblock %}

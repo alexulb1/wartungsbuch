@@ -107,3 +107,9 @@ h2 { font-size: 1.05rem; margin: 2rem 0 .5rem; display: flex; align-items: cente
   .liste .datum { display: none; }
   main { padding: .75rem; }
 }
+
+.adresse {
+  display: block; word-break: break-all; padding: .5rem .6rem;
+  background: var(--flaeche); border: 1px solid var(--linie); border-radius: .3rem;
+  font-size: .85rem;
+}

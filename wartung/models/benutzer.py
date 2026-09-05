@@ -6,11 +6,21 @@ Der Django-Admin ist ueber dieselbe Sitzung erreichbar: Wer per Magic Link
 angemeldet und als Personal markiert ist, kommt ohne Passwort hinein.
 """
 
+import secrets
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .basis import Sprache
+
+
+def neuer_kalenderschluessel() -> str:
+    """Langlebiger Schluessel fuer das Kalender-Abo (SPEC 7).
+
+    Anders als eine Zugangsmarke wird er nicht verbraucht -- ein Abo ruft die
+    Adresse dauernd ab. Er gibt nur Termine preis, keine Anmeldung."""
+    return secrets.token_urlsafe(24)
 
 
 class BenutzerManager(BaseUserManager):
@@ -49,6 +59,9 @@ class Benutzer(AbstractBaseUser, PermissionsMixin):
     )
     is_active = models.BooleanField(_("aktiv"), default=True)
     is_staff = models.BooleanField(_("Zugang zur Verwaltung"), default=False)
+    kalender_schluessel = models.CharField(
+        _("Kalenderschlüssel"), max_length=43, unique=True, default=neuer_kalenderschluessel
+    )
     angelegt_am = models.DateTimeField(_("angelegt am"), auto_now_add=True)
 
     objects = BenutzerManager()

@@ -3,6 +3,7 @@ from .benutzer import Benutzer
 from .bestand import Aufgabe, Bereich, Objekt
 from .ereignis import Ereignis
 from .katalog import BereichsTyp, ObjektTyp, Taetigkeit
+from .zugang import Zugangsmarke, Zweck
 
 __all__ = [
     "Aufgabe",
@@ -17,4 +18,6 @@ __all__ = [
     "Sprache",
     "Taetigkeit",
     "UebersetzterName",
+    "Zugangsmarke",
+    "Zweck",
 ]

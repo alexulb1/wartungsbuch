@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 12:51+0200\n"
+"POT-Creation-Date: 2026-09-05 13:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,6 +65,10 @@ msgstr "— ingen, fri beskrivning —"
 msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
 msgstr "Välj en åtgärd eller beskriv vad som gjordes."
 
+#| msgid "E-Mail"
+msgid "E-Mail-Adresse"
+msgstr "E-postadress"
+
 msgid "Deutsch"
 msgstr "Tyska"
 
@@ -116,6 +119,10 @@ msgstr "aktiv"
 
 msgid "Zugang zur Verwaltung"
 msgstr "Åtkomst till administrationen"
+
+#| msgid "Schlüssel"
+msgid "Kalenderschlüssel"
+msgstr "Kalendernyckel"
 
 msgid "angelegt am"
 msgstr "skapad den"
@@ -261,6 +268,31 @@ msgstr "Månad i kalenderrytmen"
 msgid "Tätigkeiten"
 msgstr "Åtgärder"
 
+msgid "Anmeldung"
+msgstr "Inloggning"
+
+#| msgid "Erledigt"
+msgid "Erledigung"
+msgstr "Utförande"
+
+msgid "Zugangsmarke"
+msgstr "Åtkomstnyckel"
+
+msgid "Zugangsmarken"
+msgstr "Åtkomstnycklar"
+
+msgid "Anmelden"
+msgstr "Logga in"
+
+msgid "Wenn es für diese Adresse ein Konto gibt, ist ein Anmeldelink unterwegs. Schau in dein Postfach."
+msgstr "Om det finns ett konto för den här adressen är en inloggningslänk på väg. Titta i din inkorg."
+
+msgid "Es gibt kein Passwort. Trag deine Adresse ein, dann kommt ein Anmeldelink per E-Mail."
+msgstr "Det finns inget lösenord. Ange din adress så kommer en inloggningslänk med e-post."
+
+msgid "Anmeldelink schicken"
+msgstr "Skicka inloggningslänk"
+
 msgid "Aufgaben ergänzen"
 msgstr "Lägg till uppgifter"
 
@@ -279,6 +311,9 @@ msgstr "Katalogen har inget mer för den här byggnadsdelen."
 
 msgid "Zurück"
 msgstr "Tillbaka"
+
+msgid "Abmelden"
+msgstr "Logga ut"
 
 msgid "Stand"
 msgstr "Per"
@@ -322,6 +357,70 @@ msgstr "Registrera"
 msgid "Als erledigt eintragen"
 msgstr "Registrera som utförd"
 
+#| msgid "Eintragen"
+msgid "Eingetragen"
+msgstr "Registrerat"
+
+#, python-format
+msgid "%(was)s am %(wann)s, %(wo)s."
+msgstr "%(was)s den %(wann)s, %(wo)s."
+
+#| msgid "Wartungsbuch"
+msgid "Zum Wartungsbuch"
+msgstr "Till underhållsboken"
+
+#, python-format
+msgid "Hallo %(name)s,"
+msgstr "Hej %(name)s,"
+
+msgid "mit diesem Link kommst du ins Wartungsbuch:"
+msgstr "med den här länken kommer du till underhållsboken:"
+
+#, python-format
+msgid "Der Link gilt %(stunden)s Stunde(n) und lässt sich nur einmal benutzen."
+msgstr "Länken gäller i %(stunden)s timme/timmar och kan bara användas en gång."
+
+msgid "Wenn du dich nicht anmelden wolltest, kannst du diese Nachricht übergehen."
+msgstr "Om du inte ville logga in kan du bortse från det här meddelandet."
+
+#| msgid "Wartungsbuch"
+msgid "Anmeldung beim Wartungsbuch"
+msgstr "Logga in till underhållsboken"
+
+#, python-format
+msgid "das steht an – fällig oder in den nächsten %(tage)s Tagen fällig werdend:"
+msgstr "det här är aktuellt – nu eller inom de närmaste %(tage)s dagarna:"
+
+msgid "Saisonstart – das hat sich über die Ruhezeit angesammelt:"
+msgstr "Säsongsstart – det här har samlats under vilotiden:"
+
+#, python-format
+msgid "seit %(tage)s Tagen"
+msgstr "sedan %(tage)s dagar"
+
+#| msgid "Erledigt"
+msgid "Erledigt:"
+msgstr "Utförd:"
+
+msgid "Die Links gelten einmalig und laufen nach zehn Tagen ab."
+msgstr "Länkarna fungerar en gång och upphör efter tio dagar."
+
+#, python-format
+#| msgid "Wartungsbuch"
+msgid "Wartungsbuch: 1 Aufgabe"
+msgid_plural "Wartungsbuch: %(zahl)s Aufgaben"
+msgstr[0] "Underhållsbok: 1 uppgift"
+msgstr[1] "Underhållsbok: %(zahl)s uppgifter"
+
+msgid "Link nicht mehr gültig"
+msgstr ""
+
+msgid "Dieser Link ist abgelaufen oder wurde schon benutzt. Anmeldelinks gelten nur einmal."
+msgstr ""
+
+msgid "Neuen Link anfordern"
+msgstr ""
+
 msgid "Profil"
 msgstr "Profil"
 
@@ -330,3 +429,19 @@ msgstr "Språket som väljs här gäller gränssnittet och veckobrevet."
 
 msgid "Speichern"
 msgstr "Spara"
+
+msgid "Kalender abonnieren"
+msgstr ""
+
+msgid "Diese Adresse in Apple- oder Google-Kalender als Abo eintragen. Fällige Wartungen erscheinen dann dort als Termine. Wer die Adresse hat, sieht die Termine — sie gibt aber keinen Zugang zur Anwendung."
+msgstr ""
+
+#| msgid "Speichern"
+msgid "Daten sichern"
+msgstr "Säkerhetskopiera"
+
+msgid "Alle Ereignisse als Tabelle — die Rückversicherung gegen den Tag, an dem diese Anwendung nicht mehr läuft."
+msgstr ""
+
+msgid "Als CSV herunterladen"
+msgstr ""

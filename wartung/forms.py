@@ -61,3 +61,7 @@ class ProfilForm(forms.ModelForm):
     class Meta:
         model = Benutzer
         fields = ["name", "sprache"]
+
+
+class AnmeldeForm(forms.Form):
+    email = forms.EmailField(label=_("E-Mail-Adresse"))

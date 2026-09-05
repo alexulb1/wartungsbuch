@@ -1,0 +1,12 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{% translate "Eingetragen" %}{% endblock %}
+
+{% block inhalt %}
+<h1>{% translate "Eingetragen" %}</h1>
+<p class="hinweis">
+  {% blocktranslate with was=ereignis.bezeichnung wo=ereignis.bereich wann=ereignis.datum|date:"SHORT_DATE_FORMAT" %}{{ was }} am {{ wann }}, {{ wo }}.{% endblocktranslate %}
+</p>
+<p><a class="knopf knopf-leise" href="{% url 'wartung:dashboard' %}">{% translate "Zum Wartungsbuch" %}</a></p>
+{% endblock %}

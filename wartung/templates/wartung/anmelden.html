@@ -1,0 +1,19 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{% translate "Anmelden" %}{% endblock %}
+
+{% block inhalt %}
+<h1>{% translate "Anmelden" %}</h1>
+
+{% if verschickt %}
+  <p class="hinweis">{% translate "Wenn es für diese Adresse ein Konto gibt, ist ein Anmeldelink unterwegs. Schau in dein Postfach." %}</p>
+{% else %}
+  <p class="notiz">{% translate "Es gibt kein Passwort. Trag deine Adresse ein, dann kommt ein Anmeldelink per E-Mail." %}</p>
+  <form method="post" class="formular">
+    {% csrf_token %}
+    {{ formular.as_p }}
+    <button type="submit" class="knopf">{% translate "Anmeldelink schicken" %}</button>
+  </form>
+{% endif %}
+{% endblock %}

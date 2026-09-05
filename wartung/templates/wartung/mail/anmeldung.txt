@@ -1,0 +1,8 @@
+{% load i18n %}{% blocktranslate with name=benutzer.get_short_name %}Hallo {{ name }},{% endblocktranslate %}
+
+{% translate "mit diesem Link kommst du ins Wartungsbuch:" %}
+
+{{ link }}
+
+{% blocktranslate with stunden=stunden %}Der Link gilt {{ stunden }} Stunde(n) und lässt sich nur einmal benutzen.{% endblocktranslate %}
+{% translate "Wenn du dich nicht anmelden wolltest, kannst du diese Nachricht übergehen." %}

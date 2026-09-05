@@ -10,4 +10,12 @@
   {{ formular.as_p }}
   <button type="submit" class="knopf">{% translate "Speichern" %}</button>
 </form>
+
+<h2>{% translate "Kalender abonnieren" %}</h2>
+<p class="notiz">{% translate "Diese Adresse in Apple- oder Google-Kalender als Abo eintragen. Fällige Wartungen erscheinen dann dort als Termine. Wer die Adresse hat, sieht die Termine — sie gibt aber keinen Zugang zur Anwendung." %}</p>
+<p><code class="adresse">{{ kalender_adresse }}</code></p>
+
+<h2>{% translate "Daten sichern" %}</h2>
+<p class="notiz">{% translate "Alle Ereignisse als Tabelle — die Rückversicherung gegen den Tag, an dem diese Anwendung nicht mehr läuft." %}</p>
+<p><a class="knopf knopf-leise" href="{% url 'wartung:export_csv' %}">{% translate "Als CSV herunterladen" %}</a></p>
 {% endblock %}

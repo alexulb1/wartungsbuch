@@ -1,0 +1,11 @@
+{% load i18n %}{% blocktranslate with name=benutzer.get_short_name %}Hallo {{ name }},{% endblocktranslate %}
+{% blocktranslate with tage=vorschau_tage %}das steht an – fällig oder in den nächsten {{ tage }} Tagen fällig werdend:{% endblocktranslate %}
+{% for gruppe in gruppen %}
+== {{ gruppe.objekt.name }} =={% if gruppe.saisonstart %}
+{% translate "Saisonstart – das hat sich über die Ruhezeit angesammelt:" %}{% endif %}
+{% for zeile in gruppe.zeilen %}
+* {{ zeile.eintrag.aufgabe.taetigkeit.name }} – {{ zeile.eintrag.aufgabe.bereich }}
+  {{ zeile.eintrag.status_text }}{% if zeile.eintrag.tage_ueberfaellig %} ({% blocktranslate with tage=zeile.eintrag.tage_ueberfaellig %}seit {{ tage }} Tagen{% endblocktranslate %}){% endif %} – {{ zeile.eintrag.faellig_am|date:"SHORT_DATE_FORMAT" }}
+  {% translate "Erledigt:" %} {{ zeile.link }}
+{% endfor %}{% endfor %}
+{% translate "Die Links gelten einmalig und laufen nach zehn Tagen ab." %}

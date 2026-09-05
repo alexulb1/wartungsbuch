@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 12:51+0200\n"
+"POT-Creation-Date: 2026-09-05 13:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,6 +65,10 @@ msgstr "— none, free text —"
 msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
 msgstr "Please choose an activity or describe what was done."
 
+#| msgid "E-Mail"
+msgid "E-Mail-Adresse"
+msgstr "Email address"
+
 msgid "Deutsch"
 msgstr "German"
 
@@ -116,6 +119,10 @@ msgstr "active"
 
 msgid "Zugang zur Verwaltung"
 msgstr "Administration access"
+
+#| msgid "Schlüssel"
+msgid "Kalenderschlüssel"
+msgstr "Calendar key"
 
 msgid "angelegt am"
 msgstr "created on"
@@ -261,6 +268,31 @@ msgstr "Month in the calendar rhythm"
 msgid "Tätigkeiten"
 msgstr "Activities"
 
+msgid "Anmeldung"
+msgstr "Sign-in"
+
+#| msgid "Erledigt"
+msgid "Erledigung"
+msgstr "Completion"
+
+msgid "Zugangsmarke"
+msgstr "Access token"
+
+msgid "Zugangsmarken"
+msgstr "Access tokens"
+
+msgid "Anmelden"
+msgstr "Sign in"
+
+msgid "Wenn es für diese Adresse ein Konto gibt, ist ein Anmeldelink unterwegs. Schau in dein Postfach."
+msgstr "If there is an account for this address, a sign-in link is on its way. Check your inbox."
+
+msgid "Es gibt kein Passwort. Trag deine Adresse ein, dann kommt ein Anmeldelink per E-Mail."
+msgstr "There is no password. Enter your address and a sign-in link will arrive by email."
+
+msgid "Anmeldelink schicken"
+msgstr "Send sign-in link"
+
 msgid "Aufgaben ergänzen"
 msgstr "Add tasks"
 
@@ -279,6 +311,9 @@ msgstr "The catalogue has nothing further for this area."
 
 msgid "Zurück"
 msgstr "Back"
+
+msgid "Abmelden"
+msgstr "Sign out"
 
 msgid "Stand"
 msgstr "As of"
@@ -322,6 +357,70 @@ msgstr "Record"
 msgid "Als erledigt eintragen"
 msgstr "Record as done"
 
+#| msgid "Eintragen"
+msgid "Eingetragen"
+msgstr "Recorded"
+
+#, python-format
+msgid "%(was)s am %(wann)s, %(wo)s."
+msgstr "%(was)s on %(wann)s, %(wo)s."
+
+#| msgid "Wartungsbuch"
+msgid "Zum Wartungsbuch"
+msgstr "To the maintenance log"
+
+#, python-format
+msgid "Hallo %(name)s,"
+msgstr "Hello %(name)s,"
+
+msgid "mit diesem Link kommst du ins Wartungsbuch:"
+msgstr "this link takes you to the maintenance log:"
+
+#, python-format
+msgid "Der Link gilt %(stunden)s Stunde(n) und lässt sich nur einmal benutzen."
+msgstr "The link is valid for %(stunden)s hour(s) and can be used only once."
+
+msgid "Wenn du dich nicht anmelden wolltest, kannst du diese Nachricht übergehen."
+msgstr "If you did not want to sign in, you can ignore this message."
+
+#| msgid "Wartungsbuch"
+msgid "Anmeldung beim Wartungsbuch"
+msgstr "Sign in to the maintenance log"
+
+#, python-format
+msgid "das steht an – fällig oder in den nächsten %(tage)s Tagen fällig werdend:"
+msgstr "this is what is due – now or within the next %(tage)s days:"
+
+msgid "Saisonstart – das hat sich über die Ruhezeit angesammelt:"
+msgstr "Start of season – this piled up during the dormant period:"
+
+#, python-format
+msgid "seit %(tage)s Tagen"
+msgstr "for %(tage)s days"
+
+#| msgid "Erledigt"
+msgid "Erledigt:"
+msgstr "Done:"
+
+msgid "Die Links gelten einmalig und laufen nach zehn Tagen ab."
+msgstr "The links work once and expire after ten days."
+
+#, python-format
+#| msgid "Wartungsbuch"
+msgid "Wartungsbuch: 1 Aufgabe"
+msgid_plural "Wartungsbuch: %(zahl)s Aufgaben"
+msgstr[0] "Maintenance log: 1 task"
+msgstr[1] "Maintenance log: %(zahl)s tasks"
+
+msgid "Link nicht mehr gültig"
+msgstr ""
+
+msgid "Dieser Link ist abgelaufen oder wurde schon benutzt. Anmeldelinks gelten nur einmal."
+msgstr ""
+
+msgid "Neuen Link anfordern"
+msgstr ""
+
 msgid "Profil"
 msgstr "Profile"
 
@@ -330,3 +429,19 @@ msgstr "The language chosen here applies to the interface and to the weekly emai
 
 msgid "Speichern"
 msgstr "Save"
+
+msgid "Kalender abonnieren"
+msgstr ""
+
+msgid "Diese Adresse in Apple- oder Google-Kalender als Abo eintragen. Fällige Wartungen erscheinen dann dort als Termine. Wer die Adresse hat, sieht die Termine — sie gibt aber keinen Zugang zur Anwendung."
+msgstr ""
+
+#| msgid "Speichern"
+msgid "Daten sichern"
+msgstr "Back up your data"
+
+msgid "Alle Ereignisse als Tabelle — die Rückversicherung gegen den Tag, an dem diese Anwendung nicht mehr läuft."
+msgstr ""
+
+msgid "Als CSV herunterladen"
+msgstr ""

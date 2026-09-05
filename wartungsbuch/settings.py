@@ -105,7 +105,7 @@ def datenbank_konfiguration(url: str) -> dict:
 DATABASES = {"default": datenbank_konfiguration(umgebung("DATABASE_URL"))}
 
 AUTH_USER_MODEL = "wartung.Benutzer"
-LOGIN_URL = "/anmelden/"  # Ansicht folgt in Schritt 4 (Magic Link).
+LOGIN_URL = "/anmelden/"
 LOGIN_REDIRECT_URL = "/"
 AUTH_PASSWORD_VALIDATORS = []  # Es werden keine Passwoerter vergeben (SPEC 2).
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -145,6 +145,10 @@ EMAIL_HOST_USER = umgebung("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = umgebung("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = schalter("EMAIL_USE_TLS", True)
 DEFAULT_FROM_EMAIL = umgebung("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "wartungsbuch@localhost")
+
+# Basis fuer Links in Mails. Bewusst eine feste Angabe statt des Host-Kopfs der
+# Anfrage -- sonst koennte ein gefaelschter Host Anmeldelinks umleiten.
+BASIS_URL = umgebung("DJANGO_BASIS_URL", "http://localhost:8000")
 
 # --- Sicherheit (SPEC 8) -------------------------------------------------
 SESSION_COOKIE_HTTPONLY = True

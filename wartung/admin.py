@@ -12,6 +12,7 @@ from .models import (
     Objekt,
     ObjektTyp,
     Taetigkeit,
+    Zugangsmarke,
 )
 
 admin.site.site_header = _("Wartungsbuch")
@@ -146,3 +147,20 @@ class EreignisAdmin(admin.ModelAdmin):
         if not obj.erfasst_von_id:
             obj.erfasst_von = request.user
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Zugangsmarke)
+class ZugangsmarkeAdmin(admin.ModelAdmin):
+    """Nur zum Nachsehen. Marken werden nie von Hand angelegt, und der Rohwert
+    steht ohnehin nirgends -- gespeichert ist nur sein Hash (SPEC 8)."""
+
+    list_display = ["erstellt_am", "zweck", "benutzer", "aufgabe", "gueltig_bis", "verbraucht_am"]
+    list_filter = ["zweck", "verbraucht_am"]
+    search_fields = ["benutzer__email"]
+    readonly_fields = [f.name for f in Zugangsmarke._meta.fields]
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False

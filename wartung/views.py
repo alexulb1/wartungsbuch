@@ -5,17 +5,25 @@ Abfrageparameter setzen -- das macht Vorschauen moeglich und die Tests
 reproduzierbar, ohne an der Systemuhr zu drehen.
 """
 
+import csv
 import datetime as dt
 from collections import defaultdict
 
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
+from django.urls import reverse
+from django.utils import timezone, translation
+
 from django.utils.translation import gettext as _
 
 from .faelligkeit import Status, bewerten, uebersicht
-from .forms import EreignisForm, ErledigenForm, ProfilForm
-from .models import Aufgabe, Bereich, Ereignis
+from .kalender import feed
+from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
+from .mail import adresse, senden
+from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
+from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
 def stichtag(request) -> dt.date:
@@ -152,4 +160,169 @@ def profil(request):
             return redirect("wartung:profil")
     else:
         formular = ProfilForm(instance=request.user)
-    return render(request, "wartung/profil.html", {"formular": formular})
+    return render(
+        request,
+        "wartung/profil.html",
+        {
+            "formular": formular,
+            "kalender_adresse": adresse(
+                reverse("wartung:kalender", args=[request.user.kalender_schluessel])
+            ),
+        },
+    )
+
+
+# --- Anmeldung und Ein-Klick-Abhaken (SPEC 2, SPEC 6) --------------------
+
+#: Wie viele Anmeldelinks je Konto in RATENFENSTER hoechstens verschickt werden.
+RATE_HOECHSTZAHL = 3
+RATENFENSTER = dt.timedelta(minutes=15)
+
+
+def _gebremst(benutzer) -> bool:
+    seit = timezone.now() - RATENFENSTER
+    anzahl = Zugangsmarke.objects.filter(
+        benutzer=benutzer, zweck=Zweck.ANMELDUNG, erstellt_am__gte=seit
+    ).count()
+    return anzahl >= RATE_HOECHSTZAHL
+
+
+def anmelden(request):
+    if request.user.is_authenticated:
+        return redirect("wartung:dashboard")
+
+    if request.method == "POST":
+        formular = AnmeldeForm(request.POST)
+        if formular.is_valid():
+            benutzer = Benutzer.objects.filter(
+                email__iexact=formular.cleaned_data["email"], is_active=True
+            ).first()
+            if benutzer is not None and not _gebremst(benutzer):
+                _, roh = Zugangsmarke.objects.anlegen(Zweck.ANMELDUNG, benutzer)
+                senden(
+                    benutzer,
+                    "wartung/mail/anmeldung_betreff.txt",
+                    "wartung/mail/anmeldung.txt",
+                    {
+                        "benutzer": benutzer,
+                        "link": adresse(reverse("wartung:anmelden_mit_marke", args=[roh])),
+                        "stunden": int(GUELTIGKEIT_ANMELDUNG.total_seconds() // 3600),
+                    },
+                )
+            # Dieselbe Antwort in jedem Fall: keine Auskunft darueber, wer ein
+            # Konto hat.
+            return render(request, "wartung/anmelden.html", {"verschickt": True})
+    else:
+        formular = AnmeldeForm()
+
+    return render(request, "wartung/anmelden.html", {"formular": formular})
+
+
+def anmelden_mit_marke(request, marke):
+    eingeloest = Zugangsmarke.objects.einloesen(marke, Zweck.ANMELDUNG)
+    if eingeloest is None:
+        return render(request, "wartung/marke_ungueltig.html", status=400)
+    login(request, eingeloest.benutzer, backend="django.contrib.auth.backends.ModelBackend")
+    return redirect("wartung:dashboard")
+
+
+def abmelden(request):
+    logout(request)
+    return redirect("wartung:anmelden")
+
+
+def erledigt_mit_marke(request, marke):
+    """Abhaken direkt aus der Wochenmail, ohne Anmeldung.
+
+    Der blosse Aufruf verbraucht die Marke nicht -- Mailprogramme und
+    Virenscanner rufen Links vorab ab (SPEC 6).
+    """
+    if request.method == "POST":
+        eingeloest = Zugangsmarke.objects.einloesen(marke, Zweck.ERLEDIGUNG)
+        if eingeloest is None:
+            raise Http404
+        aufgabe = eingeloest.aufgabe
+        entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=eingeloest.benutzer)
+        formular = ErledigenForm(request.POST, instance=entwurf)
+        if formular.is_valid():
+            ereignis = formular.save()
+            with translation.override(eingeloest.benutzer.sprache):
+                return render(request, "wartung/erledigt_danke.html", {"ereignis": ereignis})
+        # Ungueltige Eingabe: die Marke ist verbraucht, also eine neue ausgeben,
+        # damit der Empfaenger nicht wegen eines Tippfehlers ausgesperrt bleibt.
+        _, neuer_rohwert = Zugangsmarke.objects.anlegen(
+            Zweck.ERLEDIGUNG, eingeloest.benutzer, aufgabe=aufgabe
+        )
+        return render(
+            request,
+            "wartung/erledigt_marke.html",
+            {"aufgabe": aufgabe, "formular": formular, "marke": neuer_rohwert},
+        )
+
+    geprueft = Zugangsmarke.objects.pruefen(marke, Zweck.ERLEDIGUNG)
+    if geprueft is None:
+        raise Http404
+    return render(
+        request,
+        "wartung/erledigt_marke.html",
+        {
+            "aufgabe": geprueft.aufgabe,
+            "formular": ErledigenForm(initial={"datum": timezone.localdate()}),
+            "marke": marke,
+        },
+    )
+
+
+# --- Kalenderfeed und CSV-Ausgabe (SPEC 7) -------------------------------
+
+
+def kalender(request, schluessel):
+    """Abonnierbarer Terminkalender. Der Schluessel steht in der Adresse --
+    er gibt Termine preis, aber keinen Zugang zur Anwendung."""
+    benutzer = get_object_or_404(Benutzer, kalender_schluessel=schluessel, is_active=True)
+    with translation.override(benutzer.sprache):
+        inhalt = feed(stichtag(request))
+    antwort = HttpResponse(inhalt, content_type="text/calendar; charset=utf-8")
+    antwort["Content-Disposition"] = 'inline; filename="wartungsbuch.ics"'
+    return antwort
+
+
+@login_required
+def export_csv(request):
+    """Alle Ereignisse als Tabelle -- die Rückversicherung gegen den Tag, an
+    dem diese Anwendung nicht mehr läuft (SPEC 7)."""
+    antwort = HttpResponse(content_type="text/csv; charset=utf-8")
+    heute = timezone.localdate().isoformat()
+    antwort["Content-Disposition"] = f'attachment; filename="wartungsbuch-{heute}.csv"'
+    antwort.write("﻿")  # Byte-Order-Mark, damit Tabellenkalkulationen UTF-8 erkennen
+
+    schreiber = csv.writer(antwort, delimiter=";")
+    schreiber.writerow(
+        [
+            _("Datum"),
+            _("Objekt"),
+            _("Bereich"),
+            _("Tätigkeit"),
+            _("Kosten"),
+            _("ausgeführt von"),
+            _("Notiz"),
+            _("erfasst von"),
+        ]
+    )
+    ereignisse = Ereignis.objects.select_related(
+        "bereich__objekt", "bereich__typ", "taetigkeit", "erfasst_von"
+    ).order_by("datum")
+    for ereignis in ereignisse:
+        schreiber.writerow(
+            [
+                ereignis.datum.isoformat(),
+                ereignis.bereich.objekt.name,
+                str(ereignis.bereich),
+                ereignis.bezeichnung,
+                ereignis.kosten if ereignis.kosten is not None else "",
+                ereignis.ausgefuehrt_von,
+                ereignis.notiz,
+                ereignis.erfasst_von.email if ereignis.erfasst_von else "",
+            ]
+        )
+    return antwort
