@@ -150,6 +150,15 @@ DEFAULT_FROM_EMAIL = umgebung("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "wartungs
 # Anfrage -- sonst koennte ein gefaelschter Host Anmeldelinks umleiten.
 BASIS_URL = umgebung("DJANGO_BASIS_URL", "http://localhost:8000")
 
+# Versandtag der Wochenmail: 0 = Montag ... 6 = Sonntag, dazu die Stunde.
+# Der Zeitplaner klopft stuendlich an; entschieden wird im Befehl selbst.
+WOCHENMAIL_WOCHENTAG = int(umgebung("WOCHENMAIL_WOCHENTAG", "0"))
+WOCHENMAIL_STUNDE = int(umgebung("WOCHENMAIL_STUNDE", "7"))
+
+# Ablage der JSON-Sicherungen. Im Betrieb ein Verzeichnis, das die Sicherung
+# des NAS mitnimmt.
+SICHERUNGS_VERZEICHNIS = umgebung("DJANGO_SICHERUNGEN", str(BASE_DIR / "sicherungen"))
+
 # --- Sicherheit (SPEC 8) -------------------------------------------------
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"

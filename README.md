@@ -6,7 +6,7 @@ gilt die Spezifikation, nicht der Code.
 
 ## Stand
 
-**Schritt 4 von 5 abgeschlossen:** inhaltlich vollständig. Es fehlt nur die Verpackung.
+**Fertig.** Alle fünf Schritte abgeschlossen. Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md).
 
 | Schritt | Inhalt | Stand |
 |--------:|--------|-------|
@@ -14,7 +14,7 @@ gilt die Spezifikation, nicht der Code.
 | 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | fertig |
 | 3 | Oberfläche und Mehrsprachigkeit | fertig |
 | 4 | Wochenmail, Token, ICS, CSV-Export | fertig |
-| 5 | Container, Portainer-Stack, Inbetriebnahme | offen |
+| 5 | Container, Portainer-Stack, Inbetriebnahme | fertig |
 
 ## Entwicklung
 
@@ -53,6 +53,8 @@ eigentlichen Anmeldung vorbei.
 | `manage.py wochenmail` | Sammelmail verschicken (wöchentlich einplanen) |
 | `manage.py wochenmail --probe --stichtag 2027-01-15` | Vorschau, ohne zu verschicken |
 | `manage.py marken_aufraeumen` | Verbrauchte Zugangsmarken löschen (wöchentlich) |
+| `manage.py planer` | Zeitplaner für den Dauerbetrieb (stündlich) |
+| `manage.py sicherung --taeglich` | JSON-Sicherung schreiben |
 | `manage.py test wartung` | Testlauf |
 | `manage.py makemessages -l en -l sv --no-location --no-wrap -i ".venv/*"` | Neue Texte in die Sprachdateien übernehmen |
 | `manage.py compilemessages --ignore .venv` | Übersetzungen übersetzen |
@@ -73,6 +75,10 @@ wartung/sicherheit.py        Content-Security-Policy
 wartung/models/zugang.py     Zugangsmarken — Magic Link und Ein-Klick-Abhaken
 wartung/mail.py              Mailversand in der Sprache des Empfängers
 wartung/kalender.py          ICS-Feed
+wartung/versandplan.py       Wann die Wochenmail rausgeht
+Dockerfile                   Abbild für den Betrieb
+docker-compose.yml           Stack für Portainer
+.github/workflows/           Tests und Abbildbau bei jedem Push
 wartung/templates/wartung/   Vorlagen der Oberfläche
 locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 ```
@@ -91,6 +97,9 @@ locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
   keine benutzbaren Links.
 - **Links in Mails entstehen aus `DJANGO_BASIS_URL`,** nie aus dem Host-Kopf der
   Anfrage.
+- **Der Zeitplaner klopft nur an, er entscheidet nicht.** Die Befehle sind
+  idempotent und holen einen ausgefallenen Termin nach. Ein Neustart zur
+  falschen Minute kostet deshalb keine Wochenmail.
 - **Der Stichtag wird hineingereicht, nie aus der Systemuhr gelesen.** Das macht
   jede Berechnung prüfbar und erlaubt Vorschauen auf andere Termine.
 - **Der Kalendermodus zählt in Jahren.** Ein Monatsintervall und ein fester

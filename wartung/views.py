@@ -11,7 +11,8 @@ from collections import defaultdict
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.db import connections
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone, translation
@@ -326,3 +327,16 @@ def export_csv(request):
             ]
         )
     return antwort
+
+
+def lebenszeichen(request):
+    """Sagt, ob der Container arbeitsfähig ist -- für die Container-Prüfung.
+
+    Bewusst wortkarg: Der Endpunkt ist offen, also gibt er nur Auskunft über
+    die eigene Betriebsbereitschaft, nichts über den Bestand.
+    """
+    try:
+        connections["default"].cursor().execute("SELECT 1")
+    except Exception:
+        return JsonResponse({"datenbank": "nicht erreichbar"}, status=503)
+    return JsonResponse({"datenbank": "erreichbar"})

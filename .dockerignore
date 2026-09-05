@@ -1,0 +1,11 @@
+.venv/
+.git/
+.github/
+__pycache__/
+*.py[cod]
+*.sqlite3
+staticfiles/
+sicherungen/
+.env
+.DS_Store
+.sc4sap/

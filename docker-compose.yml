@@ -1,0 +1,78 @@
+# Wartungsbuch — Stack für Portainer (SPEC 9).
+#
+# In Portainer: Stacks → Add stack → Repository (oder Web editor), dann die
+# Werte aus .env.beispiel unter "Environment variables" eintragen.
+#
+# Der Datenbank-Container hat bewusst keine Portfreigabe: Er ist nur aus dem
+# internen Netz dieses Stacks erreichbar (SPEC 8).
+
+services:
+  datenbank:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-wartungsbuch}
+      POSTGRES_USER: ${POSTGRES_USER:-wartung}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt}
+    volumes:
+      - pgdaten:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-wartung} -d ${POSTGRES_DB:-wartungsbuch}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  anwendung:
+    image: ${ABBILD:-ghcr.io/alexulb/wartungsbuch:latest}
+    restart: unless-stopped
+    depends_on:
+      datenbank:
+        condition: service_healthy
+    environment: &gemeinsam
+      ROLLE: web
+      DJANGO_DEBUG: "0"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?DJANGO_SECRET_KEY fehlt}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:?DJANGO_ALLOWED_HOSTS fehlt}
+      DJANGO_CSRF_TRUSTED_ORIGINS: ${DJANGO_CSRF_TRUSTED_ORIGINS}
+      DJANGO_BASIS_URL: ${DJANGO_BASIS_URL:?DJANGO_BASIS_URL fehlt}
+      DJANGO_TIME_ZONE: ${DJANGO_TIME_ZONE:-Europe/Berlin}
+      DJANGO_SICHERUNGEN: /sicherungen
+      DATABASE_URL: postgres://${POSTGRES_USER:-wartung}:${POSTGRES_PASSWORD}@datenbank:5432/${POSTGRES_DB:-wartungsbuch}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+      EMAIL_USE_TLS: ${EMAIL_USE_TLS:-1}
+      DEFAULT_FROM_EMAIL: ${DEFAULT_FROM_EMAIL}
+      WOCHENMAIL_WOCHENTAG: ${WOCHENMAIL_WOCHENTAG:-0}
+      WOCHENMAIL_STUNDE: ${WOCHENMAIL_STUNDE:-7}
+    ports:
+      # Nach außen führt der Reverse Proxy des DSM auf diesen Port.
+      - "${PORT:-8071}:8000"
+    volumes:
+      - ${SICHERUNGSPFAD:-sicherungen}:/sicherungen
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/gesund').status==200 else 1)\""]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  planer:
+    image: ${ABBILD:-ghcr.io/alexulb/wartungsbuch:latest}
+    restart: unless-stopped
+    depends_on:
+      anwendung:
+        condition: service_started
+    environment:
+      <<: *gemeinsam
+      # Der Zeitplaner wandert die Datenbank nicht fort — das tut nur der
+      # Webdienst, sonst migrieren zwei Container gleichzeitig.
+      ROLLE: planer
+    command: ["python", "manage.py", "planer"]
+    volumes:
+      - ${SICHERUNGSPFAD:-sicherungen}:/sicherungen
+
+volumes:
+  pgdaten:
+  sicherungen:

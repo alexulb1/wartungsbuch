@@ -1,0 +1,69 @@
+# Baut das Container-Abbild und legt es in der GitHub Container Registry ab.
+# In Portainer wird daraus nur noch gezogen — auf dem NAS wird nichts gebaut.
+
+name: Abbild bauen
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  ABBILD: ${{ github.repository }}
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Abhängigkeiten
+        run: |
+          sudo apt-get update && sudo apt-get install -y gettext
+          pip install -r requirements.txt
+      - name: Übersetzungen prüfen und übersetzen
+        run: DJANGO_DEBUG=1 python manage.py compilemessages
+      - name: Tests
+        run: DJANGO_DEBUG=1 python manage.py test wartung
+      - name: Offene Migrationen
+        run: DJANGO_DEBUG=1 python manage.py makemigrations --check --dry-run
+
+  bauen:
+    needs: pruefen
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Anmelden
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Marken bestimmen
+        id: marken
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.ABBILD }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
+            type=sha,format=short
+      - name: Bauen und ablegen
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          # Die DS923+ ist x86-64; ein zweites Format wäre unnötiger Ballast.
+          platforms: linux/amd64
+          tags: ${{ steps.marken.outputs.tags }}
+          labels: ${{ steps.marken.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

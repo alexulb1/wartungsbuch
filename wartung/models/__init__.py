@@ -3,6 +3,7 @@ from .benutzer import Benutzer
 from .bestand import Aufgabe, Bereich, Objekt
 from .ereignis import Ereignis
 from .katalog import BereichsTyp, ObjektTyp, Taetigkeit
+from .versand import Mailversand
 from .zugang import Zugangsmarke, Zweck
 
 __all__ = [
@@ -12,6 +13,7 @@ __all__ = [
     "BereichsTyp",
     "Einheit",
     "Ereignis",
+    "Mailversand",
     "Modus",
     "Objekt",
     "ObjektTyp",
