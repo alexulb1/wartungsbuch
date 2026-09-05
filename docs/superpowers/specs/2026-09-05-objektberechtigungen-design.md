@@ -70,10 +70,10 @@ Fremde Objekte ergeben **404**, nicht 403.
 | Abhaken (angemeldet) | 404 bei fremder Aufgabe |
 | Aufgaben aus Katalog ergänzen | 404 bei fremdem Bereich |
 | Freies Ereignis | 404 bei fremdem Bereich |
-| Wochenmail | Je Empfänger nur dessen Objekte; ohne Zuweisung keine Mail |
+| Wochenmail | Je Empfänger nur dessen Objekte; ohne Zuweisung keine Mail. Verwaltungsberechtigte erhalten sie unverändert für alle Objekte |
 | Kalender-Feed | Nur zugewiesene Objekte |
 | CSV-Ausgabe | Nur Ereignisse zugewiesener Objekte |
-| Abhaklink aus der Mail | Prüft die Zuweisung beim Einlösen erneut |
+| Abhaklink aus der Mail | Prüft beim Einlösen erneut, ob der Empfänger der Marke das Objekt der Aufgabe noch sehen darf |
 
 ## Verwaltung
 
