@@ -59,6 +59,16 @@ class Benutzer(AbstractBaseUser, PermissionsMixin):
     )
     is_active = models.BooleanField(_("aktiv"), default=True)
     is_staff = models.BooleanField(_("Zugang zur Verwaltung"), default=False)
+    zugewiesene_objekte = models.ManyToManyField(
+        "wartung.Objekt",
+        related_name="betreuer",
+        blank=True,
+        verbose_name=_("zugewiesene Objekte"),
+        help_text=_(
+            "Wer hier zugewiesen ist, sieht dieses Objekt samt Bereichen, Aufgaben "
+            "und Ereignissen. Verwaltungsberechtigte sehen ohnehin alles."
+        ),
+    )
     kalender_schluessel = models.CharField(
         _("Kalenderschlüssel"), max_length=43, unique=True, default=neuer_kalenderschluessel
     )
