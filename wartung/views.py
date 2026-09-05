@@ -27,6 +27,17 @@ from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
+def vorbelegung(benutzer, heute) -> dict:
+    """Was ein neues Ereignisformular schon wissen kann.
+
+    "ausgeführt von" meint, wer die Arbeit gemacht hat -- im Regelfall die
+    Person, die gerade abhakt. Bleibt überschreibbar: Steht dort eine Firma,
+    gehört die Firma hinein. Ohne hinterlegten Namen bleibt das Feld leer;
+    ein Adressfragment wäre dort unsinnig.
+    """
+    return {"datum": heute, "ausgefuehrt_von": benutzer.name}
+
+
 def stichtag(request) -> dt.date:
     roh = request.GET.get("stichtag")
     if roh:
@@ -99,7 +110,7 @@ def erledigen(request, pk):
             formular.save()
             return redirect("wartung:bereich", pk=aufgabe.bereich_id)
     else:
-        formular = ErledigenForm(initial={"datum": heute})
+        formular = ErledigenForm(initial=vorbelegung(request.user, heute))
 
     return render(
         request, "wartung/erledigen.html", {"aufgabe": aufgabe, "formular": formular, "heute": heute}
@@ -145,7 +156,7 @@ def ereignis_neu(request, pk):
             formular.save()
             return redirect("wartung:bereich", pk=bereich.pk)
     else:
-        formular = EreignisForm(initial={"datum": heute}, bereich=bereich)
+        formular = EreignisForm(initial=vorbelegung(request.user, heute), bereich=bereich)
 
     return render(
         request, "wartung/ereignis_neu.html", {"bereich": bereich, "formular": formular}
@@ -268,7 +279,9 @@ def erledigt_mit_marke(request, marke):
         "wartung/erledigt_marke.html",
         {
             "aufgabe": geprueft.aufgabe,
-            "formular": ErledigenForm(initial={"datum": timezone.localdate()}),
+            "formular": ErledigenForm(
+                initial=vorbelegung(geprueft.benutzer, timezone.localdate())
+            ),
             "marke": marke,
         },
     )

@@ -160,3 +160,19 @@ class AbhakenPerMarkeTest(TestCase):
     def test_marke_verschafft_keinen_zugang_zur_anwendung(self):
         self.client.get(reverse("wartung:erledigt_mit_marke", args=[self.roh]))
         self.assertEqual(self.client.get(reverse("wartung:dashboard")).status_code, 302)
+
+
+class VorbelegungAusMarkeTest(TestCase):
+    """Auch ohne Anmeldung ist bekannt, wer abhakt -- die Marke gehört einer
+    bestimmten Person."""
+
+    def setUp(self):
+        self.benutzer = Benutzer.objects.create_user("ich@example.org", name="Alex Ulb")
+        self.aufgabe = bestand()
+        _, self.roh = Zugangsmarke.objects.anlegen(
+            Zweck.ERLEDIGUNG, self.benutzer, aufgabe=self.aufgabe
+        )
+
+    def test_abhakseite_aus_der_mail_traegt_den_namen_des_empfaengers(self):
+        antwort = self.client.get(reverse("wartung:erledigt_mit_marke", args=[self.roh]))
+        self.assertContains(antwort, 'value="Alex Ulb"')

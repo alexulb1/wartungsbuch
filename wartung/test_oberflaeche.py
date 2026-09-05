@@ -258,3 +258,41 @@ class UebersetzteOberflaecheTest(Grunddaten):
     def test_deutsch_bleibt_deutsch(self):
         antwort = self.client.get(reverse("wartung:dashboard"))
         self.assertContains(antwort, "Was ansteht")
+
+
+class VorbelegungTest(Grunddaten):
+    """"ausgeführt von" mit dem Namen vorbelegen, der das Formular aufruft.
+
+    Im Regelfall macht man die Arbeit selbst; dann ist das Feld ohne einen
+    Tastendruck richtig. Es bleibt überschreibbar -- steht dort eine Firma,
+    gehört die Firma hinein.
+    """
+
+    def test_abhakformular_traegt_den_eigenen_namen(self):
+        antwort = self.client.get(reverse("wartung:erledigen", args=[self.aufgabe.pk]))
+        self.assertContains(antwort, 'value="Alex"')
+
+    def test_formular_fuer_einmaliges_ebenso(self):
+        antwort = self.client.get(reverse("wartung:ereignis_neu", args=[self.nord.pk]))
+        self.assertContains(antwort, 'value="Alex"')
+
+    def test_ohne_hinterlegten_namen_bleibt_das_feld_leer(self):
+        """Ein Adressfragment wäre als "ausgeführt von" unsinnig."""
+        self.benutzer.name = ""
+        self.benutzer.save()
+        antwort = self.client.get(reverse("wartung:erledigen", args=[self.aufgabe.pk]))
+        self.assertNotContains(antwort, "ich@example.org")
+
+    def test_vorbelegung_laesst_sich_ueberschreiben(self):
+        self.client.post(
+            reverse("wartung:erledigen", args=[self.aufgabe.pk]),
+            {"datum": "2026-03-12", "ausgefuehrt_von": "Fa. Berg"},
+        )
+        self.assertEqual(Ereignis.objects.get().ausgefuehrt_von, "Fa. Berg")
+
+    def test_vorbelegung_laesst_sich_leeren(self):
+        self.client.post(
+            reverse("wartung:erledigen", args=[self.aufgabe.pk]),
+            {"datum": "2026-03-12", "ausgefuehrt_von": ""},
+        )
+        self.assertEqual(Ereignis.objects.get().ausgefuehrt_von, "")
