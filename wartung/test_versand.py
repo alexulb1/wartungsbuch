@@ -45,6 +45,8 @@ class Bestand(TestCase):
         self.sommerhaus = Objekt.objects.create(
             name="Sommerhaus", typ=sommer_typ, aktiv_ab_monat=4, aktiv_bis_monat=10
         )
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.haus, self.sommerhaus)
         self.wp = Bereich.objects.create(objekt=self.haus, typ=wp_typ)
         self.klima = Bereich.objects.create(objekt=self.sommerhaus, typ=wp_typ)
 

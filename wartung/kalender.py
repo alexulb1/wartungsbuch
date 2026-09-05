@@ -40,7 +40,7 @@ def _falten(zeile: str) -> str:
     return "\r\n".join(teil.decode("utf-8", errors="ignore") for teil in teile)
 
 
-def feed(heute: dt.date | None = None) -> str:
+def feed(heute: dt.date | None = None, fuer=None) -> str:
     heute = heute or timezone.localdate()
     zeitstempel = timezone.now().strftime("%Y%m%dT%H%M%SZ")
 
@@ -53,7 +53,7 @@ def feed(heute: dt.date | None = None) -> str:
         f"X-WR-CALNAME:{_maskieren(_('Wartungsbuch'))}",
     ]
 
-    for eintrag in uebersicht(heute=heute):
+    for eintrag in uebersicht(heute=heute, fuer=fuer):
         aufgabe = eintrag.aufgabe
         beginn = eintrag.faellig_am
         titel = f"{aufgabe.taetigkeit.name} – {aufgabe.bereich.objekt.name}"

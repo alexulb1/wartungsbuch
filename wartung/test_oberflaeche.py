@@ -56,6 +56,8 @@ class Grunddaten(TestCase):
         self.streichen.bereichs_typen.add(self.fassade_typ)
 
         self.haus = Objekt.objects.create(name="Haupthaus", typ=haus_typ)
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.haus)
         self.wp = Bereich.objects.create(objekt=self.haus, typ=self.wp_typ)
         self.nord = Bereich.objects.create(objekt=self.haus, typ=self.fassade_typ, bezeichnung="Nord")
         self.aufgabe = Aufgabe.objects.create(
@@ -99,6 +101,7 @@ class DashboardTest(Grunddaten):
         sommerhaus = Objekt.objects.create(
             name="Sommerhaus", typ=sommer_typ, aktiv_ab_monat=4, aktiv_bis_monat=10
         )
+        self.benutzer.zugewiesene_objekte.add(sommerhaus)
         bereich = Bereich.objects.create(objekt=sommerhaus, typ=self.wp_typ)
         aufgabe = Aufgabe.objects.create(
             bereich=bereich, taetigkeit=self.filter, intervall_wert=30, intervall_einheit=Einheit.TAGE
