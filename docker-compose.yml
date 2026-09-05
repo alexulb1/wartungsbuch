@@ -23,7 +23,7 @@ services:
       retries: 10
 
   anwendung:
-    image: ${ABBILD:-ghcr.io/alexulb/wartungsbuch:latest}
+    image: ${ABBILD:-ghcr.io/alexulb1/wartungsbuch:latest}
     restart: unless-stopped
     depends_on:
       datenbank:
@@ -59,7 +59,7 @@ services:
       start_period: 30s
 
   planer:
-    image: ${ABBILD:-ghcr.io/alexulb/wartungsbuch:latest}
+    image: ${ABBILD:-ghcr.io/alexulb1/wartungsbuch:latest}
     restart: unless-stopped
     depends_on:
       anwendung:

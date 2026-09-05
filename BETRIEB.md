@@ -10,7 +10,7 @@ stehen in [SPEC.md](SPEC.md), der Entwicklungsstand in [README.md](README.md).
 Das Repository nach GitHub schieben. Der Arbeitsablauf
 [.github/workflows/abbild.yml](.github/workflows/abbild.yml) läuft bei jedem
 Push auf `main`: Er führt die Tests aus und legt danach das Abbild unter
-`ghcr.io/DEIN-KONTO/wartungsbuch:latest` ab.
+`ghcr.io/alexulb1/wartungsbuch:latest` ab.
 
 Das Abbild einmal auf **public** stellen (GitHub → Packages → Package settings),
 dann zieht Portainer es ohne Anmeldedaten. Im Abbild stehen keine Zugangsdaten —
@@ -30,7 +30,7 @@ unter *Registries* einmalig ein GHCR-Zugangstoken hinterlegen.
 | `DJANGO_ALLOWED_HOSTS` | `wartung.example.org` |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://wartung.example.org` |
 | `DJANGO_BASIS_URL` | `https://wartung.example.org` |
-| `ABBILD` | `ghcr.io/DEIN-KONTO/wartungsbuch:latest` |
+| `ABBILD` | `ghcr.io/alexulb1/wartungsbuch:latest` |
 
 Der Stack startet drei Container:
 
