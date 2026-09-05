@@ -274,6 +274,7 @@ def _aufgabe(
     aktiv_ab_monat=None,
     aktiv_bis_monat=None,
     schluessel=None,
+    objektname="Haupthaus",
     speichern=True,
 ):
     """Baut eine Aufgabe samt Objekt und Bereich.
@@ -290,7 +291,7 @@ def _aufgabe(
         schluessel=schluessel, defaults={"name_de": schluessel}
     )
     objekt, _ = Objekt.objects.get_or_create(
-        name="Haupthaus",
+        name=objektname,
         defaults={
             "typ": objekt_typ,
             "aktiv_ab_monat": aktiv_ab_monat,
@@ -336,3 +337,38 @@ class KatalogDatenTest(TestCase):
             with self.subTest(schluessel=eintrag["schluessel"]):
                 self.assertGreaterEqual(eintrag["wert"], 1)
                 self.assertIn(eintrag["einheit"], [w for w, _ in Einheit.choices])
+
+
+class UebersichtSichtbarkeitTest(TestCase):
+    """Die Übersicht liefert nur, was der Betrachter sehen darf (SPEC 2)."""
+
+    def setUp(self):
+        from .models import Benutzer
+
+        self.eigene = _aufgabe(30, Einheit.TAGE, schluessel="eigene")
+        self.fremde = _aufgabe(30, Einheit.TAGE, schluessel="fremde", objektname="Sommerhaus")
+        self.betreuer = Benutzer.objects.create_user("hilfe@example.org")
+        self.betreuer.zugewiesene_objekte.add(self.eigene.bereich.objekt)
+
+    def test_ohne_angabe_unveraendert_alles(self):
+        self.assertEqual(len(uebersicht(heute=datum("2026-03-10"))), 2)
+
+    def test_fuer_betreuer_nur_zugewiesenes(self):
+        eintraege = uebersicht(heute=datum("2026-03-10"), fuer=self.betreuer)
+        self.assertEqual([e.aufgabe.pk for e in eintraege], [self.eigene.pk])
+
+    def test_fuer_unbeteiligten_nichts(self):
+        from .models import Benutzer
+
+        fremder = Benutzer.objects.create_user("fremd@example.org")
+        self.assertEqual(uebersicht(heute=datum("2026-03-10"), fuer=fremder), [])
+
+    def test_verwaltung_sieht_weiterhin_alles(self):
+        from .models import Benutzer
+
+        chef = Benutzer.objects.create_user("chef@example.org", is_staff=True)
+        self.assertEqual(len(uebersicht(heute=datum("2026-03-10"), fuer=chef)), 2)
+
+    def test_bleibt_bei_einer_abfrage(self):
+        with self.assertNumQueries(1):
+            uebersicht(heute=datum("2026-03-10"), fuer=self.betreuer)
