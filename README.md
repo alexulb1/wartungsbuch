@@ -34,6 +34,20 @@ das ist Absicht.
 
 Vorlage für die Umgebungsvariablen: [.env.beispiel](.env.beispiel)
 
+### Zugang bis Schritt 4
+
+Die Anwendung kennt keine Passwörter — die Anmeldung läuft später über einen
+Magic Link (Schritt 4). Bis dahin gibt es keinen Weg in den Admin. Übergangs­weise
+lässt sich für ein Verwaltungskonto ein Passwort setzen:
+
+```bash
+.venv/bin/python manage.py changepassword ich@example.org
+```
+
+Sobald der Magic Link steht, ist dieses Passwort mit
+`manage.py shell -c "..."` wieder zu entwerten — ein Konto mit Passwort ist
+eine Hintertür an der eigentlichen Anmeldung vorbei.
+
 ## Befehle
 
 | Befehl | Zweck |
