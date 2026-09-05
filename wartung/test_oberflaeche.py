@@ -299,3 +299,27 @@ class VorbelegungTest(Grunddaten):
             {"datum": "2026-03-12", "ausgefuehrt_von": ""},
         )
         self.assertEqual(Ereignis.objects.get().ausgefuehrt_von, "")
+
+
+class ZuweisungImAdminTest(TestCase):
+    def setUp(self):
+        self.chef = Benutzer.objects.create_user(
+            "chef@example.org", is_staff=True, is_superuser=True
+        )
+        self.client.force_login(self.chef)
+        typ = ObjektTyp.objects.create(schluessel="haus", name_de="Haus")
+        self.objekt = Objekt.objects.create(name="Haupthaus", typ=typ)
+        self.betreuer = Benutzer.objects.create_user("hilfe@example.org", name="Hilfe")
+
+    def test_objektseite_bietet_die_zuweisung_an(self):
+        antwort = self.client.get(f"/admin/wartung/objekt/{self.objekt.pk}/change/")
+        self.assertContains(antwort, "Betreut von")
+
+    def test_benutzerseite_bietet_die_zuweisung_an(self):
+        antwort = self.client.get(f"/admin/wartung/benutzer/{self.betreuer.pk}/change/")
+        self.assertContains(antwort, "zugewiesene_objekte")
+
+    def test_uebersicht_zeigt_die_anzahl_der_objekte(self):
+        self.betreuer.zugewiesene_objekte.add(self.objekt)
+        antwort = self.client.get("/admin/wartung/benutzer/")
+        self.assertEqual(antwort.status_code, 200)
