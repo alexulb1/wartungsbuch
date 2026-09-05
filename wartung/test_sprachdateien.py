@@ -42,4 +42,7 @@ class SprachdateienTest(TestCase):
         for sprache in SPRACHEN:
             for block, msgid in eintraege(sprache):
                 with self.subTest(sprache=sprache, msgid=msgid):
-                    self.assertNotRegex(block, r'^msgstr(\[\d\])? ""$', )
+                    # (?m) ist unverzichtbar: assertNotRegex sucht ohne
+                    # MULTILINE, dann passen ^ und $ nur auf Anfang und Ende
+                    # des ganzen Blocks -- und der Test prüft nichts.
+                    self.assertNotRegex(block, r'(?m)^msgstr(\[\d\])? ""$')

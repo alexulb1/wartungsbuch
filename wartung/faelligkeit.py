@@ -140,11 +140,16 @@ def uebersicht(
     heute: dt.date,
     vorschau_tage: int = VORSCHAU_TAGE,
     nur_meldbare: bool = False,
+    fuer=None,
 ) -> list[Faelligkeit]:
     """Alle aktiven Aufgaben mit ihrem Urteil, das Draengendste zuerst.
 
     Holt die letzte Erledigung je Aufgabe in derselben Abfrage -- sonst waere
     das eine Abfrage pro Aufgabe.
+
+    "fuer" schraenkt auf die Objekte ein, die diese Person sehen darf. Ohne
+    Angabe bleibt es bei allem -- das ist der Weg fuer Verwaltungsaufgaben, die
+    ohne Benutzer laufen.
     """
     letzte_erledigung = (
         Ereignis.objects.filter(aufgabe=OuterRef("pk")).order_by("-datum").values("datum")[:1]
@@ -154,6 +159,13 @@ def uebersicht(
         .select_related("bereich__objekt__typ", "bereich__typ", "taetigkeit")
         .annotate(letzte_erledigung=Subquery(letzte_erledigung))
     )
+    if fuer is not None:
+        # Der Import steht in der Funktion: sichtbarkeit importiert models,
+        # auf Modulebene gaebe das einen Ringschluss.
+        from .sichtbarkeit import sichtbare_objekte
+
+        aufgaben = aufgaben.filter(bereich__objekt__in=sichtbare_objekte(fuer))
+
     eintraege = [
         bewerten(aufgabe, aufgabe.letzte_erledigung, heute, vorschau_tage) for aufgabe in aufgaben
     ]

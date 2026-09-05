@@ -71,18 +71,21 @@ class Command(BaseCommand):
             else jetzt.date()
         )
 
-        eintraege = [
-            eintrag
-            for eintrag in uebersicht(heute=heute, nur_meldbare=True)
-            if eintrag.status != Status.OFFEN
-        ]
-        if not eintraege:
-            self.stdout.write("Nichts fällig – keine Mail verschickt.")
-            return
-
+        # Je Empfänger neu berechnet: Jeder sieht nur seine Objekte (SPEC 2).
         empfaenger = Benutzer.objects.filter(is_active=True)
         verschickt = 0
+        gesamt = 0
         for benutzer in empfaenger:
+            eintraege = [
+                eintrag
+                for eintrag in uebersicht(heute=heute, nur_meldbare=True, fuer=benutzer)
+                if eintrag.status != Status.OFFEN
+            ]
+            if not eintraege:
+                continue
+            # Die Listen der Empfänger überschneiden sich; als Kennzahl für das
+            # Versandprotokoll dient die längste verschickte Liste.
+            gesamt = max(gesamt, len(eintraege))
             gruppen = self._gruppieren(eintraege, benutzer, heute, trocken=optionen["probe"])
             if optionen["probe"]:
                 self.stdout.write(f"{benutzer.email}: {len(eintraege)} Einträge")
@@ -106,11 +109,11 @@ class Command(BaseCommand):
             # in derselben Woche.
             Mailversand.objects.update_or_create(
                 woche=wochenkennung(jetzt),
-                defaults={"anzahl_mails": verschickt, "anzahl_eintraege": len(eintraege)},
+                defaults={"anzahl_mails": verschickt, "anzahl_eintraege": gesamt},
             )
 
         self.stdout.write(
-            self.style.SUCCESS(f"{verschickt} Mail(s) mit {len(eintraege)} Eintrag/Einträgen.")
+            self.style.SUCCESS(f"{verschickt} Mail(s) mit {gesamt} Eintrag/Einträgen.")
         )
 
     def _gruppieren(self, eintraege, benutzer, heute, trocken=False):

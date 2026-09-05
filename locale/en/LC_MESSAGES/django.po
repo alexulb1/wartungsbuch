@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 13:09+0200\n"
+"POT-Creation-Date: 2026-09-05 18:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,12 @@ msgstr "Maintenance Log"
 msgid "Verwaltung"
 msgstr "Administration"
 
+msgid "Objekte"
+msgstr "Properties"
+
+msgid "alle"
+msgstr "all"
+
 msgid "Bezeichnung"
 msgstr "Name"
 
@@ -31,6 +37,10 @@ msgstr "Note"
 
 msgid "Übliches Intervall"
 msgstr "Typical interval"
+
+#| msgid "erfasst von"
+msgid "Betreut von"
+msgstr "Looked after by"
 
 msgid "Ruhezeit"
 msgstr "Dormant period"
@@ -65,7 +75,6 @@ msgstr "— none, free text —"
 msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
 msgstr "Please choose an activity or describe what was done."
 
-#| msgid "E-Mail"
 msgid "E-Mail-Adresse"
 msgstr "Email address"
 
@@ -120,7 +129,12 @@ msgstr "active"
 msgid "Zugang zur Verwaltung"
 msgstr "Administration access"
 
-#| msgid "Schlüssel"
+msgid "zugewiesene Objekte"
+msgstr "assigned properties"
+
+msgid "Wer hier zugewiesen ist, sieht dieses Objekt samt Bereichen, Aufgaben und Ereignissen. Verwaltungsberechtigte sehen ohnehin alles."
+msgstr "Whoever is assigned here sees this property with its areas, tasks and events. Administrators see everything anyway."
+
 msgid "Kalenderschlüssel"
 msgstr "Calendar key"
 
@@ -147,9 +161,6 @@ msgstr "Note"
 
 msgid "Objekt"
 msgstr "Property"
-
-msgid "Objekte"
-msgstr "Properties"
 
 msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
 msgstr "Suffix to tell similar areas apart, e.g. \"North\" or \"1st floor\"."
@@ -268,10 +279,25 @@ msgstr "Month in the calendar rhythm"
 msgid "Tätigkeiten"
 msgstr "Activities"
 
+msgid "Woche"
+msgstr "Week"
+
+#| msgid "angelegt am"
+msgid "gesendet am"
+msgstr "sent on"
+
+msgid "Anzahl Mails"
+msgstr "Number of emails"
+
+msgid "Anzahl Einträge"
+msgstr "Number of entries"
+
+msgid "Mailversand"
+msgstr "Email dispatch"
+
 msgid "Anmeldung"
 msgstr "Sign-in"
 
-#| msgid "Erledigt"
 msgid "Erledigung"
 msgstr "Completion"
 
@@ -357,7 +383,6 @@ msgstr "Record"
 msgid "Als erledigt eintragen"
 msgstr "Record as done"
 
-#| msgid "Eintragen"
 msgid "Eingetragen"
 msgstr "Recorded"
 
@@ -365,7 +390,6 @@ msgstr "Recorded"
 msgid "%(was)s am %(wann)s, %(wo)s."
 msgstr "%(was)s on %(wann)s, %(wo)s."
 
-#| msgid "Wartungsbuch"
 msgid "Zum Wartungsbuch"
 msgstr "To the maintenance log"
 
@@ -383,7 +407,6 @@ msgstr "The link is valid for %(stunden)s hour(s) and can be used only once."
 msgid "Wenn du dich nicht anmelden wolltest, kannst du diese Nachricht übergehen."
 msgstr "If you did not want to sign in, you can ignore this message."
 
-#| msgid "Wartungsbuch"
 msgid "Anmeldung beim Wartungsbuch"
 msgstr "Sign in to the maintenance log"
 
@@ -398,7 +421,6 @@ msgstr "Start of season – this piled up during the dormant period:"
 msgid "seit %(tage)s Tagen"
 msgstr "for %(tage)s days"
 
-#| msgid "Erledigt"
 msgid "Erledigt:"
 msgstr "Done:"
 
@@ -406,20 +428,19 @@ msgid "Die Links gelten einmalig und laufen nach zehn Tagen ab."
 msgstr "The links work once and expire after ten days."
 
 #, python-format
-#| msgid "Wartungsbuch"
 msgid "Wartungsbuch: 1 Aufgabe"
 msgid_plural "Wartungsbuch: %(zahl)s Aufgaben"
 msgstr[0] "Maintenance log: 1 task"
 msgstr[1] "Maintenance log: %(zahl)s tasks"
 
 msgid "Link nicht mehr gültig"
-msgstr ""
+msgstr "Link no longer valid"
 
 msgid "Dieser Link ist abgelaufen oder wurde schon benutzt. Anmeldelinks gelten nur einmal."
-msgstr ""
+msgstr "This link has expired or has already been used. Sign-in links work only once."
 
 msgid "Neuen Link anfordern"
-msgstr ""
+msgstr "Request a new link"
 
 msgid "Profil"
 msgstr "Profile"
@@ -431,17 +452,16 @@ msgid "Speichern"
 msgstr "Save"
 
 msgid "Kalender abonnieren"
-msgstr ""
+msgstr "Subscribe to calendar"
 
 msgid "Diese Adresse in Apple- oder Google-Kalender als Abo eintragen. Fällige Wartungen erscheinen dann dort als Termine. Wer die Adresse hat, sieht die Termine — sie gibt aber keinen Zugang zur Anwendung."
-msgstr ""
+msgstr "Add this address as a subscription in Apple or Google Calendar. Due maintenance will then appear there as appointments. Anyone holding the address can see the dates — but it grants no access to the application."
 
-#| msgid "Speichern"
 msgid "Daten sichern"
 msgstr "Back up your data"
 
 msgid "Alle Ereignisse als Tabelle — die Rückversicherung gegen den Tag, an dem diese Anwendung nicht mehr läuft."
-msgstr ""
+msgstr "All events as a table — your insurance against the day this application stops running."
 
 msgid "Als CSV herunterladen"
-msgstr ""
+msgstr "Download as CSV"

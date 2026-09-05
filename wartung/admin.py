@@ -22,13 +22,28 @@ admin.site.index_title = _("Verwaltung")
 
 @admin.register(Benutzer)
 class BenutzerAdmin(admin.ModelAdmin):
-    list_display = ["email", "name", "sprache", "is_active", "is_staff"]
+    list_display = ["email", "name", "sprache", "anzahl_objekte", "is_active", "is_staff"]
     list_filter = ["sprache", "is_active", "is_staff"]
     search_fields = ["email", "name"]
     ordering = ["email"]
     # Kein Passwortfeld: Die Anmeldung laeuft ueber Magic Link (SPEC 2).
-    fields = ["email", "name", "sprache", "is_active", "is_staff", "is_superuser", "groups"]
-    filter_horizontal = ["groups"]
+    fields = [
+        "email",
+        "name",
+        "sprache",
+        "zugewiesene_objekte",
+        "is_active",
+        "is_staff",
+        "is_superuser",
+        "groups",
+    ]
+    filter_horizontal = ["groups", "zugewiesene_objekte"]
+
+    @admin.display(description=_("Objekte"))
+    def anzahl_objekte(self, benutzer):
+        if benutzer.is_staff:
+            return _("alle")
+        return benutzer.zugewiesene_objekte.count()
 
 
 class KatalogAdmin(admin.ModelAdmin):
@@ -77,6 +92,20 @@ class TaetigkeitAdmin(KatalogAdmin):
     ]
 
 
+class BetreuerInline(admin.TabularInline):
+    """Die Zuordnung liegt am Benutzer; hier von der Objektseite aus bearbeitbar.
+
+    Ein Inline über die Zwischentabelle, weil ``filter_horizontal`` auf einer
+    umgekehrten M:N-Beziehung nicht arbeitet.
+    """
+
+    model = Benutzer.zugewiesene_objekte.through
+    extra = 0
+    verbose_name = _("Betreut von")
+    verbose_name_plural = _("Betreut von")
+    autocomplete_fields = ["benutzer"]
+
+
 class BereichInline(admin.TabularInline):
     model = Bereich
     extra = 0
@@ -88,7 +117,7 @@ class ObjektAdmin(admin.ModelAdmin):
     list_display = ["name", "typ", "ruhezeit"]
     list_filter = ["typ"]
     search_fields = ["name"]
-    inlines = [BereichInline]
+    inlines = [BereichInline, BetreuerInline]
 
     @admin.display(description=_("Ruhezeit"))
     def ruhezeit(self, objekt):

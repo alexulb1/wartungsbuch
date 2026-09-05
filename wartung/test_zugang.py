@@ -42,6 +42,8 @@ class ZugangsmarkeTest(TestCase):
     def setUp(self):
         self.benutzer = Benutzer.objects.create_user("ich@example.org")
         self.aufgabe = bestand()
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.aufgabe.bereich.objekt)
 
     def test_marke_ist_nur_einmal_einloesbar(self):
         marke, roh = Zugangsmarke.objects.anlegen(Zweck.ANMELDUNG, self.benutzer)
@@ -124,6 +126,8 @@ class AbhakenPerMarkeTest(TestCase):
     def setUp(self):
         self.benutzer = Benutzer.objects.create_user("ich@example.org")
         self.aufgabe = bestand()
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.aufgabe.bereich.objekt)
         _, self.roh = Zugangsmarke.objects.anlegen(
             Zweck.ERLEDIGUNG, self.benutzer, aufgabe=self.aufgabe
         )
@@ -169,6 +173,8 @@ class VorbelegungAusMarkeTest(TestCase):
     def setUp(self):
         self.benutzer = Benutzer.objects.create_user("ich@example.org", name="Alex Ulb")
         self.aufgabe = bestand()
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.aufgabe.bereich.objekt)
         _, self.roh = Zugangsmarke.objects.anlegen(
             Zweck.ERLEDIGUNG, self.benutzer, aufgabe=self.aufgabe
         )

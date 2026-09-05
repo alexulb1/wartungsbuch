@@ -56,6 +56,8 @@ class Grunddaten(TestCase):
         self.streichen.bereichs_typen.add(self.fassade_typ)
 
         self.haus = Objekt.objects.create(name="Haupthaus", typ=haus_typ)
+        # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+        self.benutzer.zugewiesene_objekte.add(self.haus)
         self.wp = Bereich.objects.create(objekt=self.haus, typ=self.wp_typ)
         self.nord = Bereich.objects.create(objekt=self.haus, typ=self.fassade_typ, bezeichnung="Nord")
         self.aufgabe = Aufgabe.objects.create(
@@ -99,6 +101,7 @@ class DashboardTest(Grunddaten):
         sommerhaus = Objekt.objects.create(
             name="Sommerhaus", typ=sommer_typ, aktiv_ab_monat=4, aktiv_bis_monat=10
         )
+        self.benutzer.zugewiesene_objekte.add(sommerhaus)
         bereich = Bereich.objects.create(objekt=sommerhaus, typ=self.wp_typ)
         aufgabe = Aufgabe.objects.create(
             bereich=bereich, taetigkeit=self.filter, intervall_wert=30, intervall_einheit=Einheit.TAGE
@@ -296,3 +299,27 @@ class VorbelegungTest(Grunddaten):
             {"datum": "2026-03-12", "ausgefuehrt_von": ""},
         )
         self.assertEqual(Ereignis.objects.get().ausgefuehrt_von, "")
+
+
+class ZuweisungImAdminTest(TestCase):
+    def setUp(self):
+        self.chef = Benutzer.objects.create_user(
+            "chef@example.org", is_staff=True, is_superuser=True
+        )
+        self.client.force_login(self.chef)
+        typ = ObjektTyp.objects.create(schluessel="haus", name_de="Haus")
+        self.objekt = Objekt.objects.create(name="Haupthaus", typ=typ)
+        self.betreuer = Benutzer.objects.create_user("hilfe@example.org", name="Hilfe")
+
+    def test_objektseite_bietet_die_zuweisung_an(self):
+        antwort = self.client.get(f"/admin/wartung/objekt/{self.objekt.pk}/change/")
+        self.assertContains(antwort, "Betreut von")
+
+    def test_benutzerseite_bietet_die_zuweisung_an(self):
+        antwort = self.client.get(f"/admin/wartung/benutzer/{self.betreuer.pk}/change/")
+        self.assertContains(antwort, "zugewiesene_objekte")
+
+    def test_uebersicht_zeigt_die_anzahl_der_objekte(self):
+        self.betreuer.zugewiesene_objekte.add(self.objekt)
+        antwort = self.client.get("/admin/wartung/benutzer/")
+        self.assertEqual(antwort.status_code, 200)

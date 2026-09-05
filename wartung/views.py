@@ -24,6 +24,7 @@ from .kalender import feed
 from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
 from .mail import adresse, senden
 from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
+from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, sichtbare_objekte
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
@@ -51,7 +52,7 @@ def stichtag(request) -> dt.date:
 @login_required
 def dashboard(request):
     heute = stichtag(request)
-    eintraege = uebersicht(heute=heute)
+    eintraege = uebersicht(heute=heute, fuer=request.user)
 
     nach_objekt = defaultdict(list)
     for eintrag in eintraege:
@@ -73,9 +74,7 @@ def dashboard(request):
 
 @login_required
 def bereich(request, pk):
-    bereich = get_object_or_404(
-        Bereich.objects.select_related("objekt", "typ"), pk=pk
-    )
+    bereich = bereich_oder_404(request.user, pk)
     heute = stichtag(request)
     aufgaben = []
     for aufgabe in bereich.aufgaben.filter(aktiv=True).select_related("taetigkeit", "bereich__objekt"):
@@ -96,9 +95,7 @@ def bereich(request, pk):
 
 @login_required
 def erledigen(request, pk):
-    aufgabe = get_object_or_404(
-        Aufgabe.objects.select_related("bereich__objekt", "bereich__typ", "taetigkeit"), pk=pk
-    )
+    aufgabe = aufgabe_oder_404(request.user, pk)
     heute = stichtag(request)
 
     if request.method == "POST":
@@ -120,7 +117,7 @@ def erledigen(request, pk):
 @login_required
 def aufgaben_ergaenzen(request, pk):
     """Aufgaben aus dem Vorlagenkatalog uebernehmen (SPEC 7)."""
-    bereich = get_object_or_404(Bereich.objects.select_related("objekt", "typ"), pk=pk)
+    bereich = bereich_oder_404(request.user, pk)
     vorhanden = set(bereich.aufgaben.values_list("taetigkeit_id", flat=True))
     vorschlaege = bereich.typ.taetigkeiten.exclude(pk__in=vorhanden)
 
@@ -146,7 +143,7 @@ def aufgaben_ergaenzen(request, pk):
 
 @login_required
 def ereignis_neu(request, pk):
-    bereich = get_object_or_404(Bereich.objects.select_related("objekt", "typ"), pk=pk)
+    bereich = bereich_oder_404(request.user, pk)
     heute = stichtag(request)
 
     if request.method == "POST":
@@ -295,7 +292,7 @@ def kalender(request, schluessel):
     er gibt Termine preis, aber keinen Zugang zur Anwendung."""
     benutzer = get_object_or_404(Benutzer, kalender_schluessel=schluessel, is_active=True)
     with translation.override(benutzer.sprache):
-        inhalt = feed(stichtag(request))
+        inhalt = feed(stichtag(request), fuer=benutzer)
     antwort = HttpResponse(inhalt, content_type="text/calendar; charset=utf-8")
     antwort["Content-Disposition"] = 'inline; filename="wartungsbuch.ics"'
     return antwort
@@ -323,9 +320,11 @@ def export_csv(request):
             _("erfasst von"),
         ]
     )
-    ereignisse = Ereignis.objects.select_related(
-        "bereich__objekt", "bereich__typ", "taetigkeit", "erfasst_von"
-    ).order_by("datum")
+    ereignisse = (
+        Ereignis.objects.filter(bereich__objekt__in=sichtbare_objekte(request.user))
+        .select_related("bereich__objekt", "bereich__typ", "taetigkeit", "erfasst_von")
+        .order_by("datum")
+    )
     for ereignis in ereignisse:
         schreiber.writerow(
             [

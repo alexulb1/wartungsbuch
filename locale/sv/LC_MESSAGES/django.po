@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 13:09+0200\n"
+"POT-Creation-Date: 2026-09-05 18:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,12 @@ msgstr "Underhållsbok"
 msgid "Verwaltung"
 msgstr "Administration"
 
+msgid "Objekte"
+msgstr "Fastigheter"
+
+msgid "alle"
+msgstr "alla"
+
 msgid "Bezeichnung"
 msgstr "Benämning"
 
@@ -31,6 +37,10 @@ msgstr "Anvisning"
 
 msgid "Übliches Intervall"
 msgstr "Vanligt intervall"
+
+#| msgid "erfasst von"
+msgid "Betreut von"
+msgstr "Sköts av"
 
 msgid "Ruhezeit"
 msgstr "Vilotid"
@@ -65,7 +75,6 @@ msgstr "— ingen, fri beskrivning —"
 msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
 msgstr "Välj en åtgärd eller beskriv vad som gjordes."
 
-#| msgid "E-Mail"
 msgid "E-Mail-Adresse"
 msgstr "E-postadress"
 
@@ -120,7 +129,12 @@ msgstr "aktiv"
 msgid "Zugang zur Verwaltung"
 msgstr "Åtkomst till administrationen"
 
-#| msgid "Schlüssel"
+msgid "zugewiesene Objekte"
+msgstr "tilldelade fastigheter"
+
+msgid "Wer hier zugewiesen ist, sieht dieses Objekt samt Bereichen, Aufgaben und Ereignissen. Verwaltungsberechtigte sehen ohnehin alles."
+msgstr "Den som tilldelas här ser fastigheten med dess byggnadsdelar, uppgifter och händelser. Administratörer ser allt ändå."
+
 msgid "Kalenderschlüssel"
 msgstr "Kalendernyckel"
 
@@ -147,9 +161,6 @@ msgstr "Anteckning"
 
 msgid "Objekt"
 msgstr "Fastighet"
-
-msgid "Objekte"
-msgstr "Fastigheter"
 
 msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
 msgstr "Tillägg för att skilja liknande delar åt, t.ex. \"Norr\" eller \"övre plan\"."
@@ -268,10 +279,25 @@ msgstr "Månad i kalenderrytmen"
 msgid "Tätigkeiten"
 msgstr "Åtgärder"
 
+msgid "Woche"
+msgstr "Vecka"
+
+#| msgid "angelegt am"
+msgid "gesendet am"
+msgstr "skickad den"
+
+msgid "Anzahl Mails"
+msgstr "Antal e-postmeddelanden"
+
+msgid "Anzahl Einträge"
+msgstr "Antal poster"
+
+msgid "Mailversand"
+msgstr "E-postutskick"
+
 msgid "Anmeldung"
 msgstr "Inloggning"
 
-#| msgid "Erledigt"
 msgid "Erledigung"
 msgstr "Utförande"
 
@@ -357,7 +383,6 @@ msgstr "Registrera"
 msgid "Als erledigt eintragen"
 msgstr "Registrera som utförd"
 
-#| msgid "Eintragen"
 msgid "Eingetragen"
 msgstr "Registrerat"
 
@@ -365,7 +390,6 @@ msgstr "Registrerat"
 msgid "%(was)s am %(wann)s, %(wo)s."
 msgstr "%(was)s den %(wann)s, %(wo)s."
 
-#| msgid "Wartungsbuch"
 msgid "Zum Wartungsbuch"
 msgstr "Till underhållsboken"
 
@@ -383,7 +407,6 @@ msgstr "Länken gäller i %(stunden)s timme/timmar och kan bara användas en gå
 msgid "Wenn du dich nicht anmelden wolltest, kannst du diese Nachricht übergehen."
 msgstr "Om du inte ville logga in kan du bortse från det här meddelandet."
 
-#| msgid "Wartungsbuch"
 msgid "Anmeldung beim Wartungsbuch"
 msgstr "Logga in till underhållsboken"
 
@@ -398,7 +421,6 @@ msgstr "Säsongsstart – det här har samlats under vilotiden:"
 msgid "seit %(tage)s Tagen"
 msgstr "sedan %(tage)s dagar"
 
-#| msgid "Erledigt"
 msgid "Erledigt:"
 msgstr "Utförd:"
 
@@ -406,20 +428,19 @@ msgid "Die Links gelten einmalig und laufen nach zehn Tagen ab."
 msgstr "Länkarna fungerar en gång och upphör efter tio dagar."
 
 #, python-format
-#| msgid "Wartungsbuch"
 msgid "Wartungsbuch: 1 Aufgabe"
 msgid_plural "Wartungsbuch: %(zahl)s Aufgaben"
 msgstr[0] "Underhållsbok: 1 uppgift"
 msgstr[1] "Underhållsbok: %(zahl)s uppgifter"
 
 msgid "Link nicht mehr gültig"
-msgstr ""
+msgstr "Länken gäller inte längre"
 
 msgid "Dieser Link ist abgelaufen oder wurde schon benutzt. Anmeldelinks gelten nur einmal."
-msgstr ""
+msgstr "Länken har gått ut eller har redan använts. Inloggningslänkar fungerar bara en gång."
 
 msgid "Neuen Link anfordern"
-msgstr ""
+msgstr "Begär en ny länk"
 
 msgid "Profil"
 msgstr "Profil"
@@ -431,17 +452,16 @@ msgid "Speichern"
 msgstr "Spara"
 
 msgid "Kalender abonnieren"
-msgstr ""
+msgstr "Prenumerera på kalender"
 
 msgid "Diese Adresse in Apple- oder Google-Kalender als Abo eintragen. Fällige Wartungen erscheinen dann dort als Termine. Wer die Adresse hat, sieht die Termine — sie gibt aber keinen Zugang zur Anwendung."
-msgstr ""
+msgstr "Lägg till adressen som en prenumeration i Apple- eller Google-kalender. Aktuellt underhåll visas då som händelser där. Den som har adressen ser datumen — men den ger ingen åtkomst till applikationen."
 
-#| msgid "Speichern"
 msgid "Daten sichern"
 msgstr "Säkerhetskopiera"
 
 msgid "Alle Ereignisse als Tabelle — die Rückversicherung gegen den Tag, an dem diese Anwendung nicht mehr läuft."
-msgstr ""
+msgstr "Alla händelser som tabell — din försäkring mot den dag då applikationen inte längre går."
 
 msgid "Als CSV herunterladen"
-msgstr ""
+msgstr "Ladda ner som CSV"

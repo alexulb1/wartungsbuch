@@ -24,7 +24,7 @@ from .models import (
 
 
 def bestand():
-    Benutzer.objects.create_user("ich@example.org")
+    benutzer = Benutzer.objects.create_user("ich@example.org")
     haus_typ = ObjektTyp.objects.create(schluessel="haus", name_de="Haus")
     wp_typ = BereichsTyp.objects.create(schluessel="wp", name_de="Wärmepumpe")
     taetigkeit = Taetigkeit.objects.create(schluessel="filter", name_de="Luftfilter wechseln")
@@ -34,6 +34,8 @@ def bestand():
         bereich=bereich, taetigkeit=taetigkeit, intervall_wert=30, intervall_einheit=Einheit.TAGE
     )
     Ereignis.objects.create(bereich=bereich, aufgabe=aufgabe, datum=dt.date(2026, 1, 1))
+    # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
+    benutzer.zugewiesene_objekte.add(objekt)
     return aufgabe
 
 
