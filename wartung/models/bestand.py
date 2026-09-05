@@ -154,6 +154,14 @@ class Aufgabe(models.Model):
                 name="aufgabe_kalendermodus_braucht_monat",
             ),
             models.CheckConstraint(
+                # Ein Monatsintervall und ein fester Monat widersprechen
+                # einander: Der Kalendermodus ist ein jaehrlich wiederkehrender
+                # Termin, moeglicherweise nur alle N Jahre.
+                condition=~models.Q(modus=Modus.KALENDER)
+                | models.Q(intervall_einheit=Einheit.JAHRE),
+                name="aufgabe_kalendermodus_braucht_jahre",
+            ),
+            models.CheckConstraint(
                 condition=models.Q(kalender_monat__isnull=True)
                 | models.Q(kalender_monat__gte=1, kalender_monat__lte=12),
                 name="aufgabe_kalendermonat_1_bis_12",
@@ -172,4 +180,13 @@ class Aufgabe(models.Model):
         if self.modus == Modus.KALENDER and not self.kalender_monat:
             raise ValidationError(
                 {"kalender_monat": _("Beim festen Kalenderrhythmus wird ein Monat gebraucht.")}
+            )
+        if self.modus == Modus.KALENDER and self.intervall_einheit != Einheit.JAHRE:
+            raise ValidationError(
+                {
+                    "intervall_einheit": _(
+                        "Der feste Kalenderrhythmus zaehlt in Jahren. Fuer kuerzere "
+                        "Abstaende bitte den Modus \"relativ zur letzten Erledigung\" waehlen."
+                    )
+                }
             )

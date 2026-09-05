@@ -6,12 +6,12 @@ gilt die Spezifikation, nicht der Code.
 
 ## Stand
 
-**Schritt 1 von 5 abgeschlossen:** Gerüst, Datenmodell, Admin, Vorlagenkatalog.
+**Schritt 2 von 5 abgeschlossen:** Gerüst, Datenmodell, Fälligkeitsberechnung.
 
 | Schritt | Inhalt | Stand |
 |--------:|--------|-------|
 | 1 | Gerüst, Datenmodell, Admin, Katalog | fertig |
-| 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | offen |
+| 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | fertig |
 | 3 | Oberfläche und Mehrsprachigkeit | offen |
 | 4 | Wochenmail, Token, ICS, CSV-Export | offen |
 | 5 | Container, Portainer-Stack, Inbetriebnahme | offen |
@@ -65,6 +65,7 @@ wartung/models/katalog.py    Objekttypen, Bereichstypen, Tätigkeiten (dreisprac
 wartung/models/bestand.py    Objekt → Bereich → Aufgabe
 wartung/models/ereignis.py   Ereignis — die einzige Wahrheit
 wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
+wartung/faelligkeit.py       Fälligkeitsberechnung — der Kern
 ```
 
 ## Grundsätze
@@ -75,3 +76,7 @@ wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
   Mehrsprachigkeit möglich und nur so sind Auswertungen über Objekte hinweg
   überhaupt beantwortbar.
 - **Wenige Abhängigkeiten.** Die Anwendung soll in zehn Jahren noch laufen.
+- **Der Stichtag wird hineingereicht, nie aus der Systemuhr gelesen.** Das macht
+  jede Berechnung prüfbar und erlaubt Vorschauen auf andere Termine.
+- **Der Kalendermodus zählt in Jahren.** Ein Monatsintervall und ein fester
+  Monat widersprechen einander; die Datenbank weist die Kombination zurück.
