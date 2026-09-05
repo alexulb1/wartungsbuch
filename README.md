@@ -6,13 +6,13 @@ gilt die Spezifikation, nicht der Code.
 
 ## Stand
 
-**Schritt 2 von 5 abgeschlossen:** Gerüst, Datenmodell, Fälligkeitsberechnung.
+**Schritt 3 von 5 abgeschlossen:** Gerüst, Datenmodell, Fälligkeit, Oberfläche.
 
 | Schritt | Inhalt | Stand |
 |--------:|--------|-------|
 | 1 | Gerüst, Datenmodell, Admin, Katalog | fertig |
 | 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | fertig |
-| 3 | Oberfläche und Mehrsprachigkeit | offen |
+| 3 | Oberfläche und Mehrsprachigkeit | fertig |
 | 4 | Wochenmail, Token, ICS, CSV-Export | offen |
 | 5 | Container, Portainer-Stack, Inbetriebnahme | offen |
 
@@ -55,6 +55,8 @@ eine Hintertür an der eigentlichen Anmeldung vorbei.
 | `manage.py katalog_laden` | Vorlagenkatalog anlegen/aktualisieren (wiederholbar) |
 | `manage.py benutzer_anlegen <email>` | Konto für die Anmeldung per Magic Link |
 | `manage.py test wartung` | Testlauf |
+| `manage.py makemessages -l en -l sv --no-location --no-wrap -i ".venv/*"` | Neue Texte in die Sprachdateien übernehmen |
+| `manage.py compilemessages --ignore .venv` | Übersetzungen übersetzen |
 
 ## Aufbau
 
@@ -66,6 +68,11 @@ wartung/models/bestand.py    Objekt → Bereich → Aufgabe
 wartung/models/ereignis.py   Ereignis — die einzige Wahrheit
 wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
 wartung/faelligkeit.py       Fälligkeitsberechnung — der Kern
+wartung/views.py             Dashboard, Historie, Abhaken, Vorlagen, Profil
+wartung/forms.py             Formulare
+wartung/sicherheit.py        Content-Security-Policy
+wartung/templates/wartung/   Vorlagen der Oberfläche
+locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 ```
 
 ## Grundsätze

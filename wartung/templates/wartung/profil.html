@@ -1,0 +1,13 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block inhalt %}
+<h1>{% translate "Profil" %}</h1>
+<p class="notiz">{% translate "Die hier gewählte Sprache gilt für die Oberfläche und für die Wochenmail." %}</p>
+
+<form method="post" class="formular">
+  {% csrf_token %}
+  {{ formular.as_p }}
+  <button type="submit" class="knopf">{% translate "Speichern" %}</button>
+</form>
+{% endblock %}

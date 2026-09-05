@@ -24,7 +24,7 @@ class Objekt(models.Model):
         _("Ruhezeit: aktiv ab Monat"),
         null=True,
         blank=True,
-        help_text=_("Leer lassen fuer ganzjaehrig. Beispiel Sommerhaus: 4 bis 10."),
+        help_text=_("Leer lassen für ganzjährig. Beispiel Sommerhaus: 4 bis 10."),
     )
     aktiv_bis_monat = models.PositiveSmallIntegerField(
         _("Ruhezeit: aktiv bis Monat"), null=True, blank=True
@@ -124,7 +124,7 @@ class Aufgabe(models.Model):
         verbose_name=_("Bereich"),
     )
     taetigkeit = models.ForeignKey(
-        Taetigkeit, on_delete=models.PROTECT, related_name="aufgaben", verbose_name=_("Taetigkeit")
+        Taetigkeit, on_delete=models.PROTECT, related_name="aufgaben", verbose_name=_("Tätigkeit")
     )
     intervall_wert = models.PositiveIntegerField(_("Intervall"))
     intervall_einheit = models.CharField(_("Einheit"), max_length=10, choices=Einheit.choices)
@@ -185,8 +185,8 @@ class Aufgabe(models.Model):
             raise ValidationError(
                 {
                     "intervall_einheit": _(
-                        "Der feste Kalenderrhythmus zaehlt in Jahren. Fuer kuerzere "
-                        "Abstaende bitte den Modus \"relativ zur letzten Erledigung\" waehlen."
+                        "Der feste Kalenderrhythmus zählt in Jahren. Für kürzere "
+                        "Abstände bitte den Modus \"relativ zur letzten Erledigung\" wählen."
                     )
                 }
             )

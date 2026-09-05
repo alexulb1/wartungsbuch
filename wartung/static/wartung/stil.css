@@ -1,0 +1,109 @@
+/* Handgeschrieben statt Framework: weniger Abhaengigkeiten, und die Anwendung
+   besteht aus fuenf Seiten. Mobil zuerst -- eingetragen wird vor Ort. */
+
+:root {
+  --grund: #ffffff;
+  --flaeche: #f6f6f4;
+  --text: #1b1b1a;
+  --leise: #6b6b66;
+  --linie: #e2e2dd;
+  --akzent: #2f5d50;
+  --dringend: #a4331f;
+  --warnung: #a86b12;
+  --ruhig: #4a6fa5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --grund: #16171a;
+    --flaeche: #1e2024;
+    --text: #e8e8e4;
+    --leise: #9a9a94;
+    --linie: #2e3136;
+    --akzent: #7fbfa9;
+    --dringend: #e8836d;
+    --warnung: #e0b064;
+    --ruhig: #8fb0dc;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--grund);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.kopf {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; padding: .75rem 1rem;
+  background: var(--flaeche); border-bottom: 1px solid var(--linie);
+}
+.marke { font-weight: 600; text-decoration: none; color: var(--text); }
+.kopf nav a { margin-left: 1rem; color: var(--leise); text-decoration: none; font-size: .9rem; }
+.kopf nav a:hover { color: var(--text); }
+
+main { max-width: 52rem; margin: 0 auto; padding: 1rem 1rem 3rem; }
+
+h1 { font-size: 1.4rem; margin: .5rem 0 1rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 .5rem; display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+
+.pfad { color: var(--leise); font-size: .85rem; margin: 0 0 .5rem; }
+.pfad a { color: var(--leise); }
+.notiz { color: var(--leise); margin: 0 0 1rem; }
+.hinweis { color: var(--leise); background: var(--flaeche); padding: .75rem 1rem; border-radius: .4rem; }
+.hinweis-klein { display: block; color: var(--leise); font-size: .82rem; margin-top: .15rem; }
+
+.objekt { margin-bottom: 2rem; }
+.objekt h2 .typ { color: var(--leise); font-weight: 400; font-size: .85rem; }
+
+.liste { width: 100%; border-collapse: collapse; }
+.liste td { padding: .6rem .4rem; border-bottom: 1px solid var(--linie); vertical-align: top; }
+.liste td:first-child { padding-left: 0; }
+.liste td:last-child { padding-right: 0; text-align: right; }
+.liste .tat a { color: var(--text); text-decoration: none; font-weight: 500; }
+.liste .tat a:hover { text-decoration: underline; }
+.liste .bereich { display: block; color: var(--leise); font-size: .82rem; }
+.liste .datum, .liste .kosten, .liste .wer { color: var(--leise); font-size: .88rem; white-space: nowrap; }
+
+.marke-status {
+  display: inline-block; padding: .1rem .45rem; border-radius: .25rem;
+  font-size: .78rem; white-space: nowrap; border: 1px solid var(--linie); color: var(--leise);
+}
+.marke-ueberfaellig, .marke-nie_erledigt { color: var(--dringend); border-color: var(--dringend); }
+.marke-faellig { color: var(--warnung); border-color: var(--warnung); }
+.marke-bald { color: var(--ruhig); border-color: var(--ruhig); }
+.marke-ruht { color: var(--leise); }
+
+.knopf {
+  display: inline-block; padding: .4rem .8rem; border: 0; border-radius: .3rem;
+  background: var(--akzent); color: var(--grund); text-decoration: none;
+  font: inherit; font-size: .9rem; cursor: pointer;
+}
+.knopf-leise { background: transparent; color: var(--akzent); border: 1px solid var(--akzent); }
+.abbruch { margin-left: 1rem; color: var(--leise); font-size: .9rem; }
+
+.formular { max-width: 26rem; }
+.formular p { margin: 0 0 1rem; }
+.formular label { display: block; font-size: .85rem; color: var(--leise); margin-bottom: .2rem; }
+.formular input, .formular select, .formular textarea {
+  width: 100%; padding: .5rem; font: inherit;
+  background: var(--grund); color: var(--text);
+  border: 1px solid var(--linie); border-radius: .3rem;
+}
+.formular .helptext { display: block; font-size: .8rem; color: var(--leise); margin-top: .2rem; }
+.formular ul.errorlist { margin: .2rem 0; padding-left: 1rem; color: var(--dringend); font-size: .85rem; }
+
+.vorschlaege { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+.vorschlaege li { border-bottom: 1px solid var(--linie); padding: .6rem 0; }
+.vorschlaege label { display: grid; grid-template-columns: auto 1fr; gap: .1rem .6rem; cursor: pointer; }
+.vorschlaege input { grid-row: 1 / span 3; align-self: start; margin-top: .25rem; width: auto; }
+
+.fuss { max-width: 52rem; margin: 0 auto; padding: 1rem; color: var(--leise); font-size: .8rem; }
+
+@media (max-width: 34rem) {
+  .liste .datum { display: none; }
+  main { padding: .75rem; }
+}

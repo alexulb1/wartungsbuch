@@ -1,0 +1,40 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block inhalt %}
+<h1>{% translate "Was ansteht" %}</h1>
+
+{% if not gruppen %}
+  <p class="hinweis">{% translate "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt." %}</p>
+{% endif %}
+
+{% for objekt, eintraege in gruppen %}
+  <section class="objekt">
+    <h2>
+      {{ objekt.name }}
+      <span class="typ">{{ objekt.typ.name }}</span>
+      {% if not eintraege.0.wird_gemeldet %}
+        <span class="marke-status marke-ruht">{% translate "ruht" %}</span>
+      {% endif %}
+    </h2>
+
+    <table class="liste">
+      <tbody>
+      {% for eintrag in eintraege %}
+        <tr class="zeile-{{ eintrag.status }}">
+          <td class="tat">
+            <a href="{% url 'wartung:bereich' eintrag.aufgabe.bereich.pk %}">{{ eintrag.aufgabe.taetigkeit.name }}</a>
+            <span class="bereich">{{ eintrag.aufgabe.bereich }}</span>
+          </td>
+          <td class="status">
+            <span class="marke-status marke-{{ eintrag.status }}">{{ eintrag.status_text }}</span>
+          </td>
+          <td class="datum">{{ eintrag.faellig_am|date:"SHORT_DATE_FORMAT" }}</td>
+          <td class="tun"><a class="knopf" href="{% url 'wartung:erledigen' eintrag.aufgabe.pk %}">{% translate "Erledigt" %}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+{% endfor %}
+{% endblock %}

@@ -63,7 +63,7 @@ class TaetigkeitAdmin(KatalogAdmin):
         (_("Bezeichnung"), {"fields": ["name_de", "name_en", "name_sv"]}),
         (_("Hinweis"), {"fields": ["hinweis_de", "hinweis_en", "hinweis_sv"]}),
         (
-            _("Uebliches Intervall"),
+            _("Übliches Intervall"),
             {
                 "fields": [
                     "standard_intervall_wert",
@@ -92,7 +92,7 @@ class ObjektAdmin(admin.ModelAdmin):
     @admin.display(description=_("Ruhezeit"))
     def ruhezeit(self, objekt):
         if not objekt.hat_ruhezeit:
-            return _("ganzjaehrig")
+            return _("ganzjährig")
         return f"{objekt.aktiv_ab_monat}–{objekt.aktiv_bis_monat}"
 
 

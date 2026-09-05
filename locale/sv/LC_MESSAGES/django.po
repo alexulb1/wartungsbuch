@@ -1,0 +1,332 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-05 12:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Wartungsbuch"
+msgstr "Underhållsbok"
+
+msgid "Verwaltung"
+msgstr "Administration"
+
+msgid "Bezeichnung"
+msgstr "Benämning"
+
+msgid "Hinweis"
+msgstr "Anvisning"
+
+msgid "Übliches Intervall"
+msgstr "Vanligt intervall"
+
+msgid "Ruhezeit"
+msgstr "Vilotid"
+
+msgid "ganzjährig"
+msgstr "året runt"
+
+msgid "Details"
+msgstr "Detaljer"
+
+msgid "Erfassung"
+msgstr "Registrering"
+
+msgid "noch nie erledigt"
+msgstr "aldrig utförd"
+
+msgid "überfällig"
+msgstr "försenad"
+
+msgid "heute fällig"
+msgstr "förfaller idag"
+
+msgid "bald fällig"
+msgstr "förfaller snart"
+
+msgid "offen"
+msgstr "senare"
+
+msgid "— keine, freie Beschreibung —"
+msgstr "— ingen, fri beskrivning —"
+
+msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
+msgstr "Välj en åtgärd eller beskriv vad som gjordes."
+
+msgid "Deutsch"
+msgstr "Tyska"
+
+msgid "Englisch"
+msgstr "Engelska"
+
+msgid "Schwedisch"
+msgstr "Svenska"
+
+msgid "Tage"
+msgstr "dagar"
+
+msgid "Monate"
+msgstr "månader"
+
+msgid "Jahre"
+msgstr "år"
+
+msgid "Relativ zur letzten Erledigung"
+msgstr "Relativt senaste utförandet"
+
+msgid "Fester Kalenderrhythmus"
+msgstr "Fast kalenderrytm"
+
+msgid "Bezeichnung (Deutsch)"
+msgstr "Benämning (tyska)"
+
+msgid "Bezeichnung (Englisch)"
+msgstr "Benämning (engelska)"
+
+msgid "Bezeichnung (Schwedisch)"
+msgstr "Benämning (svenska)"
+
+msgid "E-Mail"
+msgstr "E-post"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Sprache"
+msgstr "Språk"
+
+msgid "Bestimmt Oberfläche und Sprache der Wochenmail."
+msgstr "Bestämmer gränssnittet och språket i veckobrevet."
+
+msgid "aktiv"
+msgstr "aktiv"
+
+msgid "Zugang zur Verwaltung"
+msgstr "Åtkomst till administrationen"
+
+msgid "angelegt am"
+msgstr "skapad den"
+
+msgid "Benutzer"
+msgstr "Användare"
+
+msgid "Typ"
+msgstr "Typ"
+
+msgid "Ruhezeit: aktiv ab Monat"
+msgstr "Vilotid: aktiv från månad"
+
+msgid "Leer lassen für ganzjährig. Beispiel Sommerhaus: 4 bis 10."
+msgstr "Lämna tomt för året runt. Exempel sommarstuga: 4 till 10."
+
+msgid "Ruhezeit: aktiv bis Monat"
+msgstr "Vilotid: aktiv till månad"
+
+msgid "Notiz"
+msgstr "Anteckning"
+
+msgid "Objekt"
+msgstr "Fastighet"
+
+msgid "Objekte"
+msgstr "Fastigheter"
+
+msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
+msgstr "Tillägg för att skilja liknande delar åt, t.ex. \"Norr\" eller \"övre plan\"."
+
+msgid "Bereich"
+msgstr "Byggnadsdel"
+
+msgid "Bereiche"
+msgstr "Byggnadsdelar"
+
+msgid "Tätigkeit"
+msgstr "Åtgärd"
+
+msgid "Intervall"
+msgstr "Intervall"
+
+msgid "Einheit"
+msgstr "Enhet"
+
+msgid "Modus"
+msgstr "Läge"
+
+msgid "Monat"
+msgstr "Månad"
+
+msgid "Nur beim festen Kalenderrhythmus."
+msgstr "Endast vid fast kalenderrytm."
+
+msgid "Tag"
+msgstr "Dag"
+
+msgid "Aufgabe"
+msgstr "Uppgift"
+
+msgid "Aufgaben"
+msgstr "Uppgifter"
+
+msgid "Beim festen Kalenderrhythmus wird ein Monat gebraucht."
+msgstr "Fast kalenderrytm kräver en månad."
+
+msgid "Der feste Kalenderrhythmus zählt in Jahren. Für kürzere Abstände bitte den Modus \"relativ zur letzten Erledigung\" wählen."
+msgstr "Fast kalenderrytm räknas i år. För kortare intervall, välj läget \"relativt senaste utförandet\"."
+
+msgid "Leer lassen bei einmaligen Vorgängen."
+msgstr "Lämna tomt för engångsåtgärder."
+
+msgid "Beschreibung"
+msgstr "Beskrivning"
+
+msgid "Nur nötig, wenn keine Tätigkeit aus dem Katalog passt."
+msgstr "Behövs bara om ingen åtgärd i katalogen passar."
+
+msgid "Datum"
+msgstr "Datum"
+
+msgid "Kosten"
+msgstr "Kostnad"
+
+msgid "ausgeführt von"
+msgstr "utförd av"
+
+msgid "Material, Farbton, Menge – z. B. \"RAL 7016, 12 l\"."
+msgstr "Material, kulör, mängd – t.ex. \"RAL 7016, 12 l\"."
+
+msgid "erfasst von"
+msgstr "registrerad av"
+
+msgid "Ereignis"
+msgstr "Händelse"
+
+msgid "Ereignisse"
+msgstr "Händelser"
+
+msgid "Bitte eine Tätigkeit aus dem Katalog wählen oder eine Beschreibung eintragen."
+msgstr "Välj en åtgärd ur katalogen eller ange en beskrivning."
+
+msgid "Die Aufgabe gehört zu einem anderen Bereich."
+msgstr "Uppgiften hör till en annan byggnadsdel."
+
+msgid "Schlüssel"
+msgstr "Nyckel"
+
+msgid "Sortierung"
+msgstr "Sorteringsordning"
+
+msgid "Objekttyp"
+msgstr "Fastighetstyp"
+
+msgid "Objekttypen"
+msgstr "Fastighetstyper"
+
+msgid "Bereichstyp"
+msgstr "Typ av byggnadsdel"
+
+msgid "Bereichstypen"
+msgstr "Typer av byggnadsdelar"
+
+msgid "passt zu Bereichstypen"
+msgstr "gäller för typer av byggnadsdelar"
+
+msgid "Hinweis (Deutsch)"
+msgstr "Anvisning (tyska)"
+
+msgid "Hinweis (Englisch)"
+msgstr "Anvisning (engelska)"
+
+msgid "Hinweis (Schwedisch)"
+msgstr "Anvisning (svenska)"
+
+msgid "übliches Intervall"
+msgstr "vanligt intervall"
+
+msgid "Monat im Kalenderrhythmus"
+msgstr "Månad i kalenderrytmen"
+
+msgid "Tätigkeiten"
+msgstr "Åtgärder"
+
+msgid "Aufgaben ergänzen"
+msgstr "Lägg till uppgifter"
+
+#, python-format
+msgid "alle %(wert)s %(einheit)s"
+msgstr "var %(wert)s %(einheit)s"
+
+msgid "Ausgewählte übernehmen"
+msgstr "Lägg till valda"
+
+msgid "Abbrechen"
+msgstr "Avbryt"
+
+msgid "Der Katalog hält für diesen Bereich nichts weiter bereit."
+msgstr "Katalogen har inget mer för den här byggnadsdelen."
+
+msgid "Zurück"
+msgstr "Tillbaka"
+
+msgid "Stand"
+msgstr "Per"
+
+msgid "Übersicht"
+msgstr "Översikt"
+
+msgid "Wiederkehrende Aufgaben"
+msgstr "Återkommande uppgifter"
+
+msgid "Erledigt"
+msgstr "Utförd"
+
+msgid "Für diesen Bereich sind noch keine Aufgaben angelegt."
+msgstr "Inga uppgifter är upplagda för den här byggnadsdelen ännu."
+
+msgid "Aufgaben aus dem Katalog ergänzen"
+msgstr "Lägg till uppgifter ur katalogen"
+
+msgid "Was hier geschah"
+msgstr "Vad som har gjorts här"
+
+msgid "Noch nichts eingetragen."
+msgstr "Inget registrerat ännu."
+
+msgid "Einmaligen Vorgang eintragen"
+msgstr "Registrera en engångsåtgärd"
+
+msgid "Was ansteht"
+msgstr "Vad som är aktuellt"
+
+msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
+msgstr "Inget upplagt ännu. Fastigheter och byggnadsdelar hanteras i administrationen."
+
+msgid "ruht"
+msgstr "vilar"
+
+msgid "Eintragen"
+msgstr "Registrera"
+
+msgid "Als erledigt eintragen"
+msgstr "Registrera som utförd"
+
+msgid "Profil"
+msgstr "Profil"
+
+msgid "Die hier gewählte Sprache gilt für die Oberfläche und für die Wochenmail."
+msgstr "Språket som väljs här gäller gränssnittet och veckobrevet."
+
+msgid "Speichern"
+msgstr "Spara"

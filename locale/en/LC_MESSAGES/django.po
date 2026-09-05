@@ -1,0 +1,332 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-05 12:51+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Wartungsbuch"
+msgstr "Maintenance Log"
+
+msgid "Verwaltung"
+msgstr "Administration"
+
+msgid "Bezeichnung"
+msgstr "Name"
+
+msgid "Hinweis"
+msgstr "Note"
+
+msgid "Übliches Intervall"
+msgstr "Typical interval"
+
+msgid "Ruhezeit"
+msgstr "Dormant period"
+
+msgid "ganzjährig"
+msgstr "all year"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "Erfassung"
+msgstr "Record"
+
+msgid "noch nie erledigt"
+msgstr "never done"
+
+msgid "überfällig"
+msgstr "overdue"
+
+msgid "heute fällig"
+msgstr "due today"
+
+msgid "bald fällig"
+msgstr "due soon"
+
+msgid "offen"
+msgstr "later"
+
+msgid "— keine, freie Beschreibung —"
+msgstr "— none, free text —"
+
+msgid "Bitte eine Tätigkeit wählen oder beschreiben, was gemacht wurde."
+msgstr "Please choose an activity or describe what was done."
+
+msgid "Deutsch"
+msgstr "German"
+
+msgid "Englisch"
+msgstr "English"
+
+msgid "Schwedisch"
+msgstr "Swedish"
+
+msgid "Tage"
+msgstr "days"
+
+msgid "Monate"
+msgstr "months"
+
+msgid "Jahre"
+msgstr "years"
+
+msgid "Relativ zur letzten Erledigung"
+msgstr "Relative to last completion"
+
+msgid "Fester Kalenderrhythmus"
+msgstr "Fixed calendar rhythm"
+
+msgid "Bezeichnung (Deutsch)"
+msgstr "Name (German)"
+
+msgid "Bezeichnung (Englisch)"
+msgstr "Name (English)"
+
+msgid "Bezeichnung (Schwedisch)"
+msgstr "Name (Swedish)"
+
+msgid "E-Mail"
+msgstr "Email"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Sprache"
+msgstr "Language"
+
+msgid "Bestimmt Oberfläche und Sprache der Wochenmail."
+msgstr "Determines the interface and the language of the weekly email."
+
+msgid "aktiv"
+msgstr "active"
+
+msgid "Zugang zur Verwaltung"
+msgstr "Administration access"
+
+msgid "angelegt am"
+msgstr "created on"
+
+msgid "Benutzer"
+msgstr "User"
+
+msgid "Typ"
+msgstr "Type"
+
+msgid "Ruhezeit: aktiv ab Monat"
+msgstr "Dormant period: active from month"
+
+msgid "Leer lassen für ganzjährig. Beispiel Sommerhaus: 4 bis 10."
+msgstr "Leave empty for all year. Example summer house: 4 to 10."
+
+msgid "Ruhezeit: aktiv bis Monat"
+msgstr "Dormant period: active until month"
+
+msgid "Notiz"
+msgstr "Note"
+
+msgid "Objekt"
+msgstr "Property"
+
+msgid "Objekte"
+msgstr "Properties"
+
+msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
+msgstr "Suffix to tell similar areas apart, e.g. \"North\" or \"1st floor\"."
+
+msgid "Bereich"
+msgstr "Area"
+
+msgid "Bereiche"
+msgstr "Areas"
+
+msgid "Tätigkeit"
+msgstr "Activity"
+
+msgid "Intervall"
+msgstr "Interval"
+
+msgid "Einheit"
+msgstr "Unit"
+
+msgid "Modus"
+msgstr "Mode"
+
+msgid "Monat"
+msgstr "Month"
+
+msgid "Nur beim festen Kalenderrhythmus."
+msgstr "Only for the fixed calendar rhythm."
+
+msgid "Tag"
+msgstr "Day"
+
+msgid "Aufgabe"
+msgstr "Task"
+
+msgid "Aufgaben"
+msgstr "Tasks"
+
+msgid "Beim festen Kalenderrhythmus wird ein Monat gebraucht."
+msgstr "The fixed calendar rhythm needs a month."
+
+msgid "Der feste Kalenderrhythmus zählt in Jahren. Für kürzere Abstände bitte den Modus \"relativ zur letzten Erledigung\" wählen."
+msgstr "The fixed calendar rhythm counts in years. For shorter intervals please choose the mode \"relative to last completion\"."
+
+msgid "Leer lassen bei einmaligen Vorgängen."
+msgstr "Leave empty for one-off events."
+
+msgid "Beschreibung"
+msgstr "Description"
+
+msgid "Nur nötig, wenn keine Tätigkeit aus dem Katalog passt."
+msgstr "Only needed if no catalogue activity fits."
+
+msgid "Datum"
+msgstr "Date"
+
+msgid "Kosten"
+msgstr "Cost"
+
+msgid "ausgeführt von"
+msgstr "carried out by"
+
+msgid "Material, Farbton, Menge – z. B. \"RAL 7016, 12 l\"."
+msgstr "Material, colour, quantity – e.g. \"RAL 7016, 12 l\"."
+
+msgid "erfasst von"
+msgstr "recorded by"
+
+msgid "Ereignis"
+msgstr "Event"
+
+msgid "Ereignisse"
+msgstr "Events"
+
+msgid "Bitte eine Tätigkeit aus dem Katalog wählen oder eine Beschreibung eintragen."
+msgstr "Please choose an activity from the catalogue or enter a description."
+
+msgid "Die Aufgabe gehört zu einem anderen Bereich."
+msgstr "That task belongs to a different area."
+
+msgid "Schlüssel"
+msgstr "Key"
+
+msgid "Sortierung"
+msgstr "Sort order"
+
+msgid "Objekttyp"
+msgstr "Property type"
+
+msgid "Objekttypen"
+msgstr "Property types"
+
+msgid "Bereichstyp"
+msgstr "Area type"
+
+msgid "Bereichstypen"
+msgstr "Area types"
+
+msgid "passt zu Bereichstypen"
+msgstr "applies to area types"
+
+msgid "Hinweis (Deutsch)"
+msgstr "Note (German)"
+
+msgid "Hinweis (Englisch)"
+msgstr "Note (English)"
+
+msgid "Hinweis (Schwedisch)"
+msgstr "Note (Swedish)"
+
+msgid "übliches Intervall"
+msgstr "typical interval"
+
+msgid "Monat im Kalenderrhythmus"
+msgstr "Month in the calendar rhythm"
+
+msgid "Tätigkeiten"
+msgstr "Activities"
+
+msgid "Aufgaben ergänzen"
+msgstr "Add tasks"
+
+#, python-format
+msgid "alle %(wert)s %(einheit)s"
+msgstr "every %(wert)s %(einheit)s"
+
+msgid "Ausgewählte übernehmen"
+msgstr "Add selected"
+
+msgid "Abbrechen"
+msgstr "Cancel"
+
+msgid "Der Katalog hält für diesen Bereich nichts weiter bereit."
+msgstr "The catalogue has nothing further for this area."
+
+msgid "Zurück"
+msgstr "Back"
+
+msgid "Stand"
+msgstr "As of"
+
+msgid "Übersicht"
+msgstr "Overview"
+
+msgid "Wiederkehrende Aufgaben"
+msgstr "Recurring tasks"
+
+msgid "Erledigt"
+msgstr "Done"
+
+msgid "Für diesen Bereich sind noch keine Aufgaben angelegt."
+msgstr "No tasks have been set up for this area yet."
+
+msgid "Aufgaben aus dem Katalog ergänzen"
+msgstr "Add tasks from the catalogue"
+
+msgid "Was hier geschah"
+msgstr "What happened here"
+
+msgid "Noch nichts eingetragen."
+msgstr "Nothing recorded yet."
+
+msgid "Einmaligen Vorgang eintragen"
+msgstr "Record a one-off event"
+
+msgid "Was ansteht"
+msgstr "What is due"
+
+msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
+msgstr "Nothing set up yet. Properties and areas are maintained in the administration."
+
+msgid "ruht"
+msgstr "dormant"
+
+msgid "Eintragen"
+msgstr "Record"
+
+msgid "Als erledigt eintragen"
+msgstr "Record as done"
+
+msgid "Profil"
+msgstr "Profile"
+
+msgid "Die hier gewählte Sprache gilt für die Oberfläche und für die Wochenmail."
+msgstr "The language chosen here applies to the interface and to the weekly email."
+
+msgid "Speichern"
+msgstr "Save"

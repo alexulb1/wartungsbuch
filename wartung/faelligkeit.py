@@ -41,6 +41,11 @@ class Faelligkeit:
     tage_ueberfaellig: int
     wird_gemeldet: bool
 
+    @property
+    def status_text(self) -> str:
+        """Der Status im Klartext, in der aktiven Sprache."""
+        return Status(self.status).label
+
 
 def monate_addieren(datum: dt.date, monate: int) -> dt.date:
     """Addiert Monate und kappt auf das Monatsende.

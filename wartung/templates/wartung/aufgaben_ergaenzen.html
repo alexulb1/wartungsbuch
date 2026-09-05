@@ -1,0 +1,32 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block inhalt %}
+<h1>{% translate "Aufgaben ergänzen" %}</h1>
+<p class="pfad">{{ bereich }} – {{ bereich.objekt.name }}</p>
+
+{% if vorschlaege %}
+<form method="post" class="formular">
+  {% csrf_token %}
+  <ul class="vorschlaege">
+  {% for taetigkeit in vorschlaege %}
+    <li>
+      <label>
+        <input type="checkbox" name="taetigkeit" value="{{ taetigkeit.pk }}">
+        <strong>{{ taetigkeit.name }}</strong>
+        {% if taetigkeit.standard_intervall_wert %}
+          <span class="bereich">{% blocktranslate with wert=taetigkeit.standard_intervall_wert einheit=taetigkeit.get_standard_intervall_einheit_display %}alle {{ wert }} {{ einheit }}{% endblocktranslate %}</span>
+        {% endif %}
+        {% if taetigkeit.hinweis %}<span class="hinweis-klein">{{ taetigkeit.hinweis }}</span>{% endif %}
+      </label>
+    </li>
+  {% endfor %}
+  </ul>
+  <button type="submit" class="knopf">{% translate "Ausgewählte übernehmen" %}</button>
+  <a class="abbruch" href="{% url 'wartung:bereich' bereich.pk %}">{% translate "Abbrechen" %}</a>
+</form>
+{% else %}
+  <p class="hinweis">{% translate "Der Katalog hält für diesen Bereich nichts weiter bereit." %}</p>
+  <p><a class="abbruch" href="{% url 'wartung:bereich' bereich.pk %}">{% translate "Zurück" %}</a></p>
+{% endif %}
+{% endblock %}

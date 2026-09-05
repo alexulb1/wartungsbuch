@@ -25,7 +25,7 @@ class Ereignis(models.Model):
         blank=True,
         related_name="ereignisse",
         verbose_name=_("Aufgabe"),
-        help_text=_("Leer lassen bei einmaligen Vorgaengen."),
+        help_text=_("Leer lassen bei einmaligen Vorgängen."),
     )
     taetigkeit = models.ForeignKey(
         Taetigkeit,
@@ -33,20 +33,20 @@ class Ereignis(models.Model):
         null=True,
         blank=True,
         related_name="ereignisse",
-        verbose_name=_("Taetigkeit"),
+        verbose_name=_("Tätigkeit"),
     )
     beschreibung = models.CharField(
         _("Beschreibung"),
         max_length=200,
         blank=True,
-        help_text=_("Nur noetig, wenn keine Taetigkeit aus dem Katalog passt."),
+        help_text=_("Nur nötig, wenn keine Tätigkeit aus dem Katalog passt."),
     )
 
     datum = models.DateField(_("Datum"), db_index=True)
     kosten = models.DecimalField(_("Kosten"), max_digits=10, decimal_places=2, null=True, blank=True)
-    ausgefuehrt_von = models.CharField(_("ausgefuehrt von"), max_length=120, blank=True)
+    ausgefuehrt_von = models.CharField(_("ausgeführt von"), max_length=120, blank=True)
     notiz = models.TextField(
-        _("Notiz"), blank=True, help_text=_('Material, Farbton, Menge -- z. B. "RAL 7016, 12 l".')
+        _("Notiz"), blank=True, help_text=_('Material, Farbton, Menge – z. B. "RAL 7016, 12 l".')
     )
 
     erfasst_von = models.ForeignKey(
@@ -102,10 +102,10 @@ class Ereignis(models.Model):
     def clean(self):
         if not self.taetigkeit_id and not self.beschreibung.strip():
             raise ValidationError(
-                _("Bitte eine Taetigkeit aus dem Katalog waehlen oder eine Beschreibung eintragen.")
+                _("Bitte eine Tätigkeit aus dem Katalog wählen oder eine Beschreibung eintragen.")
             )
         if self.aufgabe_id and self.bereich_id and self.aufgabe.bereich_id != self.bereich_id:
-            raise ValidationError({"aufgabe": _("Die Aufgabe gehoert zu einem anderen Bereich.")})
+            raise ValidationError({"aufgabe": _("Die Aufgabe gehört zu einem anderen Bereich.")})
 
     def save(self, *args, **kwargs):
         self._ableiten()

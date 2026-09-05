@@ -1,0 +1,20 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{{ aufgabe.taetigkeit.name }}{% endblock %}
+
+{% block pfad %}
+<p class="pfad"><a href="{% url 'wartung:bereich' aufgabe.bereich.pk %}">{{ aufgabe.bereich }}</a> › {{ aufgabe.bereich.objekt.name }}</p>
+{% endblock %}
+
+{% block inhalt %}
+<h1>{{ aufgabe.taetigkeit.name }}</h1>
+{% if aufgabe.taetigkeit.hinweis %}<p class="notiz">{{ aufgabe.taetigkeit.hinweis }}</p>{% endif %}
+
+<form method="post" class="formular">
+  {% csrf_token %}
+  {{ formular.as_p }}
+  <button type="submit" class="knopf">{% translate "Als erledigt eintragen" %}</button>
+  <a class="abbruch" href="{% url 'wartung:bereich' aufgabe.bereich.pk %}">{% translate "Abbrechen" %}</a>
+</form>
+{% endblock %}

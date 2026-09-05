@@ -45,7 +45,7 @@ class Benutzer(AbstractBaseUser, PermissionsMixin):
         max_length=2,
         choices=Sprache.choices,
         default=Sprache.DEUTSCH,
-        help_text=_("Bestimmt Oberflaeche und Sprache der Wochenmail."),
+        help_text=_("Bestimmt Oberfläche und Sprache der Wochenmail."),
     )
     is_active = models.BooleanField(_("aktiv"), default=True)
     is_staff = models.BooleanField(_("Zugang zur Verwaltung"), default=False)

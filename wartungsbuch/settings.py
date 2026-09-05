@@ -61,6 +61,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "wartung.middleware.SpracheAusProfilMiddleware",
+    "wartung.sicherheit.SicherheitsHeaderMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -104,6 +105,8 @@ def datenbank_konfiguration(url: str) -> dict:
 DATABASES = {"default": datenbank_konfiguration(umgebung("DATABASE_URL"))}
 
 AUTH_USER_MODEL = "wartung.Benutzer"
+LOGIN_URL = "/anmelden/"  # Ansicht folgt in Schritt 4 (Magic Link).
+LOGIN_REDIRECT_URL = "/"
 AUTH_PASSWORD_VALIDATORS = []  # Es werden keine Passwoerter vergeben (SPEC 2).
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

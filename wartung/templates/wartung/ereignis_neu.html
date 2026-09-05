@@ -1,0 +1,14 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block inhalt %}
+<h1>{% translate "Einmaligen Vorgang eintragen" %}</h1>
+<p class="pfad">{{ bereich }} – {{ bereich.objekt.name }}</p>
+
+<form method="post" class="formular">
+  {% csrf_token %}
+  {{ formular.as_p }}
+  <button type="submit" class="knopf">{% translate "Eintragen" %}</button>
+  <a class="abbruch" href="{% url 'wartung:bereich' bereich.pk %}">{% translate "Abbrechen" %}</a>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% load i18n static %}<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'de' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titel %}{% translate "Wartungsbuch" %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'wartung/stil.css' %}">
+</head>
+<body>
+<header class="kopf">
+  <a class="marke" href="{% url 'wartung:dashboard' %}">{% translate "Wartungsbuch" %}</a>
+  <nav>
+    {% if user.is_authenticated %}
+      <a href="{% url 'wartung:profil' %}">{{ user.get_short_name }}</a>
+      {% if user.is_staff %}<a href="/admin/">{% translate "Verwaltung" %}</a>{% endif %}
+    {% endif %}
+  </nav>
+</header>
+
+<main>
+  {% block pfad %}{% endblock %}
+  {% block inhalt %}{% endblock %}
+</main>
+
+<footer class="fuss">
+  {% blocktranslate %}Stand{% endblocktranslate %}: {{ heute|date:"SHORT_DATE_FORMAT" }}
+</footer>
+</body>
+</html>

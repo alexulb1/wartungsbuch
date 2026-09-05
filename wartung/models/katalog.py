@@ -15,7 +15,7 @@ from .basis import Einheit, Modus, Sprache, UebersetzterName
 class ObjektTyp(UebersetzterName):
     """Haus, Sommerhaus, Wohnung ..."""
 
-    schluessel = models.SlugField(_("Schluessel"), unique=True)
+    schluessel = models.SlugField(_("Schlüssel"), unique=True)
     sortierung = models.PositiveSmallIntegerField(_("Sortierung"), default=100)
 
     class Meta:
@@ -27,7 +27,7 @@ class ObjektTyp(UebersetzterName):
 class BereichsTyp(UebersetzterName):
     """Waermepumpe, Fassade, Klimageraet ..."""
 
-    schluessel = models.SlugField(_("Schluessel"), unique=True)
+    schluessel = models.SlugField(_("Schlüssel"), unique=True)
     sortierung = models.PositiveSmallIntegerField(_("Sortierung"), default=100)
 
     class Meta:
@@ -43,7 +43,7 @@ class Taetigkeit(UebersetzterName):
     "woran haette ich denken muessen" (SPEC 7).
     """
 
-    schluessel = models.SlugField(_("Schluessel"), unique=True)
+    schluessel = models.SlugField(_("Schlüssel"), unique=True)
     bereichs_typen = models.ManyToManyField(
         BereichsTyp,
         related_name="taetigkeiten",
@@ -56,7 +56,7 @@ class Taetigkeit(UebersetzterName):
     hinweis_sv = models.TextField(_("Hinweis (Schwedisch)"), blank=True)
 
     standard_intervall_wert = models.PositiveIntegerField(
-        _("uebliches Intervall"), null=True, blank=True
+        _("übliches Intervall"), null=True, blank=True
     )
     standard_intervall_einheit = models.CharField(
         _("Einheit"), max_length=10, choices=Einheit.choices, blank=True
@@ -70,8 +70,8 @@ class Taetigkeit(UebersetzterName):
     sortierung = models.PositiveSmallIntegerField(_("Sortierung"), default=100)
 
     class Meta:
-        verbose_name = _("Taetigkeit")
-        verbose_name_plural = _("Taetigkeiten")
+        verbose_name = _("Tätigkeit")
+        verbose_name_plural = _("Tätigkeiten")
         ordering = ["sortierung", "name_de"]
         constraints = [
             models.CheckConstraint(
