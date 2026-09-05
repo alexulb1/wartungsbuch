@@ -53,6 +53,18 @@ class ZugangsmarkenManager(models.Manager):
         )
         return marke, roh
 
+    def _noch_berechtigt(self, marke) -> bool:
+        """Eine Marke taugt nur so lange, wie ihr Empfänger das Objekt sehen darf.
+
+        Sonst wirkte ein Entzug erst, wenn die Marke abläuft -- und das würde im
+        Ernstfall niemand erklären können (SPEC 2).
+        """
+        if marke.aufgabe_id is None:
+            return True
+        from ..sichtbarkeit import darf_sehen
+
+        return darf_sehen(marke.benutzer, marke.aufgabe.bereich.objekt)
+
     def einloesen(self, roh: str, zweck):
         """Prueft eine Marke und verbraucht sie. Gibt None zurueck, wenn sie
         nicht taugt -- abgelaufen, schon benutzt, falscher Zweck, erfunden."""
@@ -65,7 +77,7 @@ class ZugangsmarkenManager(models.Manager):
             verbraucht_am__isnull=True,
             gueltig_bis__gt=jetzt,
         ).select_related("benutzer", "aufgabe__bereich__objekt", "aufgabe__taetigkeit").first()
-        if marke is None:
+        if marke is None or not self._noch_berechtigt(marke):
             return None
         marke.verbraucht_am = jetzt
         marke.save(update_fields=["verbraucht_am"])
@@ -76,7 +88,7 @@ class ZugangsmarkenManager(models.Manager):
         Formulars. Ein blosser Aufruf darf nichts veraendern (SPEC 6)."""
         if not roh:
             return None
-        return (
+        marke = (
             self.filter(
                 schluessel_hash=_hashen(roh),
                 zweck=zweck,
@@ -86,6 +98,9 @@ class ZugangsmarkenManager(models.Manager):
             .select_related("benutzer", "aufgabe__bereich__objekt", "aufgabe__taetigkeit")
             .first()
         )
+        if marke is None or not self._noch_berechtigt(marke):
+            return None
+        return marke
 
 
 class Zugangsmarke(models.Model):

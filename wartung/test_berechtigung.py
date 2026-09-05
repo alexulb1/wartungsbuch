@@ -125,3 +125,77 @@ class VerwaltungTest(ZweiObjekte):
     def test_verwaltung_erreicht_jeden_bereich(self):
         antwort = self.client.get(reverse("wartung:bereich", args=[self.bereich_sommer.pk]))
         self.assertEqual(antwort.status_code, 200)
+
+
+class WochenmailBerechtigungTest(ZweiObjekte):
+    def wochenmail(self, stichtag="2026-03-10"):
+        from io import StringIO
+
+        from django.core.management import call_command
+
+        call_command("wochenmail", stichtag=stichtag, stdout=StringIO())
+
+    def test_empfaenger_sieht_nur_seine_objekte(self):
+        from django.core import mail
+
+        self.wochenmail()
+        an_betreuer = [n for n in mail.outbox if "hilfe@example.org" in n.to][0]
+        self.assertIn("Haupthaus", an_betreuer.body)
+        self.assertNotIn("Sommerhaus", an_betreuer.body)
+
+    def test_ohne_zuweisung_keine_mail(self):
+        from django.core import mail
+
+        self.betreuer.zugewiesene_objekte.clear()
+        self.wochenmail()
+        self.assertEqual([n for n in mail.outbox if "hilfe@example.org" in n.to], [])
+
+    def test_verwaltung_bekommt_alles(self):
+        from django.core import mail
+
+        Benutzer.objects.create_user("chef@example.org", is_staff=True)
+        self.wochenmail()
+        an_chef = [n for n in mail.outbox if "chef@example.org" in n.to][0]
+        self.assertIn("Haupthaus", an_chef.body)
+        self.assertIn("Sommerhaus", an_chef.body)
+
+
+class MarkeNachEntzugTest(ZweiObjekte):
+    """Entzogen heißt entzogen -- auch für Links, die schon draußen sind."""
+
+    def setUp(self):
+        super().setUp()
+        from .models import Zugangsmarke, Zweck
+
+        _, self.roh = Zugangsmarke.objects.anlegen(
+            Zweck.ERLEDIGUNG, self.betreuer, aufgabe=self.aufgabe_haus
+        )
+
+    def test_marke_wirkt_solange_die_zuweisung_besteht(self):
+        antwort = self.client.get(reverse("wartung:erledigt_mit_marke", args=[self.roh]))
+        self.assertEqual(antwort.status_code, 200)
+
+    def test_entzogene_zuweisung_entwertet_die_marke_sofort(self):
+        self.betreuer.zugewiesene_objekte.clear()
+        antwort = self.client.get(reverse("wartung:erledigt_mit_marke", args=[self.roh]))
+        self.assertEqual(antwort.status_code, 404)
+
+    def test_entzogene_zuweisung_verhindert_auch_das_absenden(self):
+        self.betreuer.zugewiesene_objekte.clear()
+        antwort = self.client.post(
+            reverse("wartung:erledigt_mit_marke", args=[self.roh]), {"datum": "2026-03-12"}
+        )
+        self.assertEqual(antwort.status_code, 404)
+        self.assertFalse(Ereignis.objects.filter(aufgabe=self.aufgabe_haus).exists())
+
+    def test_bestehende_ereignisse_bleiben_nach_entzug(self):
+        """Die Historie ist die Wahrheit und wird nicht umgeschrieben."""
+        Ereignis.objects.create(
+            bereich=self.bereich_haus,
+            aufgabe=self.aufgabe_haus,
+            datum=dt.date(2026, 2, 1),
+            erfasst_von=self.betreuer,
+        )
+        self.betreuer.zugewiesene_objekte.clear()
+        eintrag = Ereignis.objects.get(aufgabe=self.aufgabe_haus)
+        self.assertEqual(eintrag.erfasst_von, self.betreuer)

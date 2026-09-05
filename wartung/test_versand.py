@@ -131,7 +131,8 @@ class WochenmailTest(Bestand):
         self.assertNotIn("Luftfilter wechseln", mail.outbox[0].body)
 
     def test_jeder_empfaenger_bekommt_eigene_marken(self):
-        Benutzer.objects.create_user("du@example.org")
+        zweiter = Benutzer.objects.create_user("du@example.org")
+        zweiter.zugewiesene_objekte.add(self.haus, self.sommerhaus)
         self.wochenmail()
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(Zugangsmarke.objects.filter(zweck=Zweck.ERLEDIGUNG).count(), 2)
