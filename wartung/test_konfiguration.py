@@ -10,7 +10,7 @@ sie ist nicht mehr der Weg, den der Betrieb geht.
 """
 
 from django.core.exceptions import ImproperlyConfigured
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase, override_settings
 
 from wartungsbuch.settings import datenbank_konfiguration
 
@@ -92,3 +92,59 @@ class OhneAngabenTest(SimpleTestCase):
     def test_faellt_auf_sqlite_zurueck(self):
         ergebnis = datenbank_konfiguration({})
         self.assertEqual(ergebnis["ENGINE"], "django.db.backends.sqlite3")
+
+
+class ErlaubteHostsTest(SimpleTestCase):
+    """Die Gesundheitsprüfung des Containers ruft die Anwendung über die
+    eigene Loopback-Adresse auf. Fehlt die in ALLOWED_HOSTS, antwortet Django
+    mit 400, der Container gilt als krank und wird endlos neu gestartet.
+    """
+
+    def test_eigene_adresse_ist_immer_erlaubt(self):
+        from wartungsbuch.settings import erlaubte_hosts
+
+        hosts = erlaubte_hosts({"DJANGO_ALLOWED_HOSTS": "wartung.example.org"})
+        self.assertIn("wartung.example.org", hosts)
+        self.assertIn("127.0.0.1", hosts)
+        self.assertIn("localhost", hosts)
+
+    def test_ohne_angabe_bleibt_nur_die_eigene_adresse(self):
+        from wartungsbuch.settings import erlaubte_hosts
+
+        self.assertEqual(sorted(erlaubte_hosts({})), ["127.0.0.1", "localhost"])
+
+    def test_keine_doppelten_eintraege(self):
+        from wartungsbuch.settings import erlaubte_hosts
+
+        hosts = erlaubte_hosts({"DJANGO_ALLOWED_HOSTS": "localhost, wartung.example.org"})
+        self.assertEqual(len(hosts), len(set(hosts)))
+
+
+class LebenszeichenOhneUmleitungTest(TestCase):
+    """Auch mit ALLOWED_HOSTS nützt die Prüfung nichts, wenn die Anwendung
+    den Aufruf auf HTTPS umleitet: Die Prüfung erwartet 200, bekäme aber 301.
+    """
+
+    @override_settings(SECURE_SSL_REDIRECT=True)
+    def test_gesund_wird_nicht_umgeleitet(self):
+        self.assertEqual(self.client.get("/gesund").status_code, 200)
+
+    @override_settings(SECURE_SSL_REDIRECT=True)
+    def test_andere_seiten_werden_weiterhin_umgeleitet(self):
+        self.assertEqual(self.client.get("/anmelden/").status_code, 301)
+
+
+class KalendermaskierungTest(SimpleTestCase):
+    """Das Semikolon war mit einer ungültigen Escape-Folge geschrieben --
+    inhaltlich richtig, aber Python warnt bei jedem Import."""
+
+    def test_semikolon_wird_maskiert(self):
+        from wartung.kalender import _maskieren
+
+        self.assertEqual(_maskieren("Wartung; dringend"), "Wartung\; dringend")
+
+    def test_komma_und_backslash_ebenso(self):
+        from wartung.kalender import _maskieren
+
+        self.assertEqual(_maskieren("a,b"), "a\\,b")
+        self.assertEqual(_maskieren("a\\b"), "a\\\\b")

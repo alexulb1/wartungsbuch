@@ -39,7 +39,23 @@ SECRET_KEY = umgebung(
     pflicht=not DEBUG,
 )
 
-ALLOWED_HOSTS = liste("DJANGO_ALLOWED_HOSTS") or (["localhost", "127.0.0.1"] if DEBUG else [])
+def erlaubte_hosts(werte: dict) -> list[str]:
+    """Die eigene Loopback-Adresse ist immer erlaubt.
+
+    Die Gesundheitsprüfung des Containers ruft die Anwendung über
+    http://127.0.0.1:8000/gesund auf. Fehlt die Adresse hier, antwortet Django
+    mit 400, der Container gilt als krank und wird endlos neu gestartet --
+    obwohl er einwandfrei arbeitet.
+    """
+    genannt = [t.strip() for t in (werte.get("DJANGO_ALLOWED_HOSTS") or "").split(",") if t.strip()]
+    hosts = ["localhost", "127.0.0.1"]
+    for host in genannt:
+        if host not in hosts:
+            hosts.append(host)
+    return hosts
+
+
+ALLOWED_HOSTS = erlaubte_hosts(os.environ)
 CSRF_TRUSTED_ORIGINS = liste("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 INSTALLED_APPS = [
@@ -206,6 +222,9 @@ CSRF_COOKIE_SAMESITE = "Lax"
 X_FRAME_OPTIONS = "DENY"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "same-origin"
+# Das Lebenszeichen wird containerintern über HTTP abgefragt; eine Umleitung
+# auf HTTPS würde die Gesundheitsprüfung scheitern lassen.
+SECURE_REDIRECT_EXEMPT = [r"^gesund$"]
 
 if not DEBUG:
     # Die Anwendung laeuft hinter dem DSM-Reverse-Proxy, der TLS terminiert.

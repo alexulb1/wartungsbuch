@@ -135,3 +135,5 @@ durch"): Er muss es nicht mehr.
 | `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
 | Oberfläche ohne Gestaltung | `collectstatic` lief beim Bau nicht — Abbild neu bauen |
+| Container startet endlos neu, im Protokoll `DisallowedHost: '127.0.0.1:8000'` bei `/gesund` | Behoben: Die eigene Loopback-Adresse ist jetzt immer erlaubt und von der HTTPS-Umleitung ausgenommen. Abbild neu ziehen |
+| Anmeldelink kommt nicht an | Gibt es überhaupt ein Konto? `benutzer_anlegen` läuft nicht von selbst. Sonst: drei Links je Konto und Viertelstunde, danach schweigt die Anwendung |

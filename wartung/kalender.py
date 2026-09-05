@@ -20,7 +20,7 @@ def _maskieren(text: str) -> str:
     return (
         str(text)
         .replace("\\", "\\\\")
-        .replace(";", "\;")
+        .replace(";", "\\;")
         .replace(",", "\\,")
         .replace("\n", "\\n")
     )
