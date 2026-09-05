@@ -1,0 +1,63 @@
+# Wartungsbuch
+
+Wartungshistorie und Erinnerungsplan für mehrere Wohnobjekte.
+Die abgestimmten Anforderungen stehen in [SPEC.md](SPEC.md) — bei Zweifeln
+gilt die Spezifikation, nicht der Code.
+
+## Stand
+
+**Schritt 1 von 5 abgeschlossen:** Gerüst, Datenmodell, Admin, Vorlagenkatalog.
+
+| Schritt | Inhalt | Stand |
+|--------:|--------|-------|
+| 1 | Gerüst, Datenmodell, Admin, Katalog | fertig |
+| 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | offen |
+| 3 | Oberfläche und Mehrsprachigkeit | offen |
+| 4 | Wochenmail, Token, ICS, CSV-Export | offen |
+| 5 | Container, Portainer-Stack, Inbetriebnahme | offen |
+
+## Entwicklung
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+export DJANGO_DEBUG=1
+.venv/bin/python manage.py migrate
+.venv/bin/python manage.py katalog_laden
+.venv/bin/python manage.py benutzer_anlegen ich@example.org --name "Alex" --verwaltung
+.venv/bin/python manage.py runserver
+```
+
+Ohne `DATABASE_URL` läuft die Anwendung auf einer lokalen SQLite-Datei; im
+Betrieb kommt PostgreSQL aus dem eigenen Container. Ohne `DJANGO_DEBUG=1`
+verlangt die Anwendung einen `DJANGO_SECRET_KEY` und startet sonst nicht —
+das ist Absicht.
+
+Vorlage für die Umgebungsvariablen: [.env.beispiel](.env.beispiel)
+
+## Befehle
+
+| Befehl | Zweck |
+|--------|-------|
+| `manage.py katalog_laden` | Vorlagenkatalog anlegen/aktualisieren (wiederholbar) |
+| `manage.py benutzer_anlegen <email>` | Konto für die Anmeldung per Magic Link |
+| `manage.py test wartung` | Testlauf |
+
+## Aufbau
+
+```
+wartung/models/basis.py      Sprachen, Intervalleinheiten, Übersetzungs-Mixin
+wartung/models/benutzer.py   Konten (ohne Passwort, Magic Link)
+wartung/models/katalog.py    Objekttypen, Bereichstypen, Tätigkeiten (dreisprachig)
+wartung/models/bestand.py    Objekt → Bereich → Aufgabe
+wartung/models/ereignis.py   Ereignis — die einzige Wahrheit
+wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
+```
+
+## Grundsätze
+
+- **Die Fälligkeit wird berechnet, nie gespeichert.** Sie ergibt sich aus dem
+  jüngsten Ereignis plus Intervall. Es gibt keinen Status, der veralten kann.
+- **Katalogdaten werden ausgewählt, Freitext bleibt Freitext.** Nur so ist
+  Mehrsprachigkeit möglich und nur so sind Auswertungen über Objekte hinweg
+  überhaupt beantwortbar.
+- **Wenige Abhängigkeiten.** Die Anwendung soll in zehn Jahren noch laufen.
