@@ -105,6 +105,15 @@ sudo docker exec wartungsbuch-anwendung-1 python manage.py wochenmail --probe
 curl -s http://localhost:8071/gesund
 ```
 
+### Wie weit das Dashboard vorausschaut
+
+Standardmäßig 30 Tage. Über `DASHBOARD_HORIZONT_TAGE` im Stack änderbar.
+Überfälliges und noch nie Erledigtes bleibt unabhängig davon immer sichtbar;
+Späteres erreichst du über „Alles anzeigen" unter der Liste.
+
+Die Wochenmail hat ihr eigenes Fenster von 14 Tagen (SPEC 6) — das ist
+Absicht: Eine Mail soll knapper sein als der Blick auf den Bildschirm.
+
 ### Wochenmail von Hand auslösen
 
 ```bash

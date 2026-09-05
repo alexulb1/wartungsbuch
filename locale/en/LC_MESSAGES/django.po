@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 18:19+0200\n"
+"POT-Creation-Date: 2026-09-05 19:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,6 @@ msgstr "Note"
 msgid "Übliches Intervall"
 msgstr "Typical interval"
 
-#| msgid "erfasst von"
 msgid "Betreut von"
 msgstr "Looked after by"
 
@@ -282,7 +281,6 @@ msgstr "Activities"
 msgid "Woche"
 msgstr "Week"
 
-#| msgid "angelegt am"
 msgid "gesendet am"
 msgstr "sent on"
 
@@ -371,11 +369,31 @@ msgstr "Record a one-off event"
 msgid "Was ansteht"
 msgstr "What is due"
 
+#, python-format
+#| msgid "seit %(tage)s Tagen"
+msgid "nächste %(tage)s Tage"
+msgstr "next %(tage)s days"
+
 msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
 msgstr "Nothing set up yet. Properties and areas are maintained in the administration."
 
+msgid "Alle Aufgaben, auch weit entfernte."
+msgstr "All tasks, including distant ones."
+
+msgid "Nur das Nächste zeigen"
+msgstr "Show only what is near"
+
 msgid "ruht"
 msgstr "dormant"
+
+#, python-format
+msgid "Eine weitere Aufgabe ist später fällig."
+msgid_plural "%(zahl)s weitere Aufgaben sind später fällig."
+msgstr[0] "One more task is due later."
+msgstr[1] "%(zahl)s more tasks are due later."
+
+msgid "Alles anzeigen"
+msgstr "Show everything"
 
 msgid "Eintragen"
 msgstr "Record"

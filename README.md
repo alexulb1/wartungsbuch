@@ -101,6 +101,9 @@ locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 - **Sichtbarkeit wird an einer Stelle entschieden.** Alle datenliefernden Pfade
   gehen über `sichtbarkeit.py`; ein Wächter-Test geht die Routen durch und
   besteht darauf, dass jede eingeordnet ist.
+- **Was ausgeblendet wird, bleibt sichtbar ausgeblendet.** Das Dashboard zeigt
+  30 Tage, nennt aber die Zahl der späteren Aufgaben — sonst fragt man sich,
+  ob man sie je angelegt hat.
 - **Der Zeitplaner klopft nur an, er entscheidet nicht.** Die Befehle sind
   idempotent und holen einen ausgefallenen Termin nach. Ein Neustart zur
   falschen Minute kostet deshalb keine Wochenmail.

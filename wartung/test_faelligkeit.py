@@ -372,3 +372,50 @@ class UebersichtSichtbarkeitTest(TestCase):
     def test_bleibt_bei_einer_abfrage(self):
         with self.assertNumQueries(1):
             uebersicht(heute=datum("2026-03-10"), fuer=self.betreuer)
+
+
+class HorizontTest(TestCase):
+    """Das Dashboard zeigt, was ansteht -- nicht, was 2031 ansteht.
+
+    Überfälliges und noch nie Erledigtes bleibt immer sichtbar: Es ist ja
+    gerade das, was drängt.
+    """
+
+    def setUp(self):
+        self.bald = _aufgabe(30, Einheit.TAGE, schluessel="bald")
+        Ereignis.objects.create(
+            bereich=self.bald.bereich, aufgabe=self.bald, datum=datum("2026-03-01")
+        )
+        self.fern = _aufgabe(5, Einheit.JAHRE, schluessel="fern")
+        Ereignis.objects.create(
+            bereich=self.fern.bereich, aufgabe=self.fern, datum=datum("2026-03-01")
+        )
+        self.ueberfaellig = _aufgabe(30, Einheit.TAGE, schluessel="ueberfaellig")
+        Ereignis.objects.create(
+            bereich=self.ueberfaellig.bereich, aufgabe=self.ueberfaellig, datum=datum("2025-01-01")
+        )
+        self.nie = _aufgabe(30, Einheit.TAGE, schluessel="nie")
+
+    def schluessel(self, **kwargs):
+        return {
+            e.aufgabe.taetigkeit.schluessel
+            for e in uebersicht(heute=datum("2026-03-10"), **kwargs)
+        }
+
+    def test_ohne_horizont_unveraendert_alles(self):
+        self.assertEqual(len(self.schluessel()), 4)
+
+    def test_horizont_blendet_fernes_aus(self):
+        self.assertNotIn("fern", self.schluessel(horizont_tage=30))
+
+    def test_horizont_zeigt_was_bald_faellig_wird(self):
+        self.assertIn("bald", self.schluessel(horizont_tage=30))
+
+    def test_ueberfaelliges_bleibt_immer_sichtbar(self):
+        self.assertIn("ueberfaellig", self.schluessel(horizont_tage=1))
+
+    def test_nie_erledigtes_bleibt_immer_sichtbar(self):
+        self.assertIn("nie", self.schluessel(horizont_tage=1))
+
+    def test_kurzer_horizont_blendet_auch_bald_faelliges_aus(self):
+        self.assertNotIn("bald", self.schluessel(horizont_tage=5))

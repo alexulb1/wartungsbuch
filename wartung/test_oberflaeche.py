@@ -6,7 +6,7 @@ bewirkt, und in welcher Sprache die Seite erscheint.
 
 import datetime as dt
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from .models import (
@@ -323,3 +323,38 @@ class ZuweisungImAdminTest(TestCase):
         self.betreuer.zugewiesene_objekte.add(self.objekt)
         antwort = self.client.get("/admin/wartung/benutzer/")
         self.assertEqual(antwort.status_code, 200)
+
+
+class DashboardHorizontTest(Grunddaten):
+    """Was ansteht heißt: die nächsten Wochen, nicht der ganze Kalender."""
+
+    def setUp(self):
+        super().setUp()
+        self.fern = Taetigkeit.objects.create(schluessel="streichen-fern", name_de="Fassade streichen")
+        self.fern.bereichs_typen.add(self.fassade_typ)
+        aufgabe = Aufgabe.objects.create(
+            bereich=self.nord,
+            taetigkeit=self.fern,
+            intervall_wert=5,
+            intervall_einheit=Einheit.JAHRE,
+        )
+        Ereignis.objects.create(bereich=self.nord, aufgabe=aufgabe, datum=datum("2026-03-01"))
+
+    def test_fernes_erscheint_nicht(self):
+        antwort = self.client.get(reverse("wartung:dashboard"), {"stichtag": "2026-03-10"})
+        self.assertNotContains(antwort, "Fassade streichen")
+
+    def test_es_bleibt_sichtbar_dass_etwas_ausgeblendet_ist(self):
+        antwort = self.client.get(reverse("wartung:dashboard"), {"stichtag": "2026-03-10"})
+        self.assertContains(antwort, "später fällig")
+
+    def test_alles_anzeigen_holt_es_zurueck(self):
+        antwort = self.client.get(
+            reverse("wartung:dashboard"), {"stichtag": "2026-03-10", "horizont": "alle"}
+        )
+        self.assertContains(antwort, "Fassade streichen")
+
+    @override_settings(DASHBOARD_HORIZONT_TAGE=3000)
+    def test_der_horizont_laesst_sich_konfigurieren(self):
+        antwort = self.client.get(reverse("wartung:dashboard"), {"stichtag": "2026-03-10"})
+        self.assertContains(antwort, "Fassade streichen")

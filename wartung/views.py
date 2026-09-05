@@ -19,7 +19,9 @@ from django.utils import timezone, translation
 
 from django.utils.translation import gettext as _
 
-from .faelligkeit import Status, bewerten, uebersicht
+from django.conf import settings
+
+from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, uebersicht
 from .kalender import feed
 from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
 from .mail import adresse, senden
@@ -52,7 +54,20 @@ def stichtag(request) -> dt.date:
 @login_required
 def dashboard(request):
     heute = stichtag(request)
-    eintraege = uebersicht(heute=heute, fuer=request.user)
+    alle_zeigen = request.GET.get("horizont") == "alle"
+    horizont = None if alle_zeigen else settings.DASHBOARD_HORIZONT_TAGE
+
+    eintraege = uebersicht(
+        heute=heute,
+        # Damit Anzeige und Beschriftung übereinstimmen: Was im Horizont liegt,
+        # heißt auch "bald fällig" und nicht "offen".
+        vorschau_tage=horizont or VORSCHAU_TAGE,
+        fuer=request.user,
+        horizont_tage=horizont,
+    )
+    spaeter = 0
+    if not alle_zeigen:
+        spaeter = len(uebersicht(heute=heute, fuer=request.user)) - len(eintraege)
 
     nach_objekt = defaultdict(list)
     for eintrag in eintraege:
@@ -68,7 +83,14 @@ def dashboard(request):
     return render(
         request,
         "wartung/dashboard.html",
-        {"gruppen": gruppen, "heute": heute, "anzahl_offen": len(offen)},
+        {
+            "gruppen": gruppen,
+            "heute": heute,
+            "anzahl_offen": len(offen),
+            "spaeter": spaeter,
+            "alle_zeigen": alle_zeigen,
+            "horizont": horizont,
+        },
     )
 
 

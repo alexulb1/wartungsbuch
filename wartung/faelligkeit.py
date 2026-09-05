@@ -141,6 +141,7 @@ def uebersicht(
     vorschau_tage: int = VORSCHAU_TAGE,
     nur_meldbare: bool = False,
     fuer=None,
+    horizont_tage: int | None = None,
 ) -> list[Faelligkeit]:
     """Alle aktiven Aufgaben mit ihrem Urteil, das Draengendste zuerst.
 
@@ -150,6 +151,10 @@ def uebersicht(
     "fuer" schraenkt auf die Objekte ein, die diese Person sehen darf. Ohne
     Angabe bleibt es bei allem -- das ist der Weg fuer Verwaltungsaufgaben, die
     ohne Benutzer laufen.
+
+    "horizont_tage" blendet aus, was erst spaeter faellig wird. Ueberfaelliges
+    und noch nie Erledigtes bleibt dabei immer sichtbar -- es ist ja gerade
+    das, was draengt.
     """
     letzte_erledigung = (
         Ereignis.objects.filter(aufgabe=OuterRef("pk")).order_by("-datum").values("datum")[:1]
@@ -169,6 +174,9 @@ def uebersicht(
     eintraege = [
         bewerten(aufgabe, aufgabe.letzte_erledigung, heute, vorschau_tage) for aufgabe in aufgaben
     ]
+    if horizont_tage is not None:
+        grenze = heute + dt.timedelta(days=horizont_tage)
+        eintraege = [eintrag for eintrag in eintraege if eintrag.faellig_am <= grenze]
     if nur_meldbare:
         eintraege = [eintrag for eintrag in eintraege if eintrag.wird_gemeldet]
     return sorted(eintraege, key=lambda eintrag: (eintrag.faellig_am, eintrag.aufgabe.pk))

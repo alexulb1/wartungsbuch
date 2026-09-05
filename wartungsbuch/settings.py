@@ -211,6 +211,10 @@ BASIS_URL = umgebung("DJANGO_BASIS_URL", "http://localhost:8000")
 WOCHENMAIL_WOCHENTAG = int(umgebung("WOCHENMAIL_WOCHENTAG", "0"))
 WOCHENMAIL_STUNDE = int(umgebung("WOCHENMAIL_STUNDE", "7"))
 
+# Wie weit das Dashboard voraussschaut. Was später fällig wird, ist über
+# "Alles anzeigen" erreichbar; Überfälliges bleibt immer sichtbar.
+DASHBOARD_HORIZONT_TAGE = int(umgebung("DASHBOARD_HORIZONT_TAGE", "30"))
+
 # Ablage der JSON-Sicherungen. Im Betrieb ein Verzeichnis, das die Sicherung
 # des NAS mitnimmt.
 SICHERUNGS_VERZEICHNIS = umgebung("DJANGO_SICHERUNGEN", str(BASE_DIR / "sicherungen"))

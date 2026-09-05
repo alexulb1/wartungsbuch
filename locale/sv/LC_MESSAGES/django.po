@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 18:19+0200\n"
+"POT-Creation-Date: 2026-09-05 19:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,6 @@ msgstr "Anvisning"
 msgid "Übliches Intervall"
 msgstr "Vanligt intervall"
 
-#| msgid "erfasst von"
 msgid "Betreut von"
 msgstr "Sköts av"
 
@@ -282,7 +281,6 @@ msgstr "Åtgärder"
 msgid "Woche"
 msgstr "Vecka"
 
-#| msgid "angelegt am"
 msgid "gesendet am"
 msgstr "skickad den"
 
@@ -371,11 +369,31 @@ msgstr "Registrera en engångsåtgärd"
 msgid "Was ansteht"
 msgstr "Vad som är aktuellt"
 
+#, python-format
+#| msgid "seit %(tage)s Tagen"
+msgid "nächste %(tage)s Tage"
+msgstr "närmaste %(tage)s dagarna"
+
 msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
 msgstr "Inget upplagt ännu. Fastigheter och byggnadsdelar hanteras i administrationen."
 
+msgid "Alle Aufgaben, auch weit entfernte."
+msgstr "Alla uppgifter, även avlägsna."
+
+msgid "Nur das Nächste zeigen"
+msgstr "Visa bara det närmaste"
+
 msgid "ruht"
 msgstr "vilar"
+
+#, python-format
+msgid "Eine weitere Aufgabe ist später fällig."
+msgid_plural "%(zahl)s weitere Aufgaben sind später fällig."
+msgstr[0] "Ytterligare en uppgift förfaller senare."
+msgstr[1] "Ytterligare %(zahl)s uppgifter förfaller senare."
+
+msgid "Alles anzeigen"
+msgstr "Visa allt"
 
 msgid "Eintragen"
 msgstr "Registrera"

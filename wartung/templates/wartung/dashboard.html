@@ -2,10 +2,20 @@
 {% load i18n %}
 
 {% block inhalt %}
-<h1>{% translate "Was ansteht" %}</h1>
+<h1>
+  {% translate "Was ansteht" %}
+  {% if not alle_zeigen %}<span class="horizont">{% blocktranslate with tage=horizont %}nächste {{ tage }} Tage{% endblocktranslate %}</span>{% endif %}
+</h1>
 
 {% if not gruppen %}
   <p class="hinweis">{% translate "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt." %}</p>
+{% endif %}
+
+{% if alle_zeigen %}
+  <p class="hinweis">
+    {% translate "Alle Aufgaben, auch weit entfernte." %}
+    <a href="{% url 'wartung:dashboard' %}">{% blocktranslate with tage=horizont %}Nur das Nächste zeigen{% endblocktranslate %}</a>
+  </p>
 {% endif %}
 
 {% for objekt, eintraege in gruppen %}
@@ -37,4 +47,11 @@
     </table>
   </section>
 {% endfor %}
+
+{% if spaeter %}
+  <p class="hinweis">
+    {% blocktranslate count zahl=spaeter %}Eine weitere Aufgabe ist später fällig.{% plural %}{{ zahl }} weitere Aufgaben sind später fällig.{% endblocktranslate %}
+    <a href="?horizont=alle{% if request.GET.stichtag %}&amp;stichtag={{ request.GET.stichtag }}{% endif %}">{% translate "Alles anzeigen" %}</a>
+  </p>
+{% endif %}
 {% endblock %}
