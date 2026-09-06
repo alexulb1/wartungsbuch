@@ -94,8 +94,35 @@ sudo docker exec -i wartungsbuch-anwendung-1 \
 
 ### Aktualisieren
 
-In Portainer beim Stack **Update the stack** mit *Re-pull image* — mehr nicht.
-Auf dem NAS wird nichts gebaut. Die Datenbank wandert beim Start von selbst fort.
+In Portainer beim Stack **Update the stack**, und dabei im Dialog
+**„Re-pull image and redeploy" ankreuzen**. Auf dem NAS wird nichts gebaut,
+die Datenbank wandert beim Start von selbst fort.
+
+> **Das Häkchen ist keine Feinheit.** Ohne es sieht Portainer, dass bereits ein
+> Container mit dem Tag `:latest` läuft, und lässt ihn stehen — obwohl
+> `:latest` inzwischen auf ein neueres Abbild zeigt. Man aktualisiert dann
+> scheinbar erfolgreich und schaut weiter auf den alten Stand.
+
+Welche Fassung tatsächlich läuft, verrät die letzte Migration:
+
+```bash
+sudo docker exec wartungsbuch-anwendung-1 python manage.py showmigrations wartung | tail -2
+```
+
+### Nach dem allerersten Start
+
+Eine leere Datenbank enthält weder Konto noch Katalog. Beides anlegen —
+ohne Konto verschickt `/anmelden/` keinen Link, und zwar wortlos: Die
+Anwendung antwortet absichtlich immer gleich, damit niemand ausprobieren kann,
+wer ein Konto hat.
+
+```bash
+sudo docker exec wartungsbuch-anwendung-1 python manage.py benutzer_anlegen deine@adresse.de --name "Dein Name" --verwaltung
+sudo docker exec wartungsbuch-anwendung-1 python manage.py katalog_laden
+```
+
+Ob die Datenbank frisch war, steht im Protokoll: `Applying
+contenttypes.0001_initial... OK` erscheint nur bei einer leeren Datenbank.
 
 ### Nachsehen, ob etwas klemmt
 
@@ -143,6 +170,9 @@ durch"): Er muss es nicht mehr.
 | Container startet nicht, „SECRET_KEY fehlt" | Absicht — ohne Schlüssel läuft nichts außerhalb des Debug-Modus |
 | `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
+| Alte Fassung läuft nach dem Update weiter | „Re-pull image and redeploy" war nicht angekreuzt. Mit `showmigrations` prüfen, welche Fassung läuft |
+| Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |
+| SMTP prüfen, unabhängig von Konten | `docker exec wartungsbuch-anwendung-1 python manage.py sendtestemail deine@adresse.de` |
 | Oberfläche ohne Gestaltung | `collectstatic` lief beim Bau nicht — Abbild neu bauen |
 | Container startet endlos neu, im Protokoll `DisallowedHost: '127.0.0.1:8000'` bei `/gesund` | Behoben: Die eigene Loopback-Adresse ist jetzt immer erlaubt und von der HTTPS-Umleitung ausgenommen. Abbild neu ziehen |
 | Anmeldelink kommt nicht an | Gibt es überhaupt ein Konto? `benutzer_anlegen` läuft nicht von selbst. Sonst: drei Links je Konto und Viertelstunde, danach schweigt die Anwendung |
