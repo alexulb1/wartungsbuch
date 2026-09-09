@@ -13,7 +13,7 @@ Umbau nachrüstbar sind." Version 1 läuft. Die Zusage wird jetzt eingelöst.
 | Frage | Entscheidung | Begründung |
 |---|---|---|
 | Was soll ein Anhang leisten? | Zustandsfotos, Belege **und** Bauteil-Unterlagen | Eine Bedienungsanleitung gehört zum Bauteil, nicht zu einem Vorgang. Ohne diese zweite Andockstelle müsste man ein Schein-Ereignis erfinden — eine Lüge in der Historie |
-| Wo liegen die Dateien? | Bind-Mount auf eine NAS-Freigade, `/volume1/docker/wartungsbuch/medien` | Derselbe Grund wie bei JSON statt `pg_dump`: Was in zehn Jahren lesbar sein soll, muss ohne diese Anwendung lesbar sein. Ein Ordner mit Fotos erfüllt das, ein Base64-Block in einer JSON-Datei nicht |
+| Wo liegen die Dateien? | Bind-Mount auf eine NAS-Freigabe, `/volume1/docker/wartungsbuch/medien` | Derselbe Grund wie bei JSON statt `pg_dump`: Was in zehn Jahren lesbar sein soll, muss ohne diese Anwendung lesbar sein. Ein Ordner mit Fotos erfüllt das, ein Base64-Block in einer JSON-Datei nicht |
 | Bilder verkleinern? | Original behalten, zusätzlich Vorschau erzeugen (Pillow) | Der Engpass ist das Handy über Mobilfunk, nicht der Speicherplatz. Ein verworfenes Original kommt nicht wieder — und ein Typenschild ist auf 800 px unlesbar |
 | Wer liefert die Dateien aus? | Django, mit Berechtigungsprüfung | Auslieferung durch den Webserver würde die Objektberechtigungen stillschweigend aushebeln |
 | Adressen | Zufällige Kennung (UUID), nicht der Dateiname | `rechnung-heizung-2026.pdf` verrät seinen Inhalt schon im Link |
@@ -45,7 +45,10 @@ Bereich ──┬─► Anhang          (Bauteil-Unterlage)
 Ereignis ─┴──────┘            (Zustandsfoto, Beleg)
 ```
 
-`wartung/models/anhang.py`:
+`wartung/models/anhang.py`. Das Verschieben nach `geloescht/` hängt an einem
+`post_delete`-Signal: Beim Löschen eines Ereignisses oder Bereichs räumt Django
+die Anhänge gebündelt ab, ohne `delete()` je Zeile aufzurufen — eine Methode
+allein würde diese Fälle verpassen.
 
 | Feld | Typ | Zweck |
 |---|---|---|
@@ -74,7 +77,10 @@ Bedingung in der Datenbank: Ist `ereignis` gesetzt, muss dessen `bereich` mit
 ```
 
 Der abgelegte Name entsteht aus Datum, Tätigkeit bzw. Beschreibung und den
-ersten sechs Zeichen der Kennung. Das ist der Kern der Ablage-Entscheidung: Ein
+ersten sechs Zeichen der Kennung. Hängt der Anhang **nicht** an einem Ereignis,
+tritt an die Stelle des Ereignisdatums das Datum des Hochladens und an die
+Stelle der Tätigkeit die Beschriftung, ersatzweise der Bereichsname:
+`Haupthaus/2026-09-09_Waermepumpe-Anleitung_c4d8e2.pdf`. Das ist der Kern der Ablage-Entscheidung: Ein
 Ordner mit `2026-03-12_Luftfilter-wechseln.jpg` ist ohne Software verständlich,
 ein Ordner voller UUIDs nicht. Umlaute und Sonderzeichen werden ersetzt.
 
@@ -83,7 +89,10 @@ später umbenannt, bleiben ältere Dateien im alten Ordner — das ist
 hingenommen; die Datenbank kennt den Pfad, und der Ordnername bleibt richtig
 für das, was damals galt.
 
-Vorschau: längste Kante 1200 px, JPEG, Qualität 80.
+Vorschau: längste Kante 1200 px, JPEG, Qualität 80 — je nach Motiv 150–250 kB.
+Eine Historie mit zehn Bildern lädt damit rund 2 MB statt 40 MB. Das ist der
+Faktor, um den es geht; die im Gespräch genannten 40 kB wären nur bei deutlich
+kleinerer Vorschau erreichbar und würden zum Erkennen oft nicht reichen.
 
 ## Auslieferung
 
@@ -139,6 +148,9 @@ Der CSV-Export bekommt eine Spalte mit den Dateinamen der Anhänge.
 - Zu große Dateien (> 25 MB) und unerlaubte Typen werden abgewiesen
 - Ein Anhang am Ereignis erbt dessen Bereich; ein widersprüchlicher Bereich wird beanstandet
 - Gelöschte Anhänge landen in `geloescht/`, die Datenbankzeile verschwindet
+- **Auch beim Löschen des Ereignisses oder des Bereichs**: Django löscht
+  Kaskaden gebündelt und ruft `delete()` nicht je Zeile auf, deshalb hängt das
+  Verschieben an einem `post_delete`-Signal und nicht an einer Methode
 - `anhaenge_aufraeumen` entfernt nach 30 Tagen, Jüngeres bleibt
 - Der ursprüngliche Dateiname steht im Download, nicht der abgelegte
 - Die zwei neuen Routen sind im Wächter-Test eingeordnet
