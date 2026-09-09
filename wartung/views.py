@@ -16,6 +16,7 @@ from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone, translation
+from django.views.decorators.http import require_POST
 
 from django.utils.translation import gettext as _
 
@@ -23,7 +24,7 @@ from django.conf import settings
 
 from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, uebersicht
 from .kalender import feed
-from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
+from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm, UnterlageForm
 from .mail import adresse, senden
 from .models import Anhang, Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
 from .anhaenge import anhaenge_speichern
@@ -107,12 +108,21 @@ def bereich(request, pk):
 
     historie = (
         bereich.ereignisse.select_related("taetigkeit", "erfasst_von")
+        .prefetch_related("anhaenge")
         .order_by("-datum", "-erfasst_am")
     )
+    # Unterlagen hängen am Bauteil, nicht an einem Vorgang.
+    unterlagen = bereich.anhaenge.filter(ereignis__isnull=True).order_by("hochgeladen_am")
     return render(
         request,
         "wartung/bereich.html",
-        {"bereich": bereich, "aufgaben": aufgaben, "historie": historie, "heute": heute},
+        {
+            "bereich": bereich,
+            "aufgaben": aufgaben,
+            "historie": historie,
+            "unterlagen": unterlagen,
+            "heute": heute,
+        },
     )
 
 
@@ -417,3 +427,37 @@ def anhang_vorschau(request, kennung):
     if not geprueft.vorschau:
         raise Http404
     return FileResponse(geprueft.vorschau.open("rb"), content_type="image/jpeg")
+
+
+@login_required
+def anhang_neu(request, pk):
+    """Unterlagen zum Bauteil nachtragen."""
+    bereich = bereich_oder_404(request.user, pk)
+
+    if request.method == "POST":
+        formular = UnterlageForm(request.POST, request.FILES)
+        if formular.is_valid():
+            angelegt = anhaenge_speichern(
+                formular.cleaned_data["anhaenge"], bereich, request.user
+            )
+            beschriftung = formular.cleaned_data["beschriftung"]
+            if beschriftung:
+                for eintrag in angelegt:
+                    eintrag.beschriftung = beschriftung
+                    eintrag.save(update_fields=["beschriftung"])
+            return redirect("wartung:bereich", pk=bereich.pk)
+    else:
+        formular = UnterlageForm()
+
+    return render(request, "wartung/anhang_neu.html", {"bereich": bereich, "formular": formular})
+
+
+@login_required
+@require_POST
+def anhang_loeschen(request, kennung):
+    """Nur per POST: Ein Löschen darf nie an einem GET hängen, weil Vorschauen
+    und Scanner Links abrufen -- derselbe Grund wie beim Abhaken."""
+    geprueft = _anhang_oder_404(request.user, kennung)
+    bereich_nummer = geprueft.bereich_id
+    geprueft.delete()
+    return redirect("wartung:bereich", pk=bereich_nummer)

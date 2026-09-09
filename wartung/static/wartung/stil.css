@@ -118,3 +118,27 @@ h2 { font-size: 1.05rem; margin: 2rem 0 .5rem; display: flex; align-items: cente
 h1 .horizont {
   font-size: .8rem; font-weight: 400; color: var(--leise); margin-left: .5rem;
 }
+
+.anhaenge { list-style: none; padding: 0; margin: 0 0 1rem; }
+.anhaenge li {
+  display: flex; align-items: center; gap: .75rem;
+  padding: .5rem 0; border-bottom: 1px solid var(--linie);
+}
+.anhaenge li > a { display: flex; align-items: center; gap: .75rem; flex: 1; text-decoration: none; color: var(--text); }
+.anhaenge img { width: 64px; height: 64px; object-fit: cover; border-radius: .3rem; }
+.anhangname { font-size: .9rem; }
+
+.anhaenge-klein { display: flex; gap: .4rem; margin-top: .4rem; flex-wrap: wrap; }
+.anhaenge-klein img { width: 72px; height: 72px; object-fit: cover; border-radius: .3rem; }
+
+.ersatzsymbol {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border: 1px solid var(--linie); border-radius: .3rem;
+  color: var(--leise); font-size: .7rem; text-transform: uppercase;
+}
+
+.loeschen {
+  border: 0; background: transparent; color: var(--leise);
+  font: inherit; font-size: .82rem; cursor: pointer; padding: .2rem .4rem;
+}
+.loeschen:hover { color: var(--dringend); }

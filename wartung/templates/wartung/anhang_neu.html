@@ -1,0 +1,15 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block inhalt %}
+<h1>{% translate "Unterlage hinzufügen" %}</h1>
+<p class="pfad">{{ bereich }} – {{ bereich.objekt.name }}</p>
+<p class="notiz">{% translate "Für Bedienungsanleitungen, Datenblätter und alles, was zum Bauteil gehört statt zu einem einzelnen Vorgang." %}</p>
+
+<form method="post" class="formular" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ formular.as_p }}
+  <button type="submit" class="knopf">{% translate "Hinzufügen" %}</button>
+  <a class="abbruch" href="{% url 'wartung:bereich' bereich.pk %}">{% translate "Abbrechen" %}</a>
+</form>
+{% endblock %}

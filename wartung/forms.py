@@ -119,3 +119,21 @@ class ProfilForm(forms.ModelForm):
 
 class AnmeldeForm(forms.Form):
     email = forms.EmailField(label=_("E-Mail-Adresse"))
+
+
+class UnterlageForm(forms.Form):
+    """Anhänge nachtragen -- als Unterlage zum Bauteil."""
+
+    beschriftung = forms.CharField(
+        label=_("Beschriftung"),
+        max_length=200,
+        required=False,
+        help_text=_('Etwa "Typenschild" oder "Bedienungsanleitung".'),
+    )
+    anhaenge = _anhangfeld()
+
+    def clean_anhaenge(self):
+        dateien = _geprueft(self.cleaned_data.get("anhaenge"))
+        if not dateien:
+            raise forms.ValidationError(_("Bitte mindestens eine Datei auswählen."))
+        return dateien

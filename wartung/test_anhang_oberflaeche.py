@@ -215,3 +215,81 @@ class AusliefernTest(AnhangOberflaeche):
         )[0]
         antwort = self.client.get(reverse("wartung:anhang_vorschau", args=[ohne.kennung]))
         self.assertEqual(antwort.status_code, 404)
+
+
+class BereichsseiteTest(AnhangOberflaeche):
+    def setUp(self):
+        super().setUp()
+        from .anhaenge import anhaenge_speichern
+
+        self.ereignis = Ereignis.objects.create(
+            bereich=self.bereich, aufgabe=self.aufgabe, datum=dt.date(2026, 3, 12)
+        )
+        self.am_ereignis = anhaenge_speichern(
+            [echtes_bild("typenschild.jpg")], self.bereich, self.benutzer, self.ereignis
+        )[0]
+        self.unterlage = anhaenge_speichern(
+            [SimpleUploadedFile("anleitung.pdf", b"%PDF-1.4", content_type="application/pdf")],
+            self.bereich,
+            self.benutzer,
+        )[0]
+        self.unterlage.beschriftung = "Bedienungsanleitung"
+        self.unterlage.save()
+
+    def test_unterlagen_stehen_in_einem_eigenen_abschnitt(self):
+        antwort = self.client.get(reverse("wartung:bereich", args=[self.bereich.pk]))
+        self.assertContains(antwort, "Unterlagen")
+        self.assertContains(antwort, "Bedienungsanleitung")
+
+    def test_anhang_am_ereignis_erscheint_in_der_historie(self):
+        antwort = self.client.get(reverse("wartung:bereich", args=[self.bereich.pk]))
+        self.assertContains(
+            antwort, reverse("wartung:anhang_vorschau", args=[self.am_ereignis.kennung])
+        )
+
+    def test_nachtragen_legt_eine_unterlage_an(self):
+        antwort = self.client.post(
+            reverse("wartung:anhang_neu", args=[self.bereich.pk]),
+            {"beschriftung": "Datenblatt", "anhaenge": [echtes_bild("datenblatt.jpg")]},
+        )
+        self.assertEqual(antwort.status_code, 302)
+        neu = Anhang.objects.get(beschriftung="Datenblatt")
+        self.assertIsNone(neu.ereignis)
+        self.assertEqual(neu.bereich, self.bereich)
+
+    def test_nachtragen_an_fremdem_bereich_ergibt_404(self):
+        antwort = self.client.post(
+            reverse("wartung:anhang_neu", args=[self.fremder_bereich.pk]),
+            {"beschriftung": "Eingeschmuggelt", "anhaenge": [echtes_bild()]},
+        )
+        self.assertEqual(antwort.status_code, 404)
+        self.assertFalse(Anhang.objects.filter(beschriftung="Eingeschmuggelt").exists())
+
+    def test_loeschen_entfernt_den_eintrag_und_verschiebt_die_datei(self):
+        abgelegt = Path(self.am_ereignis.datei.path)
+        antwort = self.client.post(
+            reverse("wartung:anhang_loeschen", args=[self.am_ereignis.kennung])
+        )
+        self.assertEqual(antwort.status_code, 302)
+        self.assertFalse(Anhang.objects.filter(pk=self.am_ereignis.pk).exists())
+        self.assertFalse(abgelegt.exists())
+        self.assertTrue(list((Path(self.ordner) / "geloescht").glob("*")))
+
+    def test_blosser_aufruf_loescht_nicht(self):
+        """Ein Löschen darf nie an einem GET hängen -- Vorschauen und Scanner
+        rufen Links ab."""
+        antwort = self.client.get(
+            reverse("wartung:anhang_loeschen", args=[self.am_ereignis.kennung])
+        )
+        self.assertIn(antwort.status_code, (200, 405))
+        self.assertTrue(Anhang.objects.filter(pk=self.am_ereignis.pk).exists())
+
+    def test_fremden_anhang_kann_man_nicht_loeschen(self):
+        from .anhaenge import anhaenge_speichern
+
+        fremder = anhaenge_speichern(
+            [echtes_bild("fremd.jpg")], self.fremder_bereich, self.benutzer
+        )[0]
+        antwort = self.client.post(reverse("wartung:anhang_loeschen", args=[fremder.kennung]))
+        self.assertEqual(antwort.status_code, 404)
+        self.assertTrue(Anhang.objects.filter(pk=fremder.pk).exists())

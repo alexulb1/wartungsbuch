@@ -32,6 +32,31 @@
 {% endif %}
 <p><a class="knopf knopf-leise" href="{% url 'wartung:aufgaben_ergaenzen' bereich.pk %}">{% translate "Aufgaben aus dem Katalog ergänzen" %}</a></p>
 
+<h2>{% translate "Unterlagen" %}</h2>
+{% if unterlagen %}
+<ul class="anhaenge">
+  {% for anhang in unterlagen %}
+    <li>
+      <a href="{% url 'wartung:anhang' anhang.kennung %}">
+        {% if anhang.vorschau %}
+          <img src="{% url 'wartung:anhang_vorschau' anhang.kennung %}" alt="" loading="lazy">
+        {% else %}
+          <span class="ersatzsymbol">{{ anhang.dateiname|slice:"-4:" }}</span>
+        {% endif %}
+        <span class="anhangname">{{ anhang }}</span>
+      </a>
+      <form method="post" action="{% url 'wartung:anhang_loeschen' anhang.kennung %}">
+        {% csrf_token %}
+        <button type="submit" class="loeschen">{% translate "Löschen" %}</button>
+      </form>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p class="hinweis">{% translate "Keine Unterlagen hinterlegt." %}</p>
+{% endif %}
+<p><a class="knopf knopf-leise" href="{% url 'wartung:anhang_neu' bereich.pk %}">{% translate "Unterlage hinzufügen" %}</a></p>
+
 <h2>{% translate "Was hier geschah" %}</h2>
 {% if historie %}
 <table class="liste historie">
@@ -41,6 +66,19 @@
       <td class="datum">{{ ereignis.datum|date:"SHORT_DATE_FORMAT" }}</td>
       <td class="tat">{{ ereignis.bezeichnung }}
         {% if ereignis.notiz %}<span class="bereich">{{ ereignis.notiz }}</span>{% endif %}
+        {% if ereignis.anhaenge.all %}
+          <span class="anhaenge-klein">
+            {% for anhang in ereignis.anhaenge.all %}
+              <a href="{% url 'wartung:anhang' anhang.kennung %}">
+                {% if anhang.vorschau %}
+                  <img src="{% url 'wartung:anhang_vorschau' anhang.kennung %}" alt="" loading="lazy">
+                {% else %}
+                  <span class="ersatzsymbol">{{ anhang.dateiname|slice:"-4:" }}</span>
+                {% endif %}
+              </a>
+            {% endfor %}
+          </span>
+        {% endif %}
       </td>
       <td class="kosten">{% if ereignis.kosten %}{{ ereignis.kosten }}{% endif %}</td>
       <td class="wer">{{ ereignis.ausgefuehrt_von }}</td>
