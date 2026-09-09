@@ -214,6 +214,9 @@ class WaechterTest(ZweiObjekte):
     #: Routenname -> Feld dieses Tests, dessen fremdes Objekt eingesetzt wird.
     ROUTEN_MIT_OBJEKTBEZUG = {
         "anhang_neu": "bereich_sommer",
+        "aufgabe_aufnehmen": "aufgabe_sommer",
+        "aufgabe_loeschen": "aufgabe_sommer",
+        "aufgabe_stilllegen": "aufgabe_sommer",
         "bereich": "bereich_sommer",
         "aufgaben_ergaenzen": "bereich_sommer",
         "ereignis_neu": "bereich_sommer",
@@ -257,7 +260,9 @@ class WaechterTest(ZweiObjekte):
             adresse = reverse(f"wartung:{route}", args=[fremdes.pk])
             with self.subTest(route=route, methode="GET"):
                 antwort = self.client.get(adresse)
-                self.assertEqual(antwort.status_code, 404)
+                # 405 bei Routen, die nur POST annehmen -- auch dort kommt
+                # nichts durch, es scheitert nur eine Stufe früher.
+                self.assertIn(antwort.status_code, (404, 405))
                 self.assertNotIn(b"Sommerhaus", antwort.content)
             with self.subTest(route=route, methode="POST"):
                 antwort = self.client.post(adresse, {"datum": "2026-03-12"})
@@ -269,4 +274,4 @@ class WaechterTest(ZweiObjekte):
             eigenes = getattr(self, feld.replace("sommer", "haus"))
             with self.subTest(route=route):
                 antwort = self.client.get(reverse(f"wartung:{route}", args=[eigenes.pk]))
-                self.assertEqual(antwort.status_code, 404)
+                self.assertIn(antwort.status_code, (404, 405))

@@ -142,3 +142,10 @@ h1 .horizont {
   font: inherit; font-size: .82rem; cursor: pointer; padding: .2rem .4rem;
 }
 .loeschen:hover { color: var(--dringend); }
+
+.nebenwege { display: flex; gap: .5rem; justify-content: flex-end; align-items: center; margin-top: .3rem; }
+.nebenwege form { display: inline; }
+.zeile-ruht .tat { color: var(--leise); }
+.knopf-gefahr { background: var(--dringend); }
+
+.nachtrag { margin-top: 1.75rem; }

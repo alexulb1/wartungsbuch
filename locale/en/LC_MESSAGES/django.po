@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 20:31+0200\n"
+"POT-Creation-Date: 2026-09-09 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,6 @@ msgstr "Please choose an activity or describe what was done."
 msgid "E-Mail-Adresse"
 msgstr "Email address"
 
-#| msgid "Beschreibung"
 msgid "Beschriftung"
 msgstr "Caption"
 
@@ -137,7 +136,6 @@ msgstr "Attachment"
 msgid "Anhänge"
 msgstr "Attachments"
 
-#| msgid "Die Aufgabe gehört zu einem anderen Bereich."
 msgid "Das Ereignis gehört zu einem anderen Bereich."
 msgstr "That event belongs to a different area."
 
@@ -387,12 +385,36 @@ msgstr "There is no password. Enter your address and a sign-in link will arrive 
 msgid "Anmeldelink schicken"
 msgstr "Send sign-in link"
 
-msgid "Aufgaben ergänzen"
-msgstr "Add tasks"
+msgid "Aufgabe löschen"
+msgstr "Delete task"
+
+msgid "Aufgabe löschen?"
+msgstr "Delete this task?"
 
 #, python-format
 msgid "alle %(wert)s %(einheit)s"
 msgstr "every %(wert)s %(einheit)s"
+
+msgid "fester Kalenderrhythmus"
+msgstr "fixed calendar rhythm"
+
+#, python-format
+msgid "Das dazugehörige Ereignis bleibt in der Historie stehen."
+msgid_plural "Die %(zahl)s dazugehörigen Ereignisse bleiben in der Historie stehen."
+msgstr[0] "The related event stays in the history."
+msgstr[1] "The %(zahl)s related events stay in the history."
+
+msgid "Verloren geht nur die wiederkehrende Regel: Intervall, Modus und Termin."
+msgstr "Only the recurring rule is lost: interval, mode and date."
+
+msgid "Endgültig löschen"
+msgstr "Delete permanently"
+
+msgid "Willst du sie nur aus Dashboard und Wochenmail nehmen, ohne etwas zu verlieren, geh zurück und wähle „Stilllegen“."
+msgstr "To take it out of the dashboard and the weekly email without losing anything, go back and choose “Deactivate”."
+
+msgid "Aufgaben ergänzen"
+msgstr "Add tasks"
 
 msgid "Ausgewählte übernehmen"
 msgstr "Add selected"
@@ -415,8 +437,20 @@ msgstr "Overview"
 msgid "Wiederkehrende Aufgaben"
 msgstr "Recurring tasks"
 
+msgid "stillgelegt"
+msgstr "deactivated"
+
 msgid "Erledigt"
 msgstr "Done"
+
+msgid "Stilllegen"
+msgstr "Deactivate"
+
+msgid "Löschen"
+msgstr "Delete"
+
+msgid "Wieder aufnehmen"
+msgstr "Reactivate"
 
 msgid "Für diesen Bereich sind noch keine Aufgaben angelegt."
 msgstr "No tasks have been set up for this area yet."
@@ -424,12 +458,8 @@ msgstr "No tasks have been set up for this area yet."
 msgid "Aufgaben aus dem Katalog ergänzen"
 msgstr "Add tasks from the catalogue"
 
-#| msgid "Eintragen"
 msgid "Unterlagen"
 msgstr "Documents"
-
-msgid "Löschen"
-msgstr "Delete"
 
 msgid "Keine Unterlagen hinterlegt."
 msgstr "No documents stored."

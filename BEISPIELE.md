@@ -216,6 +216,25 @@ Name steht dort schon vorbelegt; machst du es selbst, musst du nichts tippen.
 mit Etikett ist vollständiger als jede abgetippte Produktbezeichnung — und
 schneller.
 
+## Wenn eine Aufgabe wieder weg soll
+
+Auf der Bereichsseite steht neben jeder Aufgabe **Stilllegen** und **Löschen**.
+
+**Stilllegen** ist meist das Richtige. Die Aufgabe verschwindet aus Dashboard,
+Wochenmail und Kalender, bleibt aber mit allen Einstellungen bestehen und lässt
+sich mit einem Klick zurückholen. Für „ich probiere hier mal was" und für
+Saisonales, das ein Jahr aussetzt.
+
+**Löschen** entfernt die wiederkehrende Regel — Intervall, Modus, Termin. Die
+**Ereignisse bleiben stehen**: Was du an diesem Bereich gemacht hast, steht
+weiter in der Historie, nur ohne Regel dahinter. Die Zwischenseite sagt dir
+vorher, wie viele Ereignisse das betrifft.
+
+Ganze **Bereiche und Objekte** löschst du in der Verwaltung. Solange dort noch
+Ereignisse hängen, verweigert die Anwendung das — die Historie soll nicht durch
+einen versehentlichen Klick verschwinden. Dann erst die Ereignisse entfernen,
+dann den Bereich.
+
 ## Altbestand nachtragen
 
 Du weißt oft nur ungefähr Bescheid. Das ist kein Grund, es nicht einzutragen:

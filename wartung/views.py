@@ -101,10 +101,11 @@ def bereich(request, pk):
     bereich = bereich_oder_404(request.user, pk)
     heute = stichtag(request)
     aufgaben = []
-    for aufgabe in bereich.aufgaben.filter(aktiv=True).select_related("taetigkeit", "bereich__objekt"):
+    # Auch stillgelegte: Sonst könnte man sie nirgends zurückholen.
+    for aufgabe in bereich.aufgaben.select_related("taetigkeit", "bereich__objekt"):
         letzte = aufgabe.ereignisse.order_by("-datum").values_list("datum", flat=True).first()
         aufgaben.append(bewerten(aufgabe, letzte, heute))
-    aufgaben.sort(key=lambda eintrag: eintrag.faellig_am)
+    aufgaben.sort(key=lambda eintrag: (not eintrag.aufgabe.aktiv, eintrag.faellig_am))
 
     historie = (
         bereich.ereignisse.select_related("taetigkeit", "erfasst_von")
@@ -464,3 +465,46 @@ def anhang_loeschen(request, kennung):
     bereich_nummer = geprueft.bereich_id
     geprueft.delete()
     return redirect("wartung:bereich", pk=bereich_nummer)
+
+
+# --- Aufgaben stilllegen und löschen --------------------------------------
+
+
+@login_required
+@require_POST
+def aufgabe_stilllegen(request, pk):
+    """Nimmt die Aufgabe aus Planung und Meldungen, ohne etwas zu verlieren."""
+    aufgabe = aufgabe_oder_404(request.user, pk)
+    aufgabe.aktiv = False
+    aufgabe.save(update_fields=["aktiv"])
+    return redirect("wartung:bereich", pk=aufgabe.bereich_id)
+
+
+@login_required
+@require_POST
+def aufgabe_aufnehmen(request, pk):
+    aufgabe = aufgabe_oder_404(request.user, pk)
+    aufgabe.aktiv = True
+    aufgabe.save(update_fields=["aktiv"])
+    return redirect("wartung:bereich", pk=aufgabe.bereich_id)
+
+
+@login_required
+def aufgabe_loeschen(request, pk):
+    """Mit Rückfrage: In einer Aufgabe steckt eine Festlegung, die man nicht in
+    zehn Sekunden wiederherstellt. Die Zwischenseite nennt vorher, was
+    dranhängt und was stehenbleibt."""
+    aufgabe = aufgabe_oder_404(request.user, pk)
+
+    if request.method == "POST":
+        bereich_nummer = aufgabe.bereich_id
+        # Die Ereignisse bleiben; sie verlieren nur den Verweis (SET_NULL).
+        # Die Historie ist die Wahrheit und wird nicht umgeschrieben.
+        aufgabe.delete()
+        return redirect("wartung:bereich", pk=bereich_nummer)
+
+    return render(
+        request,
+        "wartung/aufgabe_loeschen.html",
+        {"aufgabe": aufgabe, "anzahl_ereignisse": aufgabe.ereignisse.count()},
+    )

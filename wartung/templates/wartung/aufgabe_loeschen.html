@@ -1,0 +1,29 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{% translate "Aufgabe löschen" %}{% endblock %}
+
+{% block inhalt %}
+<h1>{% translate "Aufgabe löschen?" %}</h1>
+<p class="pfad">{{ aufgabe.bereich }} – {{ aufgabe.bereich.objekt.name }}</p>
+
+<p class="hinweis">
+  <strong>{{ aufgabe.taetigkeit.name }}</strong> —
+  {% blocktranslate with wert=aufgabe.intervall_wert einheit=aufgabe.get_intervall_einheit_display %}alle {{ wert }} {{ einheit }}{% endblocktranslate %}{% if aufgabe.modus == "kalender" %}, {% translate "fester Kalenderrhythmus" %}{% endif %}
+</p>
+
+<p class="notiz">
+  {% blocktranslate count zahl=anzahl_ereignisse %}Das dazugehörige Ereignis bleibt in der Historie stehen.{% plural %}Die {{ zahl }} dazugehörigen Ereignisse bleiben in der Historie stehen.{% endblocktranslate %}
+  {% translate "Verloren geht nur die wiederkehrende Regel: Intervall, Modus und Termin." %}
+</p>
+
+<form method="post" class="formular">
+  {% csrf_token %}
+  <button type="submit" class="knopf knopf-gefahr">{% translate "Endgültig löschen" %}</button>
+  <a class="abbruch" href="{% url 'wartung:bereich' aufgabe.bereich.pk %}">{% translate "Abbrechen" %}</a>
+</form>
+
+<p class="notiz nachtrag">
+  {% translate "Willst du sie nur aus Dashboard und Wochenmail nehmen, ohne etwas zu verlieren, geh zurück und wähle „Stilllegen“." %}
+</p>
+{% endblock %}

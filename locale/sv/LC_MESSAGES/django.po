@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 20:31+0200\n"
+"POT-Creation-Date: 2026-09-09 21:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,6 @@ msgstr "Välj en åtgärd eller beskriv vad som gjordes."
 msgid "E-Mail-Adresse"
 msgstr "E-postadress"
 
-#| msgid "Beschreibung"
 msgid "Beschriftung"
 msgstr "Beskrivning"
 
@@ -137,7 +136,6 @@ msgstr "Bilaga"
 msgid "Anhänge"
 msgstr "Bilagor"
 
-#| msgid "Die Aufgabe gehört zu einem anderen Bereich."
 msgid "Das Ereignis gehört zu einem anderen Bereich."
 msgstr "Händelsen hör till en annan byggnadsdel."
 
@@ -387,12 +385,36 @@ msgstr "Det finns inget lösenord. Ange din adress så kommer en inloggningslän
 msgid "Anmeldelink schicken"
 msgstr "Skicka inloggningslänk"
 
-msgid "Aufgaben ergänzen"
-msgstr "Lägg till uppgifter"
+msgid "Aufgabe löschen"
+msgstr "Ta bort uppgift"
+
+msgid "Aufgabe löschen?"
+msgstr "Ta bort uppgiften?"
 
 #, python-format
 msgid "alle %(wert)s %(einheit)s"
 msgstr "var %(wert)s %(einheit)s"
+
+msgid "fester Kalenderrhythmus"
+msgstr "fast kalenderrytm"
+
+#, python-format
+msgid "Das dazugehörige Ereignis bleibt in der Historie stehen."
+msgid_plural "Die %(zahl)s dazugehörigen Ereignisse bleiben in der Historie stehen."
+msgstr[0] "Den tillhörande händelsen står kvar i historiken."
+msgstr[1] "De %(zahl)s tillhörande händelserna står kvar i historiken."
+
+msgid "Verloren geht nur die wiederkehrende Regel: Intervall, Modus und Termin."
+msgstr "Bara den återkommande regeln går förlorad: intervall, läge och datum."
+
+msgid "Endgültig löschen"
+msgstr "Ta bort permanent"
+
+msgid "Willst du sie nur aus Dashboard und Wochenmail nehmen, ohne etwas zu verlieren, geh zurück und wähle „Stilllegen“."
+msgstr "Om du bara vill ta bort den från översikten och veckobrevet utan att förlora något, gå tillbaka och välj ”Vilande”."
+
+msgid "Aufgaben ergänzen"
+msgstr "Lägg till uppgifter"
 
 msgid "Ausgewählte übernehmen"
 msgstr "Lägg till valda"
@@ -415,8 +437,20 @@ msgstr "Översikt"
 msgid "Wiederkehrende Aufgaben"
 msgstr "Återkommande uppgifter"
 
+msgid "stillgelegt"
+msgstr "vilande"
+
 msgid "Erledigt"
 msgstr "Utförd"
+
+msgid "Stilllegen"
+msgstr "Gör vilande"
+
+msgid "Löschen"
+msgstr "Ta bort"
+
+msgid "Wieder aufnehmen"
+msgstr "Återuppta"
 
 msgid "Für diesen Bereich sind noch keine Aufgaben angelegt."
 msgstr "Inga uppgifter är upplagda för den här byggnadsdelen ännu."
@@ -424,12 +458,8 @@ msgstr "Inga uppgifter är upplagda för den här byggnadsdelen ännu."
 msgid "Aufgaben aus dem Katalog ergänzen"
 msgstr "Lägg till uppgifter ur katalogen"
 
-#| msgid "Eintragen"
 msgid "Unterlagen"
 msgstr "Underlag"
-
-msgid "Löschen"
-msgstr "Ta bort"
 
 msgid "Keine Unterlagen hinterlegt."
 msgstr "Inga underlag sparade."
