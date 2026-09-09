@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *.sqlite3
 staticfiles/
+medien/
+sicherungen/
 .env
 .DS_Store
 .sc4sap/
