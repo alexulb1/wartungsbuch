@@ -28,7 +28,13 @@ from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm, Unterla
 from .mail import adresse, senden
 from .models import Anhang, Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
 from .anhaenge import anhaenge_speichern
-from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, darf_sehen, sichtbare_objekte
+from .sichtbarkeit import (
+    aufgabe_oder_404,
+    bereich_oder_404,
+    darf_sehen,
+    ereignis_oder_404,
+    sichtbare_objekte,
+)
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
@@ -508,3 +514,44 @@ def aufgabe_loeschen(request, pk):
         "wartung/aufgabe_loeschen.html",
         {"aufgabe": aufgabe, "anzahl_ereignisse": aufgabe.ereignisse.count()},
     )
+
+
+@login_required
+def ereignis_loeschen(request, pk):
+    """Der heikelste Löschvorgang: Ein Ereignis ist die einzige Wahrheit.
+
+    Weil die Fälligkeit daraus berechnet wird, verschiebt sein Verschwinden
+    rückwirkend den nächsten Termin — löscht man die jüngste Erledigung, kann
+    eine Aufgabe schlagartig überfällig sein. Die Rückfrage rechnet das vorher
+    aus, sonst wundert man sich hinterher über eine Wochenmail.
+    """
+    ereignis = ereignis_oder_404(request.user, pk)
+
+    if request.method == "POST":
+        bereich_nummer = ereignis.bereich_id
+        # Anhänge wandern über das post_delete-Signal in den Papierkorb.
+        ereignis.delete()
+        return redirect("wartung:bereich", pk=bereich_nummer)
+
+    return render(
+        request,
+        "wartung/ereignis_loeschen.html",
+        {
+            "ereignis": ereignis,
+            "anzahl_anhaenge": ereignis.anhaenge.count(),
+            "danach": _faelligkeit_ohne(ereignis, stichtag(request)),
+        },
+    )
+
+
+def _faelligkeit_ohne(ereignis, heute):
+    """Wie die Aufgabe dastünde, wenn es dieses Ereignis nicht gäbe."""
+    if ereignis.aufgabe is None:
+        return None
+    letzte = (
+        ereignis.aufgabe.ereignisse.exclude(pk=ereignis.pk)
+        .order_by("-datum")
+        .values_list("datum", flat=True)
+        .first()
+    )
+    return bewerten(ereignis.aufgabe, letzte, heute)

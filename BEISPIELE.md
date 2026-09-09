@@ -230,6 +230,18 @@ Saisonales, das ein Jahr aussetzt.
 weiter in der Historie, nur ohne Regel dahinter. Die Zwischenseite sagt dir
 vorher, wie viele Ereignisse das betrifft.
 
+**Einzelne Einträge in der Historie** löschst du dort, wo sie stehen: auf der
+Bereichsseite steht neben jeder Zeile ein „Löschen".
+
+Auch hier fragt die Anwendung vorher — und rechnet dabei etwas aus, das man
+leicht übersieht: **Löschst du die jüngste Erledigung, verschiebt sich der
+nächste Termin rückwärts.** Der Luftfilter kann dadurch schlagartig überfällig
+sein. Die Zwischenseite sagt dir vorher, wie die Aufgabe danach dasteht. Das ist
+die Kehrseite davon, dass die Fälligkeit immer aus der Historie berechnet und
+nie gespeichert wird.
+
+Anhänge an einem gelöschten Eintrag gehen mit — auch sie 30 Tage zurückholbar.
+
 Ganze **Bereiche und Objekte** löschst du in der Verwaltung. Solange dort noch
 Ereignisse hängen, verweigert die Anwendung das — die Historie soll nicht durch
 einen versehentlichen Klick verschwinden. Dann erst die Ereignisse entfernen,

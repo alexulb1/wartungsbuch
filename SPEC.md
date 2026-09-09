@@ -132,6 +132,12 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   vorher nach und nennt dabei, wie viele Ereignisse stehenbleiben — in einer
   Aufgabe steckt eine Festlegung, die man nicht in zehn Sekunden
   wiederherstellt. **Die Ereignisse bleiben in beiden Fällen**
+- **Einzelne Ereignisse löschen** in der Historie, mit Rückfrage. Sie nennt die
+  Zahl der mitgehenden Anhänge und **rechnet die Folge für die Fälligkeit vorher
+  aus**: Wer die jüngste Erledigung löscht, verschiebt den nächsten Termin
+  rückwärts. Ohne diesen Hinweis wundert man sich über eine Wochenmail, die man
+  nicht erwartet hat — die Kehrseite davon, dass Fälligkeit berechnet und nie
+  gespeichert wird
 
 ### Bewusst nicht in Version 1
 

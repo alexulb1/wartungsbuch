@@ -31,6 +31,7 @@ Gunicorn, Pillow)
 | Dashboard-Horizont (30 Tage) | — |
 | Vorbelegung von „ausgeführt von" | — |
 | Aufgaben stilllegen und löschen | — |
+| Einzelne Ereignisse löschen | — |
 
 ## Entwicklung
 

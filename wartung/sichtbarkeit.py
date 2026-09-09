@@ -12,7 +12,7 @@ bestätigt, dass es das Objekt gibt.
 
 from django.shortcuts import get_object_or_404
 
-from .models import Aufgabe, Bereich, Objekt
+from .models import Aufgabe, Bereich, Ereignis, Objekt
 
 
 def sichtbare_objekte(benutzer):
@@ -43,6 +43,15 @@ def aufgabe_oder_404(benutzer, pk) -> Aufgabe:
     return get_object_or_404(
         Aufgabe.objects.select_related(
             "bereich__objekt", "bereich__typ", "taetigkeit"
+        ).filter(bereich__objekt__in=sichtbare_objekte(benutzer)),
+        pk=pk,
+    )
+
+
+def ereignis_oder_404(benutzer, pk) -> Ereignis:
+    return get_object_or_404(
+        Ereignis.objects.select_related(
+            "bereich__objekt", "bereich__typ", "taetigkeit", "aufgabe__taetigkeit"
         ).filter(bereich__objekt__in=sichtbare_objekte(benutzer)),
         pk=pk,
     )

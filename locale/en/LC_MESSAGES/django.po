@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 21:46+0200\n"
+"POT-Creation-Date: 2026-09-09 22:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -500,6 +500,32 @@ msgstr[1] "%(zahl)s more tasks are due later."
 
 msgid "Alles anzeigen"
 msgstr "Show everything"
+
+msgid "Eintrag löschen"
+msgstr "Delete entry"
+
+msgid "Eintrag löschen?"
+msgstr "Delete this entry?"
+
+#, python-format
+msgid "Ein Anhang wird mitgelöscht."
+msgid_plural "%(zahl)s Anhänge werden mitgelöscht."
+msgstr[0] "One attachment is deleted with it."
+msgstr[1] "%(zahl)s attachments are deleted with it."
+
+msgid "Sie bleiben 30 Tage im Papierkorb und sind bis dahin zurückholbar."
+msgstr "They stay in the trash for 30 days and can be recovered until then."
+
+msgid "Folge für die Fälligkeit:"
+msgstr "Effect on the due date:"
+
+#, python-format
+msgid "Danach rechnet die Anwendung ab der davorliegenden Erledigung — „%(was)s“ ist dann fällig am %(wann)s."
+msgstr "The application will then count from the previous completion — “%(was)s” falls due on %(wann)s."
+
+#, python-format
+msgid "Es ist die einzige Erledigung. Danach gilt „%(was)s“ als nie erledigt und steht sofort offen."
+msgstr "It is the only completion. Afterwards “%(was)s” counts as never done and falls due at once."
 
 msgid "Eintragen"
 msgstr "Record"

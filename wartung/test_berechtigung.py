@@ -42,10 +42,13 @@ class ZweiObjekte(TestCase):
             intervall_wert=30,
             intervall_einheit=Einheit.TAGE,
         )
-        Ereignis.objects.create(
+        self.ereignis_sommer = Ereignis.objects.create(
             bereich=self.bereich_sommer,
             beschreibung="Sommerhaus renoviert",
             datum=dt.date(2026, 1, 1),
+        )
+        self.ereignis_haus = Ereignis.objects.create(
+            bereich=self.bereich_haus, beschreibung="Haupthaus", datum=dt.date(2026, 1, 1)
         )
 
         self.betreuer = Benutzer.objects.create_user("hilfe@example.org", name="Hilfe")
@@ -218,6 +221,7 @@ class WaechterTest(ZweiObjekte):
         "aufgabe_loeschen": "aufgabe_sommer",
         "aufgabe_stilllegen": "aufgabe_sommer",
         "bereich": "bereich_sommer",
+        "ereignis_loeschen": "ereignis_sommer",
         "aufgaben_ergaenzen": "bereich_sommer",
         "ereignis_neu": "bereich_sommer",
         "erledigen": "aufgabe_sommer",

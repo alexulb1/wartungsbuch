@@ -104,7 +104,11 @@
         {% endif %}
       </td>
       <td class="kosten">{% if ereignis.kosten %}{{ ereignis.kosten }}{% endif %}</td>
-      <td class="wer">{{ ereignis.ausgefuehrt_von }}</td>
+      <td class="wer">{{ ereignis.ausgefuehrt_von }}
+        <span class="nebenwege">
+          <a class="loeschen" href="{% url 'wartung:ereignis_loeschen' ereignis.pk %}">{% translate "Löschen" %}</a>
+        </span>
+      </td>
     </tr>
   {% endfor %}
   </tbody>

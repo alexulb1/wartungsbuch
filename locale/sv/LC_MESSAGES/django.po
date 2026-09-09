@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 21:46+0200\n"
+"POT-Creation-Date: 2026-09-09 22:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -500,6 +500,32 @@ msgstr[1] "Ytterligare %(zahl)s uppgifter förfaller senare."
 
 msgid "Alles anzeigen"
 msgstr "Visa allt"
+
+msgid "Eintrag löschen"
+msgstr "Ta bort post"
+
+msgid "Eintrag löschen?"
+msgstr "Ta bort posten?"
+
+#, python-format
+msgid "Ein Anhang wird mitgelöscht."
+msgid_plural "%(zahl)s Anhänge werden mitgelöscht."
+msgstr[0] "En bilaga tas bort med den."
+msgstr[1] "%(zahl)s bilagor tas bort med den."
+
+msgid "Sie bleiben 30 Tage im Papierkorb und sind bis dahin zurückholbar."
+msgstr "De ligger kvar i papperskorgen i 30 dagar och kan hämtas tillbaka till dess."
+
+msgid "Folge für die Fälligkeit:"
+msgstr "Följd för förfallodatumet:"
+
+#, python-format
+msgid "Danach rechnet die Anwendung ab der davorliegenden Erledigung — „%(was)s“ ist dann fällig am %(wann)s."
+msgstr "Applikationen räknar då från det föregående utförandet — ”%(was)s” förfaller den %(wann)s."
+
+#, python-format
+msgid "Es ist die einzige Erledigung. Danach gilt „%(was)s“ als nie erledigt und steht sofort offen."
+msgstr "Det är det enda utförandet. Därefter räknas ”%(was)s” som aldrig utförd och blir genast aktuell."
 
 msgid "Eintragen"
 msgstr "Registrera"

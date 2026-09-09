@@ -10,6 +10,7 @@ urlpatterns = [
     path("bereich/<int:pk>/aufgaben/", views.aufgaben_ergaenzen, name="aufgaben_ergaenzen"),
     path("bereich/<int:pk>/ereignis/", views.ereignis_neu, name="ereignis_neu"),
     path("bereich/<int:pk>/unterlage/", views.anhang_neu, name="anhang_neu"),
+    path("ereignis/<int:pk>/loeschen/", views.ereignis_loeschen, name="ereignis_loeschen"),
     path("aufgabe/<int:pk>/erledigen/", views.erledigen, name="erledigen"),
     path("aufgabe/<int:pk>/stilllegen/", views.aufgabe_stilllegen, name="aufgabe_stilllegen"),
     path("aufgabe/<int:pk>/aufnehmen/", views.aufgabe_aufnehmen, name="aufgabe_aufnehmen"),
