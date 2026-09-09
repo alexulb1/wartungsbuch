@@ -146,11 +146,19 @@ Fotos, Belege und Bauteil-Unterlagen liegen als gewöhnliche Dateien unter
 **Einmalig einzurichten**, vor dem ersten Hochladen:
 
 ```bash
-sudo mkdir -p /volume1/docker/wartungsbuch/medien && sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien
+sudo mkdir -p /volume1/docker/wartungsbuch/medien
 ```
 
-Der Container läuft als unprivilegierter Benutzer `10001`; gehört ihm der
-Ordner nicht, scheitert jedes Hochladen mit „Permission denied".
+```bash
+sudo chown -R 10001:999 /volume1/docker/wartungsbuch/medien && sudo chmod -R 750 /volume1/docker/wartungsbuch/medien
+```
+
+**Besitzer und Zugriffsmodus, beides.** Der Container läuft als `uid=10001,
+gid=999`. Ein Ordner, der ihm gehört, aber auf Modus `000` steht, nützt nichts —
+das verbietet auch dem Besitzer alles. Genau dieser Fall ist bei der
+Inbetriebnahme aufgetreten und sah aus wie ein Besitzerproblem.
+
+Die Gruppennummer ist **999**, nicht 10001: `useradd` vergibt sie unabhängig.
 
 Dann `MEDIENPFAD=/volume1/docker/wartungsbuch/medien` im Stack setzen und den
 Ordner in Hyper Backup aufnehmen.
@@ -169,6 +177,35 @@ zurückholbar; danach räumt der Planer sie ab.
 
 Erlaubt sind Bilder und PDF bis 25 MB. HEIC von iPhones wird angenommen, bekommt
 aber keine Vorschau — *Kamera → Formate → Maximale Kompatibilität* liefert JPEG.
+
+### Prüfen, was tatsächlich eingehängt ist
+
+**Der wichtigste Kontrollschritt nach der Einrichtung.** Sind `MEDIENPFAD` und
+`SICHERUNGSPFAD` nicht gesetzt, legt Docker stillschweigend eigene Volumes an:
+Die Anwendung läuft, aber die Dateien liegen unter
+`/volume1/@docker/volumes/…` — und **Hyper Backup sichert sie nicht**.
+
+```bash
+sudo docker inspect wartungsbuch-anwendung-1 --format '{{range .Mounts}}{{.Type}}  {{.Source}}  ->  {{.Destination}}{{"\n"}}{{end}}'
+```
+
+Richtig sieht so aus:
+
+```
+bind  /volume1/docker/wartungsbuch/sicherungen  ->  /sicherungen
+bind  /volume1/docker/wartungsbuch/medien       ->  /medien
+```
+
+Steht dort **`volume`** statt `bind`, fehlt die entsprechende Variable im Stack.
+Die Rechte prüfst du so — erwartet wird `drwxr-x--- … 10001 999`:
+
+```bash
+sudo docker exec wartungsbuch-anwendung-1 ls -ldn /medien /sicherungen
+```
+
+Seit Neuestem meldet die Anwendung nicht beschreibbare Ordner beim Start selbst,
+als `wartung.W001` (Anhänge) und `wartung.W002` (Sicherungen). Ein Volume statt
+eines Bind-Mounts kann sie dagegen nicht erkennen — dafür ist der Befehl oben da.
 
 ## Laufender Betrieb
 
@@ -251,8 +288,9 @@ durch"): Er muss es nicht mehr.
 | `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
 | Alte Fassung läuft nach dem Update weiter | „Re-pull image and redeploy" war nicht angekreuzt. Mit `showmigrations` prüfen, welche Fassung läuft |
-| Hochladen endet mit Server Error 500, im Protokoll `PermissionError` | Der Medienordner gehört nicht dem Container-Benutzer: `sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien`. Beim Start meldet sich das seit Neuestem auch von selbst als `wartung.W001` |
-| `wartung.W001` im Startprotokoll | Dasselbe — der Medienordner ist nicht beschreibbar. Die Anwendung läuft trotzdem, nur Anhänge gehen nicht |
+| Hochladen endet mit Server Error 500, im Protokoll `PermissionError` | Besitzer **und** Zugriffsmodus prüfen: `sudo docker exec wartungsbuch-anwendung-1 ls -ldn /medien`. Erwartet `drwxr-x--- … 10001 999` |
+| `wartung.W001` / `wartung.W002` im Startprotokoll | Anhänge- bzw. Sicherungsordner nicht beschreibbar. Die Meldung nennt den Zugriffsmodus; die Anwendung läuft trotzdem weiter |
+| Sicherungen sind da, aber nicht im Backup | `SICHERUNGSPFAD` fehlt im Stack, Docker hat ein eigenes Volume angelegt. Mit `docker inspect` prüfen, siehe „Prüfen, was tatsächlich eingehängt ist" |
 | Fotos ohne Vorschau | HEIC oder PDF — Absicht. Bei iPhones liefert *Kamera → Formate → Maximale Kompatibilität* JPEG |
 | Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |
 | SMTP prüfen, unabhängig von Konten | `docker exec wartungsbuch-anwendung-1 python manage.py sendtestemail deine@adresse.de` |

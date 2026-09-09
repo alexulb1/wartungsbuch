@@ -150,6 +150,55 @@ class KalendermaskierungTest(SimpleTestCase):
         self.assertEqual(_maskieren("a\\b"), "a\\\\b")
 
 
+class OrdnerPruefungTest(SimpleTestCase):
+    """Beide Ablageordner werden geprüft, nicht nur der für Anhänge.
+
+    Anlass: Bei der Inbetriebnahme lag der Sicherungsordner unbemerkt in einem
+    Docker-Volume statt auf der NAS-Freigabe -- er funktionierte, wurde aber
+    von keiner Sicherung erfasst.
+    """
+
+    def test_auch_der_sicherungsordner_wird_geprueft(self):
+        import os
+        import tempfile
+
+        from wartung.checks import ablageordner_beschreibbar
+
+        with tempfile.TemporaryDirectory() as eltern:
+            gesperrt = os.path.join(eltern, "gesperrt")
+            os.mkdir(gesperrt, 0o500)
+            frei = os.path.join(eltern, "frei")
+            os.mkdir(frei)
+            try:
+                with self.settings(MEDIA_ROOT=frei, SICHERUNGS_VERZEICHNIS=gesperrt):
+                    meldungen = ablageordner_beschreibbar(None)
+            finally:
+                os.chmod(gesperrt, 0o700)
+        self.assertEqual(len(meldungen), 1)
+        self.assertIn("Sicherung", meldungen[0].msg)
+
+    def test_der_hinweis_nennt_beides_besitzer_und_zugriffsmodus(self):
+        """Bei der Inbetriebnahme gehörte der Ordner dem richtigen Benutzer,
+        stand aber auf Modus 000 -- der Hinweis nannte nur den Besitzer."""
+        import os
+        import tempfile
+
+        from wartung.checks import ablageordner_beschreibbar
+
+        with tempfile.TemporaryDirectory() as eltern:
+            gesperrt = os.path.join(eltern, "gesperrt")
+            os.mkdir(gesperrt, 0o000)
+            try:
+                with self.settings(MEDIA_ROOT=gesperrt, SICHERUNGS_VERZEICHNIS=eltern):
+                    meldungen = ablageordner_beschreibbar(None)
+            finally:
+                os.chmod(gesperrt, 0o700)
+        hinweis = meldungen[0].hint
+        self.assertIn("chown", hinweis)
+        self.assertIn("chmod", hinweis)
+        self.assertIn("10001:999", hinweis)
+
+
 class MedienordnerPruefungTest(SimpleTestCase):
     """Ein nicht beschreibbarer Medienordner soll sich beim Start melden.
 
@@ -158,10 +207,16 @@ class MedienordnerPruefungTest(SimpleTestCase):
     """
 
     def pruefen(self, ordner):
-        from wartung.checks import medienordner_beschreibbar
+        """Nur der Medienordner steht hier zur Prüfung; der Sicherungsordner
+        bekommt ein unbedenkliches Verzeichnis, damit die Meldungen eindeutig
+        zuzuordnen sind."""
+        import tempfile
 
-        with self.settings(MEDIA_ROOT=str(ordner)):
-            return medienordner_beschreibbar(None)
+        from wartung.checks import ablageordner_beschreibbar
+
+        with tempfile.TemporaryDirectory() as unbedenklich:
+            with self.settings(MEDIA_ROOT=str(ordner), SICHERUNGS_VERZEICHNIS=unbedenklich):
+                return ablageordner_beschreibbar(None)
 
     def test_beschreibbarer_ordner_ist_still(self):
         import tempfile

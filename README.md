@@ -113,7 +113,7 @@ wartung/urls.py              Routen
 wartung/admin.py             Pflegeoberfläche
 wartung/middleware.py        Sprache aus dem Benutzerprofil
 wartung/sicherheit.py        Content-Security-Policy
-wartung/checks.py            Startprüfungen (Medienordner beschreibbar?)
+wartung/checks.py            Startprüfungen (Ablageordner beschreibbar?)
 wartung/templates/wartung/   Vorlagen der Oberfläche
 locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 ```
