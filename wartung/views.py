@@ -442,14 +442,12 @@ def anhang_neu(request, pk):
     if request.method == "POST":
         formular = UnterlageForm(request.POST, request.FILES)
         if formular.is_valid():
-            angelegt = anhaenge_speichern(
-                formular.cleaned_data["anhaenge"], bereich, request.user
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"],
+                bereich,
+                request.user,
+                beschriftung=formular.cleaned_data["beschriftung"],
             )
-            beschriftung = formular.cleaned_data["beschriftung"]
-            if beschriftung:
-                for eintrag in angelegt:
-                    eintrag.beschriftung = beschriftung
-                    eintrag.save(update_fields=["beschriftung"])
             return redirect("wartung:bereich", pk=bereich.pk)
     else:
         formular = UnterlageForm()

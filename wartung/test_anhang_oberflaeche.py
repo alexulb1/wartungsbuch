@@ -293,3 +293,37 @@ class BereichsseiteTest(AnhangOberflaeche):
         antwort = self.client.post(reverse("wartung:anhang_loeschen", args=[fremder.kennung]))
         self.assertEqual(antwort.status_code, 404)
         self.assertTrue(Anhang.objects.filter(pk=fremder.pk).exists())
+
+
+class BeschriftungImDateinamenTest(AnhangOberflaeche):
+    """Die Beschriftung muss vor dem Ablegen feststehen.
+
+    Wird sie erst danach gesetzt, steht der Pfad schon fest und die Datei heißt
+    nach dem Bereich statt nach dem, was sie zeigt -- die Ablage wäre dann nur
+    halb selbsterklärend.
+    """
+
+    def test_die_beschriftung_steht_im_dateinamen(self):
+        self.client.post(
+            reverse("wartung:anhang_neu", args=[self.bereich.pk]),
+            {
+                "beschriftung": "Bedienungsanleitung Vaillant",
+                "anhaenge": [
+                    SimpleUploadedFile("x.pdf", b"%PDF-1.4", content_type="application/pdf")
+                ],
+            },
+        )
+        anhang = Anhang.objects.get()
+        self.assertIn("bedienungsanleitung-vaillant", anhang.datei.name)
+
+    def test_ohne_beschriftung_tritt_der_bereich_ein(self):
+        self.client.post(
+            reverse("wartung:anhang_neu", args=[self.bereich.pk]),
+            {
+                "beschriftung": "",
+                "anhaenge": [
+                    SimpleUploadedFile("x.pdf", b"%PDF-1.4", content_type="application/pdf")
+                ],
+            },
+        )
+        self.assertIn("warmepumpe", Anhang.objects.get().datei.name)
