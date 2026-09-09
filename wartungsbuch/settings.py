@@ -174,6 +174,12 @@ USE_I18N = True
 USE_TZ = True
 TIME_ZONE = umgebung("DJANGO_TIME_ZONE", "Europe/Berlin")
 
+# Anhänge liegen als gewöhnliche Dateien im Dateisystem, nicht in der
+# Datenbank -- damit sie in zehn Jahren auch ohne diese Anwendung lesbar sind.
+# Ausgeliefert werden sie ausschließlich durch Django, deshalb gibt es
+# absichtlich keine MEDIA_URL.
+MEDIA_ROOT = umgebung("DJANGO_MEDIEN", str(BASE_DIR / "medien"))
+
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # Der Manifest-Speicher setzt ein vorheriges collectstatic voraus und ist
