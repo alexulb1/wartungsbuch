@@ -142,3 +142,98 @@ class PapierkorbTest(AnhangBestand):
         Path(anhang.datei.path).unlink()
         anhang.delete()  # darf nicht werfen
         self.assertFalse(Anhang.objects.exists())
+
+
+class DateipruefungTest(TestCase):
+    def test_zu_grosse_datei_wird_abgewiesen(self):
+        from .dateipruefung import pruefe_datei
+        from .models.anhang import HOECHSTGROESSE
+
+        zu_gross = SimpleUploadedFile(
+            "gross.jpg", b"x" * (HOECHSTGROESSE + 1), content_type="image/jpeg"
+        )
+        with self.assertRaises(ValidationError) as fehler:
+            pruefe_datei(zu_gross)
+        self.assertIn("25", str(fehler.exception))
+
+    def test_unerlaubter_typ_wird_abgewiesen(self):
+        from .dateipruefung import pruefe_datei
+
+        schadhaft = SimpleUploadedFile("x.exe", b"MZ", content_type="application/x-msdownload")
+        with self.assertRaises(ValidationError):
+            pruefe_datei(schadhaft)
+
+    def test_bild_und_pdf_gehen_durch(self):
+        from .dateipruefung import pruefe_datei
+
+        pruefe_datei(SimpleUploadedFile("a.jpg", b"x", content_type="image/jpeg"))
+        pruefe_datei(SimpleUploadedFile("a.pdf", b"%PDF", content_type="application/pdf"))
+        pruefe_datei(SimpleUploadedFile("a.heic", b"x", content_type="image/heic"))
+
+    def test_ohne_typ_entscheidet_die_endung(self):
+        """Manche Browser schicken application/octet-stream."""
+        from .dateipruefung import pruefe_datei
+
+        pruefe_datei(
+            SimpleUploadedFile("a.jpg", b"x", content_type="application/octet-stream")
+        )
+        with self.assertRaises(ValidationError):
+            pruefe_datei(
+                SimpleUploadedFile("a.exe", b"x", content_type="application/octet-stream")
+            )
+
+
+class VorschauTest(TestCase):
+    def echtes_bild(self, groesse=(2400, 1800), format="JPEG", name="foto.jpg"):
+        from io import BytesIO
+
+        from PIL import Image
+
+        puffer = BytesIO()
+        Image.new("RGB", groesse, (120, 140, 130)).save(puffer, format=format)
+        return SimpleUploadedFile(name, puffer.getvalue(), content_type=f"image/{format.lower()}")
+
+    def test_grosses_bild_wird_verkleinert(self):
+        from PIL import Image
+
+        from .vorschau import VORSCHAU_KANTE, vorschau_erzeugen
+
+        ergebnis = vorschau_erzeugen(self.echtes_bild())
+        self.assertIsNotNone(ergebnis)
+        with Image.open(ergebnis) as bild:
+            self.assertEqual(max(bild.size), VORSCHAU_KANTE)
+
+    def test_kleines_bild_wird_nicht_vergroessert(self):
+        from PIL import Image
+
+        from .vorschau import vorschau_erzeugen
+
+        ergebnis = vorschau_erzeugen(self.echtes_bild(groesse=(400, 300)))
+        with Image.open(ergebnis) as bild:
+            self.assertEqual(bild.size, (400, 300))
+
+    def test_vorschau_traegt_einen_namen(self):
+        """Ohne Namen lässt sich die Datei keinem Dateifeld zuweisen."""
+        from .vorschau import vorschau_erzeugen
+
+        self.assertTrue(vorschau_erzeugen(self.echtes_bild()).name)
+
+    def test_pdf_bekommt_keine_vorschau(self):
+        from .vorschau import vorschau_erzeugen
+
+        self.assertIsNone(
+            vorschau_erzeugen(
+                SimpleUploadedFile("a.pdf", b"%PDF-1.4", content_type="application/pdf")
+            )
+        )
+
+    def test_unlesbares_bild_bekommt_keine_vorschau(self):
+        """HEIC kann Pillow ohne Zusatzpaket nicht -- die Datei bleibt trotzdem
+        erhalten, nur die Vorschau fehlt."""
+        from .vorschau import vorschau_erzeugen
+
+        self.assertIsNone(
+            vorschau_erzeugen(
+                SimpleUploadedFile("a.heic", b"nicht wirklich HEIC", content_type="image/heic")
+            )
+        )
