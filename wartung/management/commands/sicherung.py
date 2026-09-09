@@ -54,7 +54,16 @@ class Command(BaseCommand):
                 indent=1,
                 stdout=datei,
             )
-        self.stdout.write(self.style.SUCCESS(f"Gesichert: {ziel} ({ziel.stat().st_size} Bytes)"))
+        # Die Dateien selbst liegen im Medienordner, nicht in dieser Datei.
+        # Die Zahl hier macht ein Auseinanderlaufen sichtbar.
+        from wartung.models import Anhang
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Gesichert: {ziel} ({ziel.stat().st_size} Bytes), "
+                f"{Anhang.objects.count()} Anhänge im Medienordner"
+            )
+        )
         self._aufraeumen(ordner, optionen["behalten"])
 
     def _aufraeumen(self, ordner: Path, behalten: int) -> None:

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 19:15+0200\n"
+"POT-Creation-Date: 2026-09-09 20:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,14 @@ msgstr "Details"
 msgid "Erfassung"
 msgstr "Record"
 
+#, python-format
+msgid "„%(name)s“ ist zu groß. Höchstens %(grenze)s MB je Datei."
+msgstr "“%(name)s” is too large. At most %(grenze)s MB per file."
+
+#, python-format
+msgid "„%(name)s“ ist kein erlaubter Dateityp. Erlaubt sind Bilder und PDF."
+msgstr "“%(name)s” is not an allowed file type. Images and PDF only."
+
 msgid "noch nie erledigt"
 msgstr "never done"
 
@@ -68,6 +76,12 @@ msgstr "due soon"
 msgid "offen"
 msgstr "later"
 
+msgid "Fotos oder Belege"
+msgstr "Photos or documents"
+
+msgid "Bilder und PDF, höchstens 25 MB je Datei."
+msgstr "Images and PDF, at most 25 MB per file."
+
 msgid "— keine, freie Beschreibung —"
 msgstr "— none, free text —"
 
@@ -76,6 +90,56 @@ msgstr "Please choose an activity or describe what was done."
 
 msgid "E-Mail-Adresse"
 msgstr "Email address"
+
+#| msgid "Beschreibung"
+msgid "Beschriftung"
+msgstr "Caption"
+
+msgid "Etwa \"Typenschild\" oder \"Bedienungsanleitung\"."
+msgstr "For example \"Nameplate\" or \"User manual\"."
+
+msgid "Bitte mindestens eine Datei auswählen."
+msgstr "Please choose at least one file."
+
+msgid "Bereich"
+msgstr "Area"
+
+msgid "Ereignis"
+msgstr "Event"
+
+msgid "Leer lassen bei Unterlagen, die zum Bauteil gehören."
+msgstr "Leave empty for documents belonging to the component itself."
+
+msgid "Datei"
+msgstr "File"
+
+msgid "Vorschau"
+msgstr "Preview"
+
+msgid "ursprünglicher Dateiname"
+msgstr "original file name"
+
+msgid "Inhaltstyp"
+msgstr "Content type"
+
+msgid "Größe in Bytes"
+msgstr "Size in bytes"
+
+msgid "Etwa \"Typenschild\" oder \"Rechnung Fa. Berg\"."
+msgstr "For example \"Nameplate\" or \"Invoice Berg Ltd\"."
+
+msgid "hochgeladen von"
+msgstr "uploaded by"
+
+msgid "Anhang"
+msgstr "Attachment"
+
+msgid "Anhänge"
+msgstr "Attachments"
+
+#| msgid "Die Aufgabe gehört zu einem anderen Bereich."
+msgid "Das Ereignis gehört zu einem anderen Bereich."
+msgstr "That event belongs to a different area."
 
 msgid "Deutsch"
 msgstr "German"
@@ -164,9 +228,6 @@ msgstr "Property"
 msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
 msgstr "Suffix to tell similar areas apart, e.g. \"North\" or \"1st floor\"."
 
-msgid "Bereich"
-msgstr "Area"
-
 msgid "Bereiche"
 msgstr "Areas"
 
@@ -226,9 +287,6 @@ msgstr "Material, colour, quantity – e.g. \"RAL 7016, 12 l\"."
 
 msgid "erfasst von"
 msgstr "recorded by"
-
-msgid "Ereignis"
-msgstr "Event"
 
 msgid "Ereignisse"
 msgstr "Events"
@@ -305,6 +363,18 @@ msgstr "Access token"
 msgid "Zugangsmarken"
 msgstr "Access tokens"
 
+msgid "Unterlage hinzufügen"
+msgstr "Add document"
+
+msgid "Für Bedienungsanleitungen, Datenblätter und alles, was zum Bauteil gehört statt zu einem einzelnen Vorgang."
+msgstr "For user manuals, data sheets and anything belonging to the component rather than to a single event."
+
+msgid "Hinzufügen"
+msgstr "Add"
+
+msgid "Abbrechen"
+msgstr "Cancel"
+
 msgid "Anmelden"
 msgstr "Sign in"
 
@@ -326,9 +396,6 @@ msgstr "every %(wert)s %(einheit)s"
 
 msgid "Ausgewählte übernehmen"
 msgstr "Add selected"
-
-msgid "Abbrechen"
-msgstr "Cancel"
 
 msgid "Der Katalog hält für diesen Bereich nichts weiter bereit."
 msgstr "The catalogue has nothing further for this area."
@@ -357,6 +424,16 @@ msgstr "No tasks have been set up for this area yet."
 msgid "Aufgaben aus dem Katalog ergänzen"
 msgstr "Add tasks from the catalogue"
 
+#| msgid "Eintragen"
+msgid "Unterlagen"
+msgstr "Documents"
+
+msgid "Löschen"
+msgstr "Delete"
+
+msgid "Keine Unterlagen hinterlegt."
+msgstr "No documents stored."
+
 msgid "Was hier geschah"
 msgstr "What happened here"
 
@@ -370,7 +447,6 @@ msgid "Was ansteht"
 msgstr "What is due"
 
 #, python-format
-#| msgid "seit %(tage)s Tagen"
 msgid "nächste %(tage)s Tage"
 msgstr "next %(tage)s days"
 

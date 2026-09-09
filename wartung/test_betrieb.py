@@ -139,3 +139,56 @@ class LebenszeichenTest(TestCase):
         inhalt = self.client.get(reverse("wartung:lebenszeichen")).content.decode()
         self.assertNotIn("Haupthaus", inhalt)
         self.assertNotIn("example.org", inhalt)
+
+
+class AnhaengeAufraeumenTest(TestCase):
+    """Gelöschtes bleibt 30 Tage zurückholbar, danach ist es Ballast."""
+
+    def setUp(self):
+        import shutil
+        import tempfile
+
+        self.ordner = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.ordner, True)
+        self.ueberschreiben = override_settings(MEDIA_ROOT=self.ordner)
+        self.ueberschreiben.enable()
+        self.addCleanup(self.ueberschreiben.disable)
+
+        self.korb = Path(self.ordner) / "geloescht"
+        self.korb.mkdir()
+
+    def datei(self, name, alter_tage):
+        import os
+        import time
+
+        pfad = self.korb / name
+        pfad.write_bytes(b"x")
+        zeitpunkt = time.time() - alter_tage * 86400
+        os.utime(pfad, (zeitpunkt, zeitpunkt))
+        return pfad
+
+    def test_alte_dateien_verschwinden(self):
+        alt = self.datei("alt.jpg", 40)
+        call_command("anhaenge_aufraeumen", stdout=StringIO())
+        self.assertFalse(alt.exists())
+
+    def test_junge_dateien_bleiben(self):
+        jung = self.datei("jung.jpg", 3)
+        call_command("anhaenge_aufraeumen", stdout=StringIO())
+        self.assertTrue(jung.exists())
+
+    def test_ohne_papierkorb_kein_fehler(self):
+        import shutil
+
+        shutil.rmtree(self.korb)
+        call_command("anhaenge_aufraeumen", stdout=StringIO())
+
+
+class SicherungNenntAnhaengeTest(TestCase):
+    def test_die_zahl_der_anhaenge_steht_in_der_ausgabe(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as ordner:
+            ausgabe = StringIO()
+            call_command("sicherung", verzeichnis=ordner, stdout=ausgabe)
+            self.assertIn("Anhänge", ausgabe.getvalue())

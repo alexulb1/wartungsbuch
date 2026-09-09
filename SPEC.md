@@ -97,6 +97,9 @@ kann, entwertet alle anderen mit.
 - Objekte, Bereiche, Aufgaben und Ereignisse anlegen und pflegen
 - Dashboard: was ist fällig, was ist überfällig
 - Zuweisung von Personen zu Objekten in der Verwaltung
+- **Anhänge**: Fotos und Belege am Ereignis, Unterlagen am Bereich. Das Original
+  bleibt unverändert, dazu ein Vorschaubild. Bis 25 MB, Bilder und PDF.
+  Gelöschtes bleibt 30 Tage zurückholbar
 - Historie je Bereich („wann wurde die Nordseite zuletzt gestrichen")
 - **Dreisprachiger Vorlagenkatalog**: Bereichstyp wählen (Wärmepumpe,
   Klimagerät, Fassade …) → typische Tätigkeiten mit üblichen Intervallen zur
@@ -108,7 +111,7 @@ kann, entwertet alle anderen mit.
 
 ### Bewusst nicht in Version 1
 
-Fotos und Rechnungsanhänge · Kostenauswertungen · Push-Benachrichtigungen ·
+Kostenauswertungen · Push-Benachrichtigungen ·
 Offline-Betrieb · Rollen unterhalb der Objektzuweisung (etwa nur-lesend) ·
 Tabellen-Import.
 
@@ -186,3 +189,7 @@ noch laufen und die Daten von 2026 enthalten.
 | Rolle je Zuweisung (lesen / mitarbeiten) | Kein tatsächlicher Nur-Lesen-Fall; verdoppelt jede Zuweisungsentscheidung |
 | Eigenes Kennzeichen „sieht alle Objekte" | Bei wenigen Objekten identisch mit „allen Objekten zugewiesen" |
 | Berechtigungsbibliothek (django-guardian) | Eine Abhängigkeit auf zehn Jahre für eine Regel in dreißig Zeilen |
+| Anhänge in der Datenbank | Postgres wächst mit jedem Foto; der JSON-Abzug bekäme Base64-Blöcke und wäre weder les- noch handhabbar |
+| Original verkleinern und verwerfen | Ein Typenschild ist auf 800 px unlesbar, und genau dann braucht man es |
+| Anhänge über den Webserver ausliefern | Die Objektberechtigungen griffen nicht; Dateinamen stünden in der Adresse |
+| Upload über den Abhak-Link aus der Mail | Unangemeldeter Schreibzugriff auf den Speicher |

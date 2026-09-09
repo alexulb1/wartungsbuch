@@ -12,10 +12,11 @@ from collections import defaultdict
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import connections
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone, translation
+from django.views.decorators.http import require_POST
 
 from django.utils.translation import gettext as _
 
@@ -23,10 +24,11 @@ from django.conf import settings
 
 from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, uebersicht
 from .kalender import feed
-from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
+from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm, UnterlageForm
 from .mail import adresse, senden
-from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
-from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, sichtbare_objekte
+from .models import Anhang, Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
+from .anhaenge import anhaenge_speichern
+from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, darf_sehen, sichtbare_objekte
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
@@ -106,12 +108,21 @@ def bereich(request, pk):
 
     historie = (
         bereich.ereignisse.select_related("taetigkeit", "erfasst_von")
+        .prefetch_related("anhaenge")
         .order_by("-datum", "-erfasst_am")
     )
+    # Unterlagen hängen am Bauteil, nicht an einem Vorgang.
+    unterlagen = bereich.anhaenge.filter(ereignis__isnull=True).order_by("hochgeladen_am")
     return render(
         request,
         "wartung/bereich.html",
-        {"bereich": bereich, "aufgaben": aufgaben, "historie": historie, "heute": heute},
+        {
+            "bereich": bereich,
+            "aufgaben": aufgaben,
+            "historie": historie,
+            "unterlagen": unterlagen,
+            "heute": heute,
+        },
     )
 
 
@@ -124,9 +135,12 @@ def erledigen(request, pk):
         # Aufgabe und Urheber gehoeren an das Ereignis, bevor validiert wird:
         # Bereich und Taetigkeit leiten sich daraus ab (SPEC 4).
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=request.user)
-        formular = ErledigenForm(request.POST, instance=entwurf)
+        formular = ErledigenForm(request.POST, request.FILES, instance=entwurf)
         if formular.is_valid():
-            formular.save()
+            ereignis = formular.save()
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"], aufgabe.bereich, request.user, ereignis
+            )
             return redirect("wartung:bereich", pk=aufgabe.bereich_id)
     else:
         formular = ErledigenForm(initial=vorbelegung(request.user, heute))
@@ -170,9 +184,12 @@ def ereignis_neu(request, pk):
 
     if request.method == "POST":
         entwurf = Ereignis(bereich=bereich, erfasst_von=request.user)
-        formular = EreignisForm(request.POST, instance=entwurf, bereich=bereich)
+        formular = EreignisForm(request.POST, request.FILES, instance=entwurf, bereich=bereich)
         if formular.is_valid():
-            formular.save()
+            ereignis = formular.save()
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"], bereich, request.user, ereignis
+            )
             return redirect("wartung:bereich", pk=bereich.pk)
     else:
         formular = EreignisForm(initial=vorbelegung(request.user, heute), bereich=bereich)
@@ -274,7 +291,7 @@ def erledigt_mit_marke(request, marke):
             raise Http404
         aufgabe = eingeloest.aufgabe
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=eingeloest.benutzer)
-        formular = ErledigenForm(request.POST, instance=entwurf)
+        formular = ErledigenForm(request.POST, instance=entwurf, mit_anhaengen=False)
         if formular.is_valid():
             ereignis = formular.save()
             with translation.override(eingeloest.benutzer.sprache):
@@ -299,7 +316,8 @@ def erledigt_mit_marke(request, marke):
         {
             "aufgabe": geprueft.aufgabe,
             "formular": ErledigenForm(
-                initial=vorbelegung(geprueft.benutzer, timezone.localdate())
+                initial=vorbelegung(geprueft.benutzer, timezone.localdate()),
+                mit_anhaengen=False,
             ),
             "marke": marke,
         },
@@ -340,11 +358,13 @@ def export_csv(request):
             _("ausgeführt von"),
             _("Notiz"),
             _("erfasst von"),
+            _("Anhänge"),
         ]
     )
     ereignisse = (
         Ereignis.objects.filter(bereich__objekt__in=sichtbare_objekte(request.user))
         .select_related("bereich__objekt", "bereich__typ", "taetigkeit", "erfasst_von")
+        .prefetch_related("anhaenge")
         .order_by("datum")
     )
     for ereignis in ereignisse:
@@ -358,6 +378,9 @@ def export_csv(request):
                 ereignis.ausgefuehrt_von,
                 ereignis.notiz,
                 ereignis.erfasst_von.email if ereignis.erfasst_von else "",
+                # Damit die Zuordnung erhalten bleibt, wenn nur die Tabelle
+                # übrig ist.
+                " | ".join(a.datei.name for a in ereignis.anhaenge.all()),
             ]
         )
     return antwort
@@ -374,3 +397,70 @@ def lebenszeichen(request):
     except Exception:
         return JsonResponse({"datenbank": "nicht erreichbar"}, status=503)
     return JsonResponse({"datenbank": "erreichbar"})
+
+
+# --- Anhänge ausliefern ---------------------------------------------------
+
+
+def _anhang_oder_404(benutzer, kennung) -> Anhang:
+    """Holt den Anhang und prüft die Berechtigung in einem Schritt.
+
+    Getrennt könnte man das Prüfen vergessen -- dieselbe Überlegung wie bei
+    bereich_oder_404.
+    """
+    anhang = get_object_or_404(
+        Anhang.objects.select_related("bereich__objekt"), kennung=kennung
+    )
+    if not darf_sehen(benutzer, anhang.bereich.objekt):
+        raise Http404
+    return anhang
+
+
+@login_required
+def anhang(request, kennung):
+    geprueft = _anhang_oder_404(request.user, kennung)
+    return FileResponse(
+        geprueft.datei.open("rb"),
+        content_type=geprueft.inhaltstyp or "application/octet-stream",
+        filename=geprueft.dateiname,
+    )
+
+
+@login_required
+def anhang_vorschau(request, kennung):
+    geprueft = _anhang_oder_404(request.user, kennung)
+    if not geprueft.vorschau:
+        raise Http404
+    return FileResponse(geprueft.vorschau.open("rb"), content_type="image/jpeg")
+
+
+@login_required
+def anhang_neu(request, pk):
+    """Unterlagen zum Bauteil nachtragen."""
+    bereich = bereich_oder_404(request.user, pk)
+
+    if request.method == "POST":
+        formular = UnterlageForm(request.POST, request.FILES)
+        if formular.is_valid():
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"],
+                bereich,
+                request.user,
+                beschriftung=formular.cleaned_data["beschriftung"],
+            )
+            return redirect("wartung:bereich", pk=bereich.pk)
+    else:
+        formular = UnterlageForm()
+
+    return render(request, "wartung/anhang_neu.html", {"bereich": bereich, "formular": formular})
+
+
+@login_required
+@require_POST
+def anhang_loeschen(request, kennung):
+    """Nur per POST: Ein Löschen darf nie an einem GET hängen, weil Vorschauen
+    und Scanner Links abrufen -- derselbe Grund wie beim Abhaken."""
+    geprueft = _anhang_oder_404(request.user, kennung)
+    bereich_nummer = geprueft.bereich_id
+    geprueft.delete()
+    return redirect("wartung:bereich", pk=bereich_nummer)

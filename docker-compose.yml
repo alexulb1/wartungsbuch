@@ -37,6 +37,7 @@ services:
       DJANGO_BASIS_URL: ${DJANGO_BASIS_URL:?DJANGO_BASIS_URL fehlt}
       DJANGO_TIME_ZONE: ${DJANGO_TIME_ZONE:-Europe/Berlin}
       DJANGO_SICHERUNGEN: /sicherungen
+      DJANGO_MEDIEN: /medien
       # Einzelwerte statt einer zusammengebauten URL: So darf das Passwort
       # beliebige Sonderzeichen enthalten, ohne dass etwas maskiert werden muss.
       POSTGRES_HOST: datenbank
@@ -57,6 +58,7 @@ services:
       - "${PORT:-8071}:8000"
     volumes:
       - ${SICHERUNGSPFAD:-sicherungen}:/sicherungen
+      - ${MEDIENPFAD:-medien}:/medien
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/gesund').status==200 else 1)\""]
       interval: 60s
@@ -78,7 +80,9 @@ services:
     command: ["python", "manage.py", "planer"]
     volumes:
       - ${SICHERUNGSPFAD:-sicherungen}:/sicherungen
+      - ${MEDIENPFAD:-medien}:/medien
 
 volumes:
   pgdaten:
   sicherungen:
+  medien:

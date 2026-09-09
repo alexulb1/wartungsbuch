@@ -213,6 +213,7 @@ class WaechterTest(ZweiObjekte):
 
     #: Routenname -> Feld dieses Tests, dessen fremdes Objekt eingesetzt wird.
     ROUTEN_MIT_OBJEKTBEZUG = {
+        "anhang_neu": "bereich_sommer",
         "bereich": "bereich_sommer",
         "aufgaben_ergaenzen": "bereich_sommer",
         "ereignis_neu": "bereich_sommer",
@@ -221,6 +222,11 @@ class WaechterTest(ZweiObjekte):
 
     #: Routen ohne Objektbezug -- sie brauchen diese Prüfung nicht.
     OHNE_OBJEKTBEZUG = {
+        # Anhänge tragen eine UUID statt einer Nummer; ihre Prüfung steht in
+        # test_anhang_oberflaeche.AusliefernTest.
+        "anhang",
+        "anhang_loeschen",
+        "anhang_vorschau",
         "dashboard",
         "profil",
         "anmelden",

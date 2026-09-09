@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-05 19:15+0200\n"
+"POT-Creation-Date: 2026-09-09 20:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,6 +53,14 @@ msgstr "Detaljer"
 msgid "Erfassung"
 msgstr "Registrering"
 
+#, python-format
+msgid "„%(name)s“ ist zu groß. Höchstens %(grenze)s MB je Datei."
+msgstr "”%(name)s” är för stor. Högst %(grenze)s MB per fil."
+
+#, python-format
+msgid "„%(name)s“ ist kein erlaubter Dateityp. Erlaubt sind Bilder und PDF."
+msgstr "”%(name)s” är inte en tillåten filtyp. Endast bilder och PDF."
+
 msgid "noch nie erledigt"
 msgstr "aldrig utförd"
 
@@ -68,6 +76,12 @@ msgstr "förfaller snart"
 msgid "offen"
 msgstr "senare"
 
+msgid "Fotos oder Belege"
+msgstr "Foton eller underlag"
+
+msgid "Bilder und PDF, höchstens 25 MB je Datei."
+msgstr "Bilder och PDF, högst 25 MB per fil."
+
 msgid "— keine, freie Beschreibung —"
 msgstr "— ingen, fri beskrivning —"
 
@@ -76,6 +90,56 @@ msgstr "Välj en åtgärd eller beskriv vad som gjordes."
 
 msgid "E-Mail-Adresse"
 msgstr "E-postadress"
+
+#| msgid "Beschreibung"
+msgid "Beschriftung"
+msgstr "Beskrivning"
+
+msgid "Etwa \"Typenschild\" oder \"Bedienungsanleitung\"."
+msgstr "Till exempel ”Typskylt” eller ”Bruksanvisning”."
+
+msgid "Bitte mindestens eine Datei auswählen."
+msgstr "Välj minst en fil."
+
+msgid "Bereich"
+msgstr "Byggnadsdel"
+
+msgid "Ereignis"
+msgstr "Händelse"
+
+msgid "Leer lassen bei Unterlagen, die zum Bauteil gehören."
+msgstr "Lämna tomt för dokument som hör till byggnadsdelen."
+
+msgid "Datei"
+msgstr "Fil"
+
+msgid "Vorschau"
+msgstr "Förhandsvisning"
+
+msgid "ursprünglicher Dateiname"
+msgstr "ursprungligt filnamn"
+
+msgid "Inhaltstyp"
+msgstr "Innehållstyp"
+
+msgid "Größe in Bytes"
+msgstr "Storlek i byte"
+
+msgid "Etwa \"Typenschild\" oder \"Rechnung Fa. Berg\"."
+msgstr "Till exempel ”Typskylt” eller ”Faktura Berg AB”."
+
+msgid "hochgeladen von"
+msgstr "uppladdad av"
+
+msgid "Anhang"
+msgstr "Bilaga"
+
+msgid "Anhänge"
+msgstr "Bilagor"
+
+#| msgid "Die Aufgabe gehört zu einem anderen Bereich."
+msgid "Das Ereignis gehört zu einem anderen Bereich."
+msgstr "Händelsen hör till en annan byggnadsdel."
 
 msgid "Deutsch"
 msgstr "Tyska"
@@ -164,9 +228,6 @@ msgstr "Fastighet"
 msgid "Zusatz zur Unterscheidung, z. B. \"Nord\" oder \"OG\"."
 msgstr "Tillägg för att skilja liknande delar åt, t.ex. \"Norr\" eller \"övre plan\"."
 
-msgid "Bereich"
-msgstr "Byggnadsdel"
-
 msgid "Bereiche"
 msgstr "Byggnadsdelar"
 
@@ -226,9 +287,6 @@ msgstr "Material, kulör, mängd – t.ex. \"RAL 7016, 12 l\"."
 
 msgid "erfasst von"
 msgstr "registrerad av"
-
-msgid "Ereignis"
-msgstr "Händelse"
 
 msgid "Ereignisse"
 msgstr "Händelser"
@@ -305,6 +363,18 @@ msgstr "Åtkomstnyckel"
 msgid "Zugangsmarken"
 msgstr "Åtkomstnycklar"
 
+msgid "Unterlage hinzufügen"
+msgstr "Lägg till underlag"
+
+msgid "Für Bedienungsanleitungen, Datenblätter und alles, was zum Bauteil gehört statt zu einem einzelnen Vorgang."
+msgstr "För bruksanvisningar, datablad och allt som hör till byggnadsdelen snarare än till en enskild åtgärd."
+
+msgid "Hinzufügen"
+msgstr "Lägg till"
+
+msgid "Abbrechen"
+msgstr "Avbryt"
+
 msgid "Anmelden"
 msgstr "Logga in"
 
@@ -326,9 +396,6 @@ msgstr "var %(wert)s %(einheit)s"
 
 msgid "Ausgewählte übernehmen"
 msgstr "Lägg till valda"
-
-msgid "Abbrechen"
-msgstr "Avbryt"
 
 msgid "Der Katalog hält für diesen Bereich nichts weiter bereit."
 msgstr "Katalogen har inget mer för den här byggnadsdelen."
@@ -357,6 +424,16 @@ msgstr "Inga uppgifter är upplagda för den här byggnadsdelen ännu."
 msgid "Aufgaben aus dem Katalog ergänzen"
 msgstr "Lägg till uppgifter ur katalogen"
 
+#| msgid "Eintragen"
+msgid "Unterlagen"
+msgstr "Underlag"
+
+msgid "Löschen"
+msgstr "Ta bort"
+
+msgid "Keine Unterlagen hinterlegt."
+msgstr "Inga underlag sparade."
+
 msgid "Was hier geschah"
 msgstr "Vad som har gjorts här"
 
@@ -370,7 +447,6 @@ msgid "Was ansteht"
 msgstr "Vad som är aktuellt"
 
 #, python-format
-#| msgid "seit %(tage)s Tagen"
 msgid "nächste %(tage)s Tage"
 msgstr "närmaste %(tage)s dagarna"
 

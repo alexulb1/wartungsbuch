@@ -1,3 +1,4 @@
+from .anhang import Anhang
 from .basis import Einheit, Modus, Sprache, UebersetzterName
 from .benutzer import Benutzer
 from .bestand import Aufgabe, Bereich, Objekt
@@ -7,6 +8,7 @@ from .versand import Mailversand
 from .zugang import Zugangsmarke, Zweck
 
 __all__ = [
+    "Anhang",
     "Aufgabe",
     "Benutzer",
     "Bereich",

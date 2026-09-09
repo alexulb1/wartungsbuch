@@ -19,12 +19,61 @@ class DatumsFeld(forms.DateInput):
         super().__init__(attrs=attrs, format="%Y-%m-%d")
 
 
+class MehrfachDateiEingabe(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MehrfachDateiFeld(forms.FileField):
+    """Django nimmt je Feld nur eine Datei entgegen; das hier ist das in der
+    Django-Dokumentation beschriebene Muster für Mehrfachauswahl."""
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MehrfachDateiEingabe(attrs={"multiple": True}))
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        einzeln = super().clean
+        if isinstance(data, (list, tuple)):
+            return [einzeln(d, initial) for d in data if d]
+        return [einzeln(data, initial)] if data else []
+
+
+def _anhangfeld():
+    return MehrfachDateiFeld(
+        label=_("Fotos oder Belege"),
+        required=False,
+        help_text=_("Bilder und PDF, höchstens 25 MB je Datei."),
+    )
+
+
+def _geprueft(dateien):
+    from .dateipruefung import pruefe_datei
+
+    for datei in dateien or []:
+        pruefe_datei(datei)
+    return dateien or []
+
+
 class ErledigenForm(forms.ModelForm):
     """Abhaken einer faelligen Aufgabe.
 
     Das Datum ist frei waehlbar und mit dem Stichtag vorbelegt -- Dokumentation
     hinkt der Arbeit nach (SPEC 4).
     """
+
+    anhaenge = _anhangfeld()
+
+    def __init__(self, *args, mit_anhaengen=True, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not mit_anhaengen:
+            # Die Abhak-Seite aus der Wochenmail benutzt dasselbe Formular,
+            # dort ist niemand angemeldet. Ein Datei-Upload wäre unangemeldeter
+            # Schreibzugriff auf den Speicher -- das Feld muss weg, nicht nur
+            # unbeachtet bleiben.
+            self.fields.pop("anhaenge")
+
+    def clean_anhaenge(self):
+        return _geprueft(self.cleaned_data.get("anhaenge"))
 
     class Meta:
         model = Ereignis
@@ -34,6 +83,11 @@ class ErledigenForm(forms.ModelForm):
 
 class EreignisForm(forms.ModelForm):
     """Ein Vorgang ohne wiederkehrende Aufgabe -- etwa eine Renovierung."""
+
+    anhaenge = _anhangfeld()
+
+    def clean_anhaenge(self):
+        return _geprueft(self.cleaned_data.get("anhaenge"))
 
     class Meta:
         model = Ereignis
@@ -65,3 +119,21 @@ class ProfilForm(forms.ModelForm):
 
 class AnmeldeForm(forms.Form):
     email = forms.EmailField(label=_("E-Mail-Adresse"))
+
+
+class UnterlageForm(forms.Form):
+    """Anhänge nachtragen -- als Unterlage zum Bauteil."""
+
+    beschriftung = forms.CharField(
+        label=_("Beschriftung"),
+        max_length=200,
+        required=False,
+        help_text=_('Etwa "Typenschild" oder "Bedienungsanleitung".'),
+    )
+    anhaenge = _anhangfeld()
+
+    def clean_anhaenge(self):
+        dateien = _geprueft(self.cleaned_data.get("anhaenge"))
+        if not dateien:
+            raise forms.ValidationError(_("Bitte mindestens eine Datei auswählen."))
+        return dateien

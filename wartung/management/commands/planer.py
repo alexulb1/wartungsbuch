@@ -38,6 +38,7 @@ class Command(BaseCommand):
         for name, schritt in [
             ("Wochenmail", lambda: self.wochenmail(optionen)),
             ("Marken aufräumen", self.marken_aufraeumen),
+            ("Anhänge aufräumen", self.anhaenge_aufraeumen),
             ("Sicherung", self.sicherung),
         ]:
             try:
@@ -52,6 +53,9 @@ class Command(BaseCommand):
 
     def marken_aufraeumen(self):
         call_command("marken_aufraeumen", stdout=self.stdout)
+
+    def anhaenge_aufraeumen(self):
+        call_command("anhaenge_aufraeumen", stdout=self.stdout)
 
     def sicherung(self):
         call_command("sicherung", taeglich=True, stdout=self.stdout)
