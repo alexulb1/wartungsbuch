@@ -12,7 +12,7 @@ from collections import defaultdict
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import connections
-from django.http import Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone, translation
@@ -25,9 +25,9 @@ from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, uebersicht
 from .kalender import feed
 from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
 from .mail import adresse, senden
-from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
+from .models import Anhang, Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
 from .anhaenge import anhaenge_speichern
-from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, sichtbare_objekte
+from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, darf_sehen, sichtbare_objekte
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
 
@@ -382,3 +382,38 @@ def lebenszeichen(request):
     except Exception:
         return JsonResponse({"datenbank": "nicht erreichbar"}, status=503)
     return JsonResponse({"datenbank": "erreichbar"})
+
+
+# --- Anhänge ausliefern ---------------------------------------------------
+
+
+def _anhang_oder_404(benutzer, kennung) -> Anhang:
+    """Holt den Anhang und prüft die Berechtigung in einem Schritt.
+
+    Getrennt könnte man das Prüfen vergessen -- dieselbe Überlegung wie bei
+    bereich_oder_404.
+    """
+    anhang = get_object_or_404(
+        Anhang.objects.select_related("bereich__objekt"), kennung=kennung
+    )
+    if not darf_sehen(benutzer, anhang.bereich.objekt):
+        raise Http404
+    return anhang
+
+
+@login_required
+def anhang(request, kennung):
+    geprueft = _anhang_oder_404(request.user, kennung)
+    return FileResponse(
+        geprueft.datei.open("rb"),
+        content_type=geprueft.inhaltstyp or "application/octet-stream",
+        filename=geprueft.dateiname,
+    )
+
+
+@login_required
+def anhang_vorschau(request, kennung):
+    geprueft = _anhang_oder_404(request.user, kennung)
+    if not geprueft.vorschau:
+        raise Http404
+    return FileResponse(geprueft.vorschau.open("rb"), content_type="image/jpeg")

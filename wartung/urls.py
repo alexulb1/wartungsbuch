@@ -17,5 +17,7 @@ urlpatterns = [
     path("erledigt/<str:marke>/", views.erledigt_mit_marke, name="erledigt_mit_marke"),
     path("kalender/<str:schluessel>.ics", views.kalender, name="kalender"),
     path("export.csv", views.export_csv, name="export_csv"),
+    path("anhang/<uuid:kennung>/", views.anhang, name="anhang"),
+    path("anhang/<uuid:kennung>/vorschau/", views.anhang_vorschau, name="anhang_vorschau"),
     path("gesund", views.lebenszeichen, name="lebenszeichen"),
 ]

@@ -221,6 +221,10 @@ class WaechterTest(ZweiObjekte):
 
     #: Routen ohne Objektbezug -- sie brauchen diese Prüfung nicht.
     OHNE_OBJEKTBEZUG = {
+        # Anhänge tragen eine UUID statt einer Nummer; ihre Prüfung steht in
+        # test_anhang_oberflaeche.AusliefernTest.
+        "anhang",
+        "anhang_vorschau",
         "dashboard",
         "profil",
         "anmelden",

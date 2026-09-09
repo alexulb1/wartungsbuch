@@ -156,3 +156,62 @@ class HochladenBeimFreienEreignisTest(AnhangOberflaeche):
         )
         anhang = Anhang.objects.get()
         self.assertEqual(anhang.ereignis.beschreibung, "Bad renoviert")
+
+
+class AusliefernTest(AnhangOberflaeche):
+    def setUp(self):
+        super().setUp()
+        from .anhaenge import anhaenge_speichern
+
+        self.ereignis = Ereignis.objects.create(
+            bereich=self.bereich, aufgabe=self.aufgabe, datum=dt.date(2026, 3, 12)
+        )
+        self.anhang = anhaenge_speichern(
+            [echtes_bild("typenschild.jpg")], self.bereich, self.benutzer, self.ereignis
+        )[0]
+        self.fremder = anhaenge_speichern(
+            [echtes_bild("fremd.jpg")], self.fremder_bereich, self.benutzer
+        )[0]
+
+    def test_eigener_anhang_wird_ausgeliefert(self):
+        antwort = self.client.get(reverse("wartung:anhang", args=[self.anhang.kennung]))
+        self.assertEqual(antwort.status_code, 200)
+        self.assertEqual(antwort["Content-Type"], "image/jpeg")
+
+    def test_der_urspruengliche_dateiname_steht_im_download(self):
+        antwort = self.client.get(reverse("wartung:anhang", args=[self.anhang.kennung]))
+        self.assertIn("typenschild.jpg", antwort["Content-Disposition"])
+
+    def test_vorschau_wird_ausgeliefert(self):
+        antwort = self.client.get(reverse("wartung:anhang_vorschau", args=[self.anhang.kennung]))
+        self.assertEqual(antwort.status_code, 200)
+
+    def test_fremder_anhang_ergibt_404(self):
+        antwort = self.client.get(reverse("wartung:anhang", args=[self.fremder.kennung]))
+        self.assertEqual(antwort.status_code, 404)
+
+    def test_fremde_vorschau_ergibt_404(self):
+        antwort = self.client.get(reverse("wartung:anhang_vorschau", args=[self.fremder.kennung]))
+        self.assertEqual(antwort.status_code, 404)
+
+    def test_ohne_anmeldung_kein_zugriff(self):
+        self.client.logout()
+        antwort = self.client.get(reverse("wartung:anhang", args=[self.anhang.kennung]))
+        self.assertIn(antwort.status_code, (302, 404))
+
+    def test_erfundene_kennung_ergibt_404(self):
+        import uuid
+
+        antwort = self.client.get(reverse("wartung:anhang", args=[uuid.uuid4()]))
+        self.assertEqual(antwort.status_code, 404)
+
+    def test_fehlende_vorschau_ergibt_404(self):
+        from .anhaenge import anhaenge_speichern
+
+        ohne = anhaenge_speichern(
+            [SimpleUploadedFile("a.pdf", b"%PDF-1.4", content_type="application/pdf")],
+            self.bereich,
+            self.benutzer,
+        )[0]
+        antwort = self.client.get(reverse("wartung:anhang_vorschau", args=[ohne.kennung]))
+        self.assertEqual(antwort.status_code, 404)
