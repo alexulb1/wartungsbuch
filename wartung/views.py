@@ -358,11 +358,13 @@ def export_csv(request):
             _("ausgeführt von"),
             _("Notiz"),
             _("erfasst von"),
+            _("Anhänge"),
         ]
     )
     ereignisse = (
         Ereignis.objects.filter(bereich__objekt__in=sichtbare_objekte(request.user))
         .select_related("bereich__objekt", "bereich__typ", "taetigkeit", "erfasst_von")
+        .prefetch_related("anhaenge")
         .order_by("datum")
     )
     for ereignis in ereignisse:
@@ -376,6 +378,9 @@ def export_csv(request):
                 ereignis.ausgefuehrt_von,
                 ereignis.notiz,
                 ereignis.erfasst_von.email if ereignis.erfasst_von else "",
+                # Damit die Zuordnung erhalten bleibt, wenn nur die Tabelle
+                # übrig ist.
+                " | ".join(a.datei.name for a in ereignis.anhaenge.all()),
             ]
         )
     return antwort
