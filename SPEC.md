@@ -125,6 +125,13 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   2031 fällig wird, gehört nicht unter „Was ansteht"
 - **„Ausgeführt von" ist vorbelegt** mit dem Namen dessen, der abhakt —
   überschreibbar, wenn eine Firma gearbeitet hat
+- **Aufgaben stilllegen und löschen** in der Anwendung, nicht nur in der
+  Verwaltung. *Stilllegen* nimmt die Aufgabe aus Dashboard, Wochenmail und
+  Kalender, lässt aber alle Einstellungen stehen; stillgelegte bleiben auf der
+  Bereichsseite sichtbar, sonst wären sie nicht zurückzuholen. *Löschen* fragt
+  vorher nach und nennt dabei, wie viele Ereignisse stehenbleiben — in einer
+  Aufgabe steckt eine Festlegung, die man nicht in zehn Sekunden
+  wiederherstellt. **Die Ereignisse bleiben in beiden Fällen**
 
 ### Bewusst nicht in Version 1
 
@@ -210,3 +217,6 @@ noch laufen und die Daten von 2026 enthalten.
 | Original verkleinern und verwerfen | Ein Typenschild ist auf 800 px unlesbar, und genau dann braucht man es |
 | Anhänge über den Webserver ausliefern | Die Objektberechtigungen griffen nicht; Dateinamen stünden in der Adresse |
 | Upload über den Abhak-Link aus der Mail | Unangemeldeter Schreibzugriff auf den Speicher |
+| Aufgaben mit einem Klick löschen, ohne Rückfrage | In einer Aufgabe steckt Intervall, Modus und Termin — anders als bei einem Anhang stellt man das nicht in zehn Sekunden wieder her |
+| Stillgelegte Aufgaben ganz ausblenden | Dann wären sie nirgends mehr erreichbar und ließen sich nie zurückholen |
+| Bereiche und Objekte samt Historie löschbar machen | Ein versehentlicher Klick soll nicht zehn Jahre Dokumentation mitreißen |

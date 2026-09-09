@@ -290,6 +290,7 @@ durch"): Er muss es nicht mehr.
 | Alte Fassung läuft nach dem Update weiter | „Re-pull image and redeploy" war nicht angekreuzt. Mit `showmigrations` prüfen, welche Fassung läuft |
 | Hochladen endet mit Server Error 500, im Protokoll `PermissionError` | Besitzer **und** Zugriffsmodus prüfen: `sudo docker exec wartungsbuch-anwendung-1 ls -ldn /medien`. Erwartet `drwxr-x--- … 10001 999` |
 | `wartung.W001` / `wartung.W002` im Startprotokoll | Anhänge- bzw. Sicherungsordner nicht beschreibbar. Die Meldung nennt den Zugriffsmodus; die Anwendung läuft trotzdem weiter |
+| Objekt oder Bereich lässt sich in der Verwaltung nicht löschen (`ProtectedError`) | Absicht: Solange Ereignisse daran hängen, bleibt die Historie geschützt. Erst die Ereignisse löschen, dann den Bereich. Einzelne Aufgaben lassen sich dagegen jederzeit löschen — ihre Ereignisse bleiben stehen |
 | Sicherungen sind da, aber nicht im Backup | `SICHERUNGSPFAD` fehlt im Stack, Docker hat ein eigenes Volume angelegt. Mit `docker inspect` prüfen, siehe „Prüfen, was tatsächlich eingehängt ist" |
 | Fotos ohne Vorschau | HEIC oder PDF — Absicht. Bei iPhones liefert *Kamera → Formate → Maximale Kompatibilität* JPEG |
 | Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |

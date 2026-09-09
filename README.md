@@ -30,6 +30,7 @@ Gunicorn, Pillow)
 | Fotos und Anhänge | [2026-09-09](docs/superpowers/specs/2026-09-09-anhaenge-design.md) |
 | Dashboard-Horizont (30 Tage) | — |
 | Vorbelegung von „ausgeführt von" | — |
+| Aufgaben stilllegen und löschen | — |
 
 ## Entwicklung
 
@@ -107,7 +108,7 @@ wartung/mail.py              Mailversand in der Sprache des Empfängers
 **Oberfläche und Rahmen**
 
 ```
-wartung/views.py             Dashboard, Historie, Abhaken, Anhänge, Profil
+wartung/views.py             Dashboard, Historie, Abhaken, Anhänge, Aufgaben, Profil
 wartung/forms.py             Formulare
 wartung/urls.py              Routen
 wartung/admin.py             Pflegeoberfläche
@@ -166,3 +167,6 @@ docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
   das Objekt gibt.
 - **Was nur einmal wirken darf, hängt nie an einem GET.** Abhaken und Löschen
   verlangen ein POST — Mailprogramme und Virenscanner rufen Links vorab ab.
+- **Die Historie überlebt das Löschen.** Eine gelöschte Aufgabe nimmt ihre
+  Ereignisse nicht mit, und ein Bereich mit Ereignissen lässt sich gar nicht
+  erst löschen. Was geschehen ist, bleibt.
