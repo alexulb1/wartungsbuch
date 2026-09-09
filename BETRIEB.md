@@ -31,6 +31,12 @@ unter *Registries* einmalig ein GHCR-Zugangstoken hinterlegen.
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://wartung.example.org` |
 | `DJANGO_BASIS_URL` | `https://wartung.example.org` |
 | `ABBILD` | `ghcr.io/alexulb1/wartungsbuch:latest` |
+| `SICHERUNGSPFAD` | `/volume1/docker/wartungsbuch/sicherungen` |
+| `MEDIENPFAD` | `/volume1/docker/wartungsbuch/medien` |
+
+Die beiden Pfade sind technisch nicht erzwungen — ohne sie legt Docker eigene
+Volumes an, und deine NAS-Sicherung findet weder Sicherungen noch Anhänge.
+Deshalb stehen sie hier bei den Pflichtangaben.
 
 Der Stack startet drei Container:
 
@@ -99,6 +105,70 @@ Zurückspielen in eine leere Datenbank:
 sudo docker exec -i wartungsbuch-anwendung-1 \
   python manage.py loaddata /sicherungen/wartungsbuch-2027-01-15.json
 ```
+
+## Personen und Berechtigungen
+
+Wer angelegt ist, sieht zunächst **nichts**. Sichtbar wird ein Objekt erst,
+wenn die Person ihm zugewiesen ist — mit Ausnahme von Konten mit
+Verwaltungsberechtigung, die ohnehin alles sehen.
+
+**Konto anlegen:**
+
+```bash
+sudo docker exec wartungsbuch-anwendung-1 python manage.py benutzer_anlegen partner@example.org --name "Name"
+```
+
+Ohne `--verwaltung` bekommt das Konto keinen Zugang zum Django-Admin. Das ist
+für Mitbetreuende die richtige Wahl.
+
+**Objekt zuweisen** — im Admin auf zwei Wegen, dieselbe Zuordnung:
+
+| Weg | Wo |
+|---|---|
+| Vom Objekt aus | *Objekte → Objekt öffnen → Betreut von* |
+| Von der Person aus | *Benutzer → Konto öffnen → zugewiesene Objekte* |
+
+Die Benutzerübersicht zeigt in der Spalte *Objekte*, wie viele jemand sieht;
+bei Verwaltungskonten steht dort „alle".
+
+**Eine Zuweisung gibt volle Rechte an diesem Objekt** — sehen und eintragen.
+Das Objekt ist der Zaun, nicht die Tätigkeit.
+
+**Ein Entzug wirkt sofort**, auch für Abhak-Links, die schon in einem Postfach
+liegen. Bereits eingetragene Ereignisse bleiben bestehen, samt Namen: Die
+Historie ist die Wahrheit und wird nicht rückwirkend umgeschrieben.
+
+## Anhänge
+
+Fotos, Belege und Bauteil-Unterlagen liegen als gewöhnliche Dateien unter
+`MEDIENPFAD`, nicht in der Datenbank.
+
+**Einmalig einzurichten**, vor dem ersten Hochladen:
+
+```bash
+sudo mkdir -p /volume1/docker/wartungsbuch/medien && sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien
+```
+
+Der Container läuft als unprivilegierter Benutzer `10001`; gehört ihm der
+Ordner nicht, scheitert jedes Hochladen mit „Permission denied".
+
+Dann `MEDIENPFAD=/volume1/docker/wartungsbuch/medien` im Stack setzen und den
+Ordner in Hyper Backup aufnehmen.
+
+**Was dort liegt**, ist ohne diese Anwendung lesbar — das war der Zweck:
+
+```
+medien/haupthaus/2026-03-12_Luftfilter-wechseln_a3f9c1.jpg
+       haupthaus/vorschau/a3f9c1.jpg
+       haupthaus/2026-09-09_Bedienungsanleitung-Vaillant_c2cc80.pdf
+       geloescht/…
+```
+
+Gelöschte Anhänge liegen 30 Tage in `geloescht/` und sind bis dahin
+zurückholbar; danach räumt der Planer sie ab.
+
+Erlaubt sind Bilder und PDF bis 25 MB. HEIC von iPhones wird angenommen, bekommt
+aber keine Vorschau — *Kamera → Formate → Maximale Kompatibilität* liefert JPEG.
 
 ## Laufender Betrieb
 

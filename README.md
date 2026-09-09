@@ -6,15 +6,30 @@ gilt die Spezifikation, nicht der Code.
 
 ## Stand
 
-**Fertig.** Alle fünf Schritte abgeschlossen. Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md).
+**Im Betrieb.** Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md). Was man
+eintragen kann: [BEISPIELE.md](BEISPIELE.md).
 
-| Schritt | Inhalt | Stand |
-|--------:|--------|-------|
-| 1 | Gerüst, Datenmodell, Admin, Katalog | fertig |
-| 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) | fertig |
-| 3 | Oberfläche und Mehrsprachigkeit | fertig |
-| 4 | Wochenmail, Token, ICS, CSV-Export | fertig |
-| 5 | Container, Portainer-Stack, Inbetriebnahme | fertig |
+261 Tests · 8 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
+Gunicorn, Pillow)
+
+**Version 1** — in fünf Schritten gebaut:
+
+| | Inhalt |
+|--:|--------|
+| 1 | Gerüst, Datenmodell, Admin, Vorlagenkatalog |
+| 2 | Fälligkeitsberechnung (beide Intervallmodi, Ruhezeit) |
+| 3 | Oberfläche und Mehrsprachigkeit (de/en/sv) |
+| 4 | Wochenmail, Zugangsmarken, ICS-Feed, CSV-Ausgabe |
+| 5 | Container, Portainer-Stack, Inbetriebnahme |
+
+**Danach ergänzt**, jeweils mit Entwurf und Plan unter `docs/superpowers/`:
+
+| Ergänzung | Entwurf |
+|-----------|---------|
+| Objektbezogene Berechtigungen | [2026-09-05](docs/superpowers/specs/2026-09-05-objektberechtigungen-design.md) |
+| Fotos und Anhänge | [2026-09-09](docs/superpowers/specs/2026-09-09-anhaenge-design.md) |
+| Dashboard-Horizont (30 Tage) | — |
+| Vorbelegung von „ausgeführt von" | — |
 
 ## Entwicklung
 
@@ -62,31 +77,54 @@ eigentlichen Anmeldung vorbei.
 
 ## Aufbau
 
+**Datenmodell**
+
 ```
 wartung/models/basis.py      Sprachen, Intervalleinheiten, Übersetzungs-Mixin
-wartung/models/benutzer.py   Konten (ohne Passwort, Magic Link)
+wartung/models/benutzer.py   Konten (ohne Passwort) und Objektzuweisung
 wartung/models/katalog.py    Objekttypen, Bereichstypen, Tätigkeiten (dreisprachig)
 wartung/models/bestand.py    Objekt → Bereich → Aufgabe
 wartung/models/ereignis.py   Ereignis — die einzige Wahrheit
-wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
-wartung/faelligkeit.py       Fälligkeitsberechnung — der Kern
-wartung/views.py             Dashboard, Historie, Abhaken, Vorlagen, Profil
-wartung/forms.py             Formulare
-wartung/sicherheit.py        Content-Security-Policy
-wartung/models/zugang.py     Zugangsmarken — Magic Link und Ein-Klick-Abhaken
-wartung/mail.py              Mailversand in der Sprache des Empfängers
-wartung/kalender.py          ICS-Feed
-wartung/versandplan.py       Wann die Wochenmail rausgeht
-wartung/sichtbarkeit.py      Wer sieht welche Objekte
 wartung/models/anhang.py     Anhänge — Ablagepfad und Papierkorb
+wartung/models/zugang.py     Zugangsmarken — Magic Link und Ein-Klick-Abhaken
+wartung/models/versand.py    Protokoll der verschickten Wochenmails
+wartung/katalogdaten.py      Inhalt des Vorlagenkatalogs
+```
+
+**Fachlogik**
+
+```
+wartung/faelligkeit.py       Fälligkeitsberechnung — der Kern
+wartung/sichtbarkeit.py      Wer sieht welche Objekte
+wartung/versandplan.py       Wann die Wochenmail rausgeht
 wartung/dateipruefung.py     Größe und Typ hochgeladener Dateien
 wartung/vorschau.py          Vorschaubilder
 wartung/anhaenge.py          Hochgeladene Dateien ablegen
+wartung/kalender.py          ICS-Feed
+wartung/mail.py              Mailversand in der Sprache des Empfängers
+```
+
+**Oberfläche und Rahmen**
+
+```
+wartung/views.py             Dashboard, Historie, Abhaken, Anhänge, Profil
+wartung/forms.py             Formulare
+wartung/urls.py              Routen
+wartung/admin.py             Pflegeoberfläche
+wartung/middleware.py        Sprache aus dem Benutzerprofil
+wartung/sicherheit.py        Content-Security-Policy
+wartung/templates/wartung/   Vorlagen der Oberfläche
+locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
+```
+
+**Betrieb**
+
+```
+wartung/management/commands/ Zeitplaner, Wochenmail, Sicherung, Aufräumen
 Dockerfile                   Abbild für den Betrieb
 docker-compose.yml           Stack für Portainer
 .github/workflows/           Tests und Abbildbau bei jedem Push
-wartung/templates/wartung/   Vorlagen der Oberfläche
-locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
+docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
 ```
 
 ## Grundsätze
@@ -119,3 +157,7 @@ locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
   jede Berechnung prüfbar und erlaubt Vorschauen auf andere Termine.
 - **Der Kalendermodus zählt in Jahren.** Ein Monatsintervall und ein fester
   Monat widersprechen einander; die Datenbank weist die Kombination zurück.
+- **Fremdes ergibt 404, nie 403.** Eine Berechtigungsmeldung bestätigt, dass es
+  das Objekt gibt.
+- **Was nur einmal wirken darf, hängt nie an einem GET.** Abhaken und Löschen
+  verlangen ein POST — Mailprogramme und Virenscanner rufen Links vorab ab.

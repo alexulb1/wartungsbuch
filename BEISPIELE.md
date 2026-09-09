@@ -12,7 +12,9 @@ was du daran gemacht hast.
 Sommerhaus Åhus          ← Objekt      (Typ: Sommerhaus, ruht November–März)
  └─ Fassade Nord         ← Bereich     (Typ: Fassade, Bezeichnung: Nord)
      ├─ Streichen        ← Aufgabe     (alle 10 Jahre, im Mai)
-     └─ 20.06.2019       ← Ereignis    („RAL 7016, 12 l, Fa. Berg, 2.400 €")
+     ├─ 20.06.2019       ← Ereignis    („RAL 7016, 12 l, Fa. Berg, 2.400 €")
+     │    └─ Foto             ← Anhang am Ereignis
+     └─ Farbmuster.pdf   ← Anhang am Bereich (gehört zum Bauteil)
 ```
 
 Die **Aufgabe** ist die Regel („alle 10 Jahre"), das **Ereignis** die Tatsache
@@ -135,6 +137,63 @@ nie als fällig auf, stehen aber für immer in der Historie:
 - „Neue Haustür, Schließzylinder 40/45" · 2022
 - „Küche: Spülmaschine ersetzt, Bosch SMV4H" · 2025 · 780 €
 
+## Fotos und Unterlagen anhängen
+
+Es gibt zwei Sorten, und sie hängen an verschiedenen Stellen.
+
+**Am Ereignis** — was du bei *diesem* Vorgang festhalten willst:
+
+- Das Typenschild der Wärmepumpe, bevor du den Filter einsetzt
+- Die schadhafte Stelle vor der Reparatur und danach
+- Die Rechnung des Handwerkers
+- Der Farbeimer mit dem Etikett — oft aussagekräftiger als jede Notiz
+
+Anhängen kannst du direkt beim Abhaken: Auf dem Formular, auf dem du Datum und
+Kosten einträgst, ist ein Feld für Dateien. Mehrere auf einmal gehen auch.
+
+**Am Bereich** — was zum Bauteil gehört und nicht zu einem einzelnen Vorgang:
+
+- Bedienungsanleitung der Wärmepumpe
+- Datenblatt des Klimageräts
+- Wartungsvertrag, Garantieschein
+- Der Grundriss des Bades
+
+Diese stehen auf der Bereichsseite unter **Unterlagen**. Der Unterschied ist
+nicht formal: Eine Bedienungsanleitung ist zu keinem Zeitpunkt „passiert" — sie
+hat kein Datum und keinen Vorgang. Sie an ein erfundenes Ereignis zu hängen
+wäre eine Lüge in der Historie.
+
+### Was gut zu wissen ist
+
+| | |
+|---|---|
+| **Erlaubt** | Bilder und PDF, bis 25 MB je Datei |
+| **Das Original bleibt** | unverändert erhalten; die Vorschau ist nur die Anzeige |
+| **Gelöschtes** | ist 30 Tage lang zurückholbar |
+| **iPhone-Fotos im HEIC-Format** | werden angenommen, bekommen aber keine Vorschau. *Kamera → Formate → Maximale Kompatibilität* liefert JPEG |
+
+**Beschriftung nicht vergessen.** Sie landet im Dateinamen auf der Festplatte:
+Aus „Bedienungsanleitung Vaillant" wird
+`2026-09-09_bedienungsanleitung-vaillant_c2cc80.pdf`. Ohne Beschriftung heißt
+die Datei nur nach dem Bereich — im Ordner findest du sie dann schlechter
+wieder, und der Ordner ist genau der Ort, an dem du in zehn Jahren suchst.
+
+## Wer sieht was
+
+Solange du allein damit arbeitest, kannst du diesen Abschnitt überspringen.
+
+Sobald jemand dazukommt, gilt: **Wer angelegt ist, sieht zunächst nichts.**
+Sichtbar wird ein Objekt erst, wenn du die Person ihm zuweist — in der
+Verwaltung unter *Objekte → Betreut von*.
+
+Eine Zuweisung gibt volle Rechte an diesem Objekt: sehen **und** eintragen. Das
+Objekt ist der Zaun, nicht die Tätigkeit. Wer dem Sommerhaus zugewiesen ist,
+sieht dessen Historie und kann dort abhaken — vom Haupthaus sieht er nichts,
+nicht einmal, dass es existiert.
+
+Auch die Wochenmail folgt dem: Jeder bekommt nur seine Objekte, und wer nichts
+zugewiesen hat, bekommt gar keine.
+
 ## Was in die Notiz gehört
 
 Das ist die Stelle, die sich in zehn Jahren auszahlt. Nicht *dass* etwas
@@ -150,7 +209,12 @@ gemacht wurde, sondern **womit**:
 
 Dazu die Felder **Kosten** und **ausgeführt von** — die Firma, weil du beim
 nächsten Mal wieder dort anrufst; die Kosten, weil sich damit nach ein paar
-Jahren beantworten lässt, was ein Objekt eigentlich verschlingt.
+Jahren beantworten lässt, was ein Objekt eigentlich verschlingt. Dein eigener
+Name steht dort schon vorbelegt; machst du es selbst, musst du nichts tippen.
+
+**Und wo ein Foto die Notiz ersetzt, mach das Foto.** Ein Bild des Farbeimers
+mit Etikett ist vollständiger als jede abgetippte Produktbezeichnung — und
+schneller.
 
 ## Altbestand nachtragen
 
@@ -170,7 +234,10 @@ dagegen nicht.
 3. Je Bereich den Katalog durchgehen und ankreuzen, was zutrifft.
 4. Für jede Aufgabe **das letzte bekannte Datum** nachtragen. Ohne das steht
    alles auf „noch nie erledigt", und die erste Wochenmail wird eine Wand.
-5. Danach: was dir übers Jahr einfällt, ergänzen.
+5. Bedienungsanleitungen als **Unterlagen** an die Bereiche hängen — das ist
+   eine Stunde Arbeit und erspart dir künftig jede Suche im Ordner.
+6. Danach: was dir übers Jahr einfällt, ergänzen. Und beim nächsten Mal am
+   Gerät: fotografieren, solange du davorstehst.
 
 Der vierte Punkt ist der wichtigste. Eine App, die dir sagt, dass alles
 überfällig ist, sagt dir nichts.

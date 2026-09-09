@@ -92,14 +92,12 @@ Pro Aufgabe umschaltbar:
 Begründung des Ruhezeit-Mechanismus: Eine Erinnerung, auf die man nicht handeln
 kann, entwertet alle anderen mit.
 
-## 7. Funktionsumfang Version 1
+## 7. Funktionsumfang
+
+### Version 1
 
 - Objekte, Bereiche, Aufgaben und Ereignisse anlegen und pflegen
 - Dashboard: was ist fällig, was ist überfällig
-- Zuweisung von Personen zu Objekten in der Verwaltung
-- **Anhänge**: Fotos und Belege am Ereignis, Unterlagen am Bereich. Das Original
-  bleibt unverändert, dazu ein Vorschaubild. Bis 25 MB, Bilder und PDF.
-  Gelöschtes bleibt 30 Tage zurückholbar
 - Historie je Bereich („wann wurde die Nordseite zuletzt gestrichen")
 - **Dreisprachiger Vorlagenkatalog**: Bereichstyp wählen (Wärmepumpe,
   Klimagerät, Fassade …) → typische Tätigkeiten mit üblichen Intervallen zur
@@ -108,6 +106,25 @@ kann, entwertet alle anderen mit.
 - Wochenmail und Abhak-Seite
 - **ICS-Kalender-Feed** zum Abonnieren
 - **CSV-Export** aller Ereignisse
+
+### Danach ergänzt
+
+Version 1 lief, bevor diese Punkte entstanden. Jeder hat einen eigenen Entwurf
+unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
+
+- **Objektbezogene Berechtigungen**: Personen werden Objekten zugewiesen und
+  sehen nur diese. Ohne Zuweisung ist nichts sichtbar; Verwaltungsberechtigte
+  sehen alles. Ändert die ursprüngliche Festlegung „alle sehen alles" aus
+  Abschnitt 2
+- **Anhänge**: Fotos und Belege am Ereignis, Unterlagen am Bereich. Das Original
+  bleibt unverändert, dazu ein Vorschaubild. Bis 25 MB, Bilder und PDF.
+  Gelöschtes bleibt 30 Tage zurückholbar
+- **Dashboard-Horizont**: Standardmäßig 30 Tage, über
+  `DASHBOARD_HORIZONT_TAGE` änderbar. Überfälliges bleibt unabhängig davon
+  sichtbar, Späteres ist über „Alles anzeigen" erreichbar. Eine Aufgabe, die
+  2031 fällig wird, gehört nicht unter „Was ansteht"
+- **„Ausgeführt von" ist vorbelegt** mit dem Namen dessen, der abhakt —
+  überschreibbar, wenn eine Firma gearbeitet hat
 
 ### Bewusst nicht in Version 1
 
