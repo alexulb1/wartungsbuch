@@ -26,6 +26,7 @@ from .kalender import feed
 from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm
 from .mail import adresse, senden
 from .models import Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
+from .anhaenge import anhaenge_speichern
 from .sichtbarkeit import aufgabe_oder_404, bereich_oder_404, sichtbare_objekte
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
 
@@ -124,9 +125,12 @@ def erledigen(request, pk):
         # Aufgabe und Urheber gehoeren an das Ereignis, bevor validiert wird:
         # Bereich und Taetigkeit leiten sich daraus ab (SPEC 4).
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=request.user)
-        formular = ErledigenForm(request.POST, instance=entwurf)
+        formular = ErledigenForm(request.POST, request.FILES, instance=entwurf)
         if formular.is_valid():
-            formular.save()
+            ereignis = formular.save()
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"], aufgabe.bereich, request.user, ereignis
+            )
             return redirect("wartung:bereich", pk=aufgabe.bereich_id)
     else:
         formular = ErledigenForm(initial=vorbelegung(request.user, heute))
@@ -170,9 +174,12 @@ def ereignis_neu(request, pk):
 
     if request.method == "POST":
         entwurf = Ereignis(bereich=bereich, erfasst_von=request.user)
-        formular = EreignisForm(request.POST, instance=entwurf, bereich=bereich)
+        formular = EreignisForm(request.POST, request.FILES, instance=entwurf, bereich=bereich)
         if formular.is_valid():
-            formular.save()
+            ereignis = formular.save()
+            anhaenge_speichern(
+                formular.cleaned_data["anhaenge"], bereich, request.user, ereignis
+            )
             return redirect("wartung:bereich", pk=bereich.pk)
     else:
         formular = EreignisForm(initial=vorbelegung(request.user, heute), bereich=bereich)
@@ -274,7 +281,7 @@ def erledigt_mit_marke(request, marke):
             raise Http404
         aufgabe = eingeloest.aufgabe
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=eingeloest.benutzer)
-        formular = ErledigenForm(request.POST, instance=entwurf)
+        formular = ErledigenForm(request.POST, instance=entwurf, mit_anhaengen=False)
         if formular.is_valid():
             ereignis = formular.save()
             with translation.override(eingeloest.benutzer.sprache):
@@ -299,7 +306,8 @@ def erledigt_mit_marke(request, marke):
         {
             "aufgabe": geprueft.aufgabe,
             "formular": ErledigenForm(
-                initial=vorbelegung(geprueft.benutzer, timezone.localdate())
+                initial=vorbelegung(geprueft.benutzer, timezone.localdate()),
+                mit_anhaengen=False,
             ),
             "marke": marke,
         },

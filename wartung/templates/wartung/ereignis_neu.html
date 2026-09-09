@@ -5,7 +5,7 @@
 <h1>{% translate "Einmaligen Vorgang eintragen" %}</h1>
 <p class="pfad">{{ bereich }} – {{ bereich.objekt.name }}</p>
 
-<form method="post" class="formular">
+<form method="post" class="formular" enctype="multipart/form-data">
   {% csrf_token %}
   {{ formular.as_p }}
   <button type="submit" class="knopf">{% translate "Eintragen" %}</button>
