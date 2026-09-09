@@ -251,7 +251,8 @@ durch"): Er muss es nicht mehr.
 | `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
 | Alte Fassung läuft nach dem Update weiter | „Re-pull image and redeploy" war nicht angekreuzt. Mit `showmigrations` prüfen, welche Fassung läuft |
-| Hochladen scheitert mit „Permission denied" | Der Medienordner gehört nicht dem Container-Benutzer: `sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien` |
+| Hochladen endet mit Server Error 500, im Protokoll `PermissionError` | Der Medienordner gehört nicht dem Container-Benutzer: `sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien`. Beim Start meldet sich das seit Neuestem auch von selbst als `wartung.W001` |
+| `wartung.W001` im Startprotokoll | Dasselbe — der Medienordner ist nicht beschreibbar. Die Anwendung läuft trotzdem, nur Anhänge gehen nicht |
 | Fotos ohne Vorschau | HEIC oder PDF — Absicht. Bei iPhones liefert *Kamera → Formate → Maximale Kompatibilität* JPEG |
 | Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |
 | SMTP prüfen, unabhängig von Konten | `docker exec wartungsbuch-anwendung-1 python manage.py sendtestemail deine@adresse.de` |

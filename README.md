@@ -113,6 +113,7 @@ wartung/urls.py              Routen
 wartung/admin.py             Pflegeoberfläche
 wartung/middleware.py        Sprache aus dem Benutzerprofil
 wartung/sicherheit.py        Content-Security-Policy
+wartung/checks.py            Startprüfungen (Medienordner beschreibbar?)
 wartung/templates/wartung/   Vorlagen der Oberfläche
 locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 ```
@@ -157,6 +158,10 @@ docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
   jede Berechnung prüfbar und erlaubt Vorschauen auf andere Termine.
 - **Der Kalendermodus zählt in Jahren.** Ein Monatsintervall und ein fester
   Monat widersprechen einander; die Datenbank weist die Kombination zurück.
+- **Falsche Einrichtung meldet sich beim Start.** Ein fehlender
+  `DJANGO_SECRET_KEY` verhindert den Start, ein nicht beschreibbarer
+  Medienordner erzeugt eine Warnung — nicht erst beim ersten Foto ein 500er,
+  aus dem niemand die Ursache erraten kann.
 - **Fremdes ergibt 404, nie 403.** Eine Berechtigungsmeldung bestätigt, dass es
   das Objekt gibt.
 - **Was nur einmal wirken darf, hängt nie an einem GET.** Abhaken und Löschen

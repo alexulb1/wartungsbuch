@@ -148,3 +148,59 @@ class KalendermaskierungTest(SimpleTestCase):
 
         self.assertEqual(_maskieren("a,b"), "a\\,b")
         self.assertEqual(_maskieren("a\\b"), "a\\\\b")
+
+
+class MedienordnerPruefungTest(SimpleTestCase):
+    """Ein nicht beschreibbarer Medienordner soll sich beim Start melden.
+
+    Sonst merkt man es erst beim ersten Foto, und zwar als Server Error 500 --
+    eine Antwort, aus der niemand die Ursache erraten kann.
+    """
+
+    def pruefen(self, ordner):
+        from wartung.checks import medienordner_beschreibbar
+
+        with self.settings(MEDIA_ROOT=str(ordner)):
+            return medienordner_beschreibbar(None)
+
+    def test_beschreibbarer_ordner_ist_still(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as ordner:
+            self.assertEqual(self.pruefen(ordner), [])
+
+    def test_nicht_beschreibbarer_ordner_wird_gemeldet(self):
+        import os
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as eltern:
+            ordner = os.path.join(eltern, "gesperrt")
+            os.mkdir(ordner, 0o500)
+            try:
+                meldungen = self.pruefen(ordner)
+            finally:
+                os.chmod(ordner, 0o700)
+        self.assertEqual(len(meldungen), 1)
+        self.assertIn("chown", meldungen[0].hint)
+
+    def test_die_meldung_nennt_den_pfad(self):
+        import os
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as eltern:
+            ordner = os.path.join(eltern, "gesperrt")
+            os.mkdir(ordner, 0o500)
+            try:
+                meldungen = self.pruefen(ordner)
+            finally:
+                os.chmod(ordner, 0o700)
+        self.assertIn("gesperrt", meldungen[0].msg)
+
+    def test_fehlender_ordner_wird_angelegt(self):
+        import os
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as eltern:
+            ordner = os.path.join(eltern, "gibtsnochnicht")
+            self.assertEqual(self.pruefen(ordner), [])
+            self.assertTrue(os.path.isdir(ordner))
