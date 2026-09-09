@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from .models import (
+    Anhang,
     Aufgabe,
     Benutzer,
     Bereich,
@@ -193,3 +194,12 @@ class ZugangsmarkeAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+
+
+@admin.register(Anhang)
+class AnhangAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "bereich", "ereignis", "groesse", "hochgeladen_am"]
+    list_filter = ["bereich__objekt", "inhaltstyp"]
+    search_fields = ["dateiname", "beschriftung"]
+    autocomplete_fields = ["bereich", "ereignis"]
+    readonly_fields = ["kennung", "dateiname", "inhaltstyp", "groesse", "hochgeladen_am"]

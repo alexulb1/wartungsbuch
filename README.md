@@ -53,6 +53,7 @@ eigentlichen Anmeldung vorbei.
 | `manage.py wochenmail` | Sammelmail verschicken (wöchentlich einplanen) |
 | `manage.py wochenmail --probe --stichtag 2027-01-15` | Vorschau, ohne zu verschicken |
 | `manage.py marken_aufraeumen` | Verbrauchte Zugangsmarken löschen (wöchentlich) |
+| `manage.py anhaenge_aufraeumen` | Papierkorb der Anhänge leeren (der Planer tut es stündlich) |
 | `manage.py planer` | Zeitplaner für den Dauerbetrieb (stündlich) |
 | `manage.py sicherung --taeglich` | JSON-Sicherung schreiben |
 | `manage.py test wartung` | Testlauf |
@@ -77,6 +78,10 @@ wartung/mail.py              Mailversand in der Sprache des Empfängers
 wartung/kalender.py          ICS-Feed
 wartung/versandplan.py       Wann die Wochenmail rausgeht
 wartung/sichtbarkeit.py      Wer sieht welche Objekte
+wartung/models/anhang.py     Anhänge — Ablagepfad und Papierkorb
+wartung/dateipruefung.py     Größe und Typ hochgeladener Dateien
+wartung/vorschau.py          Vorschaubilder
+wartung/anhaenge.py          Hochgeladene Dateien ablegen
 Dockerfile                   Abbild für den Betrieb
 docker-compose.yml           Stack für Portainer
 .github/workflows/           Tests und Abbildbau bei jedem Push
@@ -104,6 +109,9 @@ locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 - **Was ausgeblendet wird, bleibt sichtbar ausgeblendet.** Das Dashboard zeigt
   30 Tage, nennt aber die Zahl der späteren Aufgaben — sonst fragt man sich,
   ob man sie je angelegt hat.
+- **Anhänge liegen als Dateien, nicht in der Datenbank.** Ein Ordner mit
+  `2026-03-12_Luftfilter-wechseln.jpg` ist 2036 ohne Software verständlich.
+  Der Preis: Die Sicherung besteht aus zwei Teilen.
 - **Der Zeitplaner klopft nur an, er entscheidet nicht.** Die Befehle sind
   idempotent und holen einen ausgefallenen Termin nach. Ein Neustart zur
   falschen Minute kostet deshalb keine Wochenmail.

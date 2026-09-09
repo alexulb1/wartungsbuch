@@ -79,6 +79,16 @@ auf einen echten Pfad setzen, etwa
 `/volume1/docker/wartungsbuch/sicherungen`, und diesen Ordner in Hyper Backup
 aufnehmen.
 
+**Die Sicherung besteht aus zwei Teilen.** Der JSON-Abzug enthält die Daten
+samt Verweisen auf die Anhänge, der Medienordner unter `MEDIENPFAD` die Dateien
+selbst. Beide gehören ins Backup — fehlt einer, führen die Verweise nach der
+Wiederherstellung ins Leere. Beim Wiederherstellen zuerst den Medienordner
+zurückkopieren, dann `loaddata`.
+
+Der Sicherungsbefehl nennt bei jedem Lauf, wie viele Anhänge es gibt. Weicht
+diese Zahl von der Zahl der Dateien im Medienordner ab, ist etwas
+auseinandergelaufen.
+
 JSON statt `pg_dump` ist Absicht: Der Bestand ist klein, und eine JSON-Datei
 lässt sich auch dann noch lesen, wenn es diese Anwendung oder diese
 Postgres-Fassung nicht mehr gibt.
@@ -171,6 +181,8 @@ durch"): Er muss es nicht mehr.
 | `Port could not be cast to integer` | Veralteter Stack, der noch `DATABASE_URL` zusammenbaut. Stack neu aus dem Repository laden — die Zugangsdaten gehen jetzt als Einzelwerte raus |
 | Keine Wochenmail | `docker logs wartungsbuch-planer-1`; mit `--probe` prüfen, ob überhaupt etwas ansteht |
 | Alte Fassung läuft nach dem Update weiter | „Re-pull image and redeploy" war nicht angekreuzt. Mit `showmigrations` prüfen, welche Fassung läuft |
+| Hochladen scheitert mit „Permission denied" | Der Medienordner gehört nicht dem Container-Benutzer: `sudo chown -R 10001:10001 /volume1/docker/wartungsbuch/medien` |
+| Fotos ohne Vorschau | HEIC oder PDF — Absicht. Bei iPhones liefert *Kamera → Formate → Maximale Kompatibilität* JPEG |
 | Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |
 | SMTP prüfen, unabhängig von Konten | `docker exec wartungsbuch-anwendung-1 python manage.py sendtestemail deine@adresse.de` |
 | Oberfläche ohne Gestaltung | `collectstatic` lief beim Bau nicht — Abbild neu bauen |

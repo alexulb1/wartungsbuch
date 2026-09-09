@@ -27,8 +27,8 @@ RUN DJANGO_DEBUG=1 python manage.py compilemessages --ignore .venv \
 
 # Unprivilegiert laufen (SPEC 8).
 RUN useradd --system --create-home --uid 10001 wartung \
- && mkdir -p /sicherungen \
- && chown -R wartung:wartung /app /sicherungen
+ && mkdir -p /sicherungen /medien \
+ && chown -R wartung:wartung /app /sicherungen /medien
 USER wartung
 
 EXPOSE 8000
