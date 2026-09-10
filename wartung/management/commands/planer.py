@@ -39,6 +39,7 @@ class Command(BaseCommand):
             ("Wochenmail", lambda: self.wochenmail(optionen)),
             ("Marken aufräumen", self.marken_aufraeumen),
             ("Anhänge aufräumen", self.anhaenge_aufraeumen),
+            ("Sitzungen aufräumen", self.sitzungen_aufraeumen),
             ("Sicherung", self.sicherung),
         ]:
             try:
@@ -56,6 +57,11 @@ class Command(BaseCommand):
 
     def anhaenge_aufraeumen(self):
         call_command("anhaenge_aufraeumen", stdout=self.stdout)
+
+    def sitzungen_aufraeumen(self):
+        # Django legt Sitzungen in der Datenbank ab und räumt nicht von selbst
+        # auf -- ohne diesen Schritt wächst die Tabelle für immer.
+        call_command("clearsessions", stdout=self.stdout)
 
     def sicherung(self):
         call_command("sicherung", taeglich=True, stdout=self.stdout)

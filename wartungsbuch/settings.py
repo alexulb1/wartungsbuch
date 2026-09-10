@@ -226,6 +226,21 @@ DASHBOARD_HORIZONT_TAGE = int(umgebung("DASHBOARD_HORIZONT_TAGE", "30"))
 SICHERUNGS_VERZEICHNIS = umgebung("DJANGO_SICHERUNGEN", str(BASE_DIR / "sicherungen"))
 
 # --- Sicherheit (SPEC 8) -------------------------------------------------
+def sitzungsdauer(werte: dict) -> int:
+    """Wie lange eine Sitzung ohne Benutzung gilt, in Sekunden.
+
+    Djangos Vorgabe sind zwei Wochen ab Anmeldung -- zu lang für ein Konto,
+    das auf einem Handy offen bleibt. Zusammen mit
+    SESSION_SAVE_EVERY_REQUEST wird daraus ein gleitendes Fenster: Jede
+    Anfrage stellt die Uhr zurück.
+    """
+    return int(werte.get("SITZUNGSDAUER_STUNDEN") or 48) * 3600
+
+
+SESSION_COOKIE_AGE = sitzungsdauer(os.environ)
+#: Ohne das wäre es kein Ablauf bei Untätigkeit, sondern ein starrer Ablauf ab
+#: Anmeldung: Django schreibt die Sitzung sonst nur, wenn sie sich ändert.
+SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"

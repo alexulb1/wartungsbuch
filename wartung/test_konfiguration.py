@@ -259,3 +259,67 @@ class MedienordnerPruefungTest(SimpleTestCase):
             ordner = os.path.join(eltern, "gibtsnochnicht")
             self.assertEqual(self.pruefen(ordner), [])
             self.assertTrue(os.path.isdir(ordner))
+
+
+class StackReichtVariablenDurchTest(SimpleTestCase):
+    """Jede Umgebungsvariable, die settings.py liest, muss der Stack auch
+    durchreichen.
+
+    Anlass: DASHBOARD_HORIZONT_TAGE stand in .env.beispiel und in der
+    Betriebsanleitung, tauchte aber nicht im environment-Block auf. Die
+    Anleitung versprach damit eine Einstellmöglichkeit, die es nicht gab —
+    lautlos, denn ohne Wert greift einfach die Vorgabe.
+    """
+
+    #: DATABASE_URL wird bewusst nicht durchgereicht: Der Stack setzt die
+    #: Einzelwerte, damit Sonderzeichen im Passwort nichts zerreißen.
+    ABSICHTLICH_NICHT = {"DATABASE_URL"}
+
+    def test_alle_gelesenen_variablen_stehen_im_stack(self):
+        import re
+        from pathlib import Path
+
+        from django.conf import settings as einstellungen
+
+        wurzel = Path(einstellungen.BASE_DIR)
+        quelle = (wurzel / "wartungsbuch" / "settings.py").read_text()
+        stack = (wurzel / "docker-compose.yml").read_text()
+
+        gelesen = set()
+        for muster in (r'umgebung\("([A-Z_]+)"', r'schalter\("([A-Z_]+)"',
+                       r'liste\("([A-Z_]+)"', r'werte\.get\("([A-Z_]+)"\)'):
+            gelesen |= set(re.findall(muster, quelle))
+
+        durchgereicht = set(re.findall(r"^      ([A-Z_]+):", stack, re.M))
+        fehlend = sorted(gelesen - durchgereicht - self.ABSICHTLICH_NICHT)
+
+        self.assertEqual(
+            fehlend,
+            [],
+            "Diese Variablen liest die Anwendung, der Stack reicht sie aber "
+            "nicht durch — sie wären im Betrieb wirkungslos: " + ", ".join(fehlend),
+        )
+
+    def test_die_vorlage_nennt_nur_wirksame_variablen(self):
+        """Was in .env.beispiel steht, soll auch ankommen."""
+        import re
+        from pathlib import Path
+
+        from django.conf import settings as einstellungen
+
+        wurzel = Path(einstellungen.BASE_DIR)
+        stack = (wurzel / "docker-compose.yml").read_text()
+        vorlage = (wurzel / ".env.beispiel").read_text()
+
+        genannt = {
+            zeile.split("=")[0].strip()
+            for zeile in vorlage.splitlines()
+            if "=" in zeile and not zeile.strip().startswith("#")
+        }
+        # Der Stack nutzt manche Werte selbst (Pfade, Abbild, Port), ohne sie
+        # an die Anwendung weiterzugeben -- die zählen auch.
+        bekannt = set(re.findall(r"\$\{([A-Z_]+)", stack)) | set(
+            re.findall(r"^      ([A-Z_]+):", stack, re.M)
+        )
+        fehlend = sorted(genannt - bekannt)
+        self.assertEqual(fehlend, [], "In .env.beispiel, aber im Stack unbenutzt: " + ", ".join(fehlend))

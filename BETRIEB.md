@@ -249,6 +249,19 @@ sudo docker exec wartungsbuch-anwendung-1 python manage.py wochenmail --probe
 curl -s http://localhost:8071/gesund
 ```
 
+### Wie lange eine Anmeldung hält
+
+Standardmäßig 48 Stunden **ohne Benutzung**. Jede aufgerufene Seite stellt die
+Uhr zurück; wer länger nichts tut, bekommt beim nächsten Aufruf die
+Anmeldeseite. Über `SITZUNGSDAUER_STUNDEN` im Stack änderbar.
+
+Bei seltener Nutzung heißt das: Man meldet sich praktisch jedes Mal neu an. Das
+Abhaken aus der Wochenmail bleibt davon unberührt — der Link dort trägt seine
+eigene Marke und braucht keine Sitzung.
+
+Der Planer räumt abgelaufene Sitzungen aus der Datenbank; ohne das wüchse die
+Tabelle für immer.
+
 ### Wie weit das Dashboard vorausschaut
 
 Standardmäßig 30 Tage. Über `DASHBOARD_HORIZONT_TAGE` im Stack änderbar.
@@ -291,6 +304,7 @@ durch"): Er muss es nicht mehr.
 | Hochladen endet mit Server Error 500, im Protokoll `PermissionError` | Besitzer **und** Zugriffsmodus prüfen: `sudo docker exec wartungsbuch-anwendung-1 ls -ldn /medien`. Erwartet `drwxr-x--- … 10001 999` |
 | `wartung.W001` / `wartung.W002` im Startprotokoll | Anhänge- bzw. Sicherungsordner nicht beschreibbar. Die Meldung nennt den Zugriffsmodus; die Anwendung läuft trotzdem weiter |
 | Objekt oder Bereich lässt sich in der Verwaltung nicht löschen (`ProtectedError`) | Absicht: Solange Ereignisse daran hängen, bleibt die Historie geschützt. Erst die Ereignisse löschen, dann den Bereich. Einzelne Aufgaben lassen sich dagegen jederzeit löschen — ihre Ereignisse bleiben stehen |
+| Eine Variable im Stack zeigt keine Wirkung | Sie muss im `environment:`-Block der Dienste stehen, nicht nur in Portainer gesetzt sein. Ein Test wacht darüber, dass jede von der Anwendung gelesene Variable dort auftaucht |
 | Sicherungen sind da, aber nicht im Backup | `SICHERUNGSPFAD` fehlt im Stack, Docker hat ein eigenes Volume angelegt. Mit `docker inspect` prüfen, siehe „Prüfen, was tatsächlich eingehängt ist" |
 | Fotos ohne Vorschau | HEIC oder PDF — Absicht. Bei iPhones liefert *Kamera → Formate → Maximale Kompatibilität* JPEG |
 | Anmeldelink kommt nicht, kein Fehler im Protokoll | Dann wurde gar kein Versand versucht — es gibt kein Konto für diese Adresse. `benutzer_anlegen` |

@@ -32,6 +32,7 @@ Gunicorn, Pillow)
 | Vorbelegung von „ausgeführt von" | — |
 | Aufgaben stilllegen und löschen | — |
 | Einzelne Ereignisse löschen | — |
+| Sitzungsablauf bei Untätigkeit | — |
 
 ## Entwicklung
 
@@ -164,6 +165,11 @@ docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
   `DJANGO_SECRET_KEY` verhindert den Start, ein nicht beschreibbarer
   Medienordner erzeugt eine Warnung — nicht erst beim ersten Foto ein 500er,
   aus dem niemand die Ursache erraten kann.
+- **Sitzungen laufen bei Untätigkeit ab,** nicht starr ab Anmeldung. Jede
+  Seite stellt die Uhr zurück.
+- **Einstellbares ist auch wirklich einstellbar.** Ein Test prüft, dass jede
+  Umgebungsvariable, die die Anwendung liest, vom Stack durchgereicht wird —
+  sonst verspricht die Anleitung Schalter, die nichts tun.
 - **Fremdes ergibt 404, nie 403.** Eine Berechtigungsmeldung bestätigt, dass es
   das Objekt gibt.
 - **Was nur einmal wirken darf, hängt nie an einem GET.** Abhaken und Löschen
