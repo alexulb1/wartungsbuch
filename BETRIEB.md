@@ -279,6 +279,20 @@ sudo docker exec wartungsbuch-anwendung-1 python manage.py wochenmail
 
 Ohne `--geplant` verschickt der Befehl sofort und übergeht die Wochensperre.
 
+## Was der Planer tut
+
+Je Durchlauf fünf Schritte: **Wochenmail**, **Marken aufräumen**, **Anhänge
+aufräumen**, **Sitzungen aufräumen**, **Sicherung**. Jeder entscheidet selbst,
+ob er dran ist — die meisten Durchläufe tun nichts.
+
+Ein Fehler in einem Schritt beendet den Planer nicht; er wird protokolliert,
+und die übrigen laufen weiter. Über zehn Jahre geht irgendwann etwas schief,
+und ein Planer, der daran hängenbleibt, fällt niemandem auf.
+
+```bash
+sudo docker logs --tail 30 wartungsbuch-planer-1
+```
+
 ## Warum der Planer stündlich anklopft
 
 Ein Zeitplaner, der genau montags um 7:00 auslöst, verliert die Mail, wenn der

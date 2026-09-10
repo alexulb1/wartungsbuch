@@ -9,7 +9,7 @@ gilt die Spezifikation, nicht der Code.
 **Im Betrieb.** Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md). Was man
 eintragen kann: [BEISPIELE.md](BEISPIELE.md).
 
-261 Tests · 8 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
+über 300 Tests · 8 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
 Gunicorn, Pillow)
 
 **Version 1** — in fünf Schritten gebaut:
@@ -72,11 +72,24 @@ eigentlichen Anmeldung vorbei.
 | `manage.py wochenmail --probe --stichtag 2027-01-15` | Vorschau, ohne zu verschicken |
 | `manage.py marken_aufraeumen` | Verbrauchte Zugangsmarken löschen (wöchentlich) |
 | `manage.py anhaenge_aufraeumen` | Papierkorb der Anhänge leeren (der Planer tut es stündlich) |
-| `manage.py planer` | Zeitplaner für den Dauerbetrieb (stündlich) |
+| `manage.py planer` | Zeitplaner für den Dauerbetrieb (stündlich) — ruft die fünf Schritte unten auf |
 | `manage.py sicherung --taeglich` | JSON-Sicherung schreiben |
 | `manage.py test wartung` | Testlauf |
 | `manage.py makemessages -l en -l sv --no-location --no-wrap -i ".venv/*"` | Neue Texte in die Sprachdateien übernehmen |
 | `manage.py compilemessages --ignore .venv` | Übersetzungen übersetzen |
+
+## Was der Planer je Durchlauf tut
+
+Stündlich, in dieser Reihenfolge. Jeder Schritt entscheidet selbst, ob er dran
+ist; ein Fehler in einem beendet den Planer nicht.
+
+| Schritt | Wann er wirklich etwas tut |
+|---|---|
+| Wochenmail | Am Versandtag, höchstens einmal je Kalenderwoche, mit Nachholen |
+| Marken aufräumen | Verbrauchte Zugangsmarken älter als 30 Tage |
+| Anhänge aufräumen | Papierkorb-Dateien älter als 30 Tage |
+| Sitzungen aufräumen | Abgelaufene Sitzungen aus der Datenbank |
+| Sicherung | Einmal täglich ein JSON-Abzug |
 
 ## Aufbau
 

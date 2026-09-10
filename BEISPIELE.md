@@ -178,6 +178,21 @@ Aus „Bedienungsanleitung Vaillant" wird
 die Datei nur nach dem Bereich — im Ordner findest du sie dann schlechter
 wieder, und der Ordner ist genau der Ort, an dem du in zehn Jahren suchst.
 
+## Wenn du dich wieder anmelden musst
+
+Nach zwei Tagen ohne Benutzung läuft die Anmeldung ab, und beim nächsten Aufruf
+steht die Anmeldeseite da. Das ist kein Fehler, sondern Absicht: Ein Konto, das
+auf einem Handy dauerhaft offen bleibt, ist genau das Risiko, das man nicht
+eingehen muss.
+
+Jede Seite, die du aufrufst, stellt die Uhr zurück — wer regelmäßig
+hineinschaut, merkt davon nichts.
+
+**Das Abhaken aus der Wochenmail ist davon nicht betroffen.** Der Link dort
+trägt seine eigene Berechtigung und funktioniert auch, wenn du seit Wochen
+nicht angemeldet warst. Genau der Handgriff, den du vor Ort am Gerät machst,
+kostet dich also nie einen Umweg übers Postfach.
+
 ## Wer sieht was
 
 Solange du allein damit arbeitest, kannst du diesen Abschnitt überspringen.

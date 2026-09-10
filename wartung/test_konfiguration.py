@@ -323,3 +323,44 @@ class StackReichtVariablenDurchTest(SimpleTestCase):
         )
         fehlend = sorted(genannt - bekannt)
         self.assertEqual(fehlend, [], "In .env.beispiel, aber im Stack unbenutzt: " + ", ".join(fehlend))
+
+
+class ReadmeZahlenTest(SimpleTestCase):
+    """Angaben im README, die veralten können, werden geprüft.
+
+    Die Testzahl steht dort bewusst ungefähr ("über 300") — eine genaue Zahl
+    wäre bei jedem neuen Test falsch. Die Zahl der Migrationen dagegen ändert
+    sich selten und sagt etwas Nützliches: was eine leere Datenbank durchläuft.
+    """
+
+    def test_die_zahl_der_migrationen_stimmt(self):
+        from pathlib import Path
+
+        from django.conf import settings
+
+        wurzel = Path(settings.BASE_DIR)
+        tatsaechlich = len(list((wurzel / "wartung" / "migrations").glob("0*.py")))
+        readme = (wurzel / "README.md").read_text()
+        self.assertIn(
+            f"{tatsaechlich} Migrationen",
+            readme,
+            f"README nennt eine andere Zahl als die tatsächlichen {tatsaechlich}",
+        )
+
+    def test_die_zahl_der_abhaengigkeiten_stimmt(self):
+        from pathlib import Path
+
+        from django.conf import settings
+
+        wurzel = Path(settings.BASE_DIR)
+        # psycopg-binary und typing_extensions sind Mitläufer, keine eigenen
+        # Entscheidungen -- gezählt wird, was wir bewusst gewählt haben.
+        gewaehlt = {"django", "psycopg", "whitenoise", "gunicorn", "pillow"}
+        readme = (wurzel / "README.md").read_text()
+        self.assertIn(f"{len(gewaehlt)} Abhängigkeiten", readme)
+        for name in gewaehlt:
+            self.assertIn(
+                name,
+                (wurzel / "requirements.txt").read_text().lower(),
+                f"{name} steht im README, aber nicht in requirements.txt",
+            )
