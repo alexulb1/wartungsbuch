@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 22:01+0200\n"
+"POT-Creation-Date: 2026-09-10 07:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -480,6 +480,10 @@ msgstr "What is due"
 msgid "nächste %(tage)s Tage"
 msgstr "next %(tage)s days"
 
+#| msgid "Vorschau"
+msgid "Jahresvorschau"
+msgstr "Year ahead"
+
 msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
 msgstr "Nothing set up yet. Properties and areas are maintained in the administration."
 
@@ -491,6 +495,10 @@ msgstr "Show only what is near"
 
 msgid "ruht"
 msgstr "dormant"
+
+#| msgid "Schwedisch"
+msgid "Nachweis"
+msgstr "Record"
 
 #, python-format
 msgid "Eine weitere Aufgabe ist später fällig."
@@ -544,6 +552,19 @@ msgid "Zum Wartungsbuch"
 msgstr "To the maintenance log"
 
 #, python-format
+msgid "Was zwischen %(von)s und %(bis)s ansteht."
+msgstr "What is due between %(von)s and %(bis)s."
+
+msgid "Zum Weitergeben: drucken und als PDF sichern."
+msgstr "To pass it on: print and save as PDF."
+
+msgid "Jetzt fällig oder überfällig"
+msgstr "Due now or overdue"
+
+msgid "In den nächsten zwölf Monaten steht nichts an."
+msgstr "Nothing is due in the next twelve months."
+
+#, python-format
 msgid "Hallo %(name)s,"
 msgstr "Hello %(name)s,"
 
@@ -591,6 +612,47 @@ msgstr "This link has expired or has already been used. Sign-in links work only 
 
 msgid "Neuen Link anfordern"
 msgstr "Request a new link"
+
+#, python-format
+msgid "Wartungsnachweis %(name)s"
+msgstr "Maintenance record %(name)s"
+
+#| msgid "Wartungsbuch"
+msgid "Wartungsnachweis"
+msgstr "Maintenance record"
+
+msgid "Zeitraum"
+msgstr "Period"
+
+msgid "gesamter Bestand"
+msgstr "everything on record"
+
+msgid "Vorgänge"
+msgstr "Events"
+
+#| msgid "Kosten"
+msgid "Kosten gesamt"
+msgstr "Total cost"
+
+msgid "Erstellt am"
+msgstr "Created on"
+
+msgid "von"
+msgstr "from"
+
+msgid "bis"
+msgstr "to"
+
+msgid "Zeitraum anwenden"
+msgstr "Apply period"
+
+#| msgid "Anhänge"
+msgid "Anhänge:"
+msgstr "Attachments:"
+
+#| msgid "Noch nichts eingetragen."
+msgid "In diesem Zeitraum ist nichts eingetragen."
+msgstr "Nothing recorded in this period."
 
 msgid "Profil"
 msgstr "Profile"

@@ -149,3 +149,40 @@ h1 .horizont {
 .knopf-gefahr { background: var(--dringend); }
 
 .nachtrag { margin-top: 1.75rem; }
+
+h2 .nebenweg { font-size: .8rem; font-weight: 400; color: var(--akzent); text-decoration: none; margin-left: auto; }
+h2 .nebenweg:hover { text-decoration: underline; }
+.berichtswege { margin: -.5rem 0 1.5rem; }
+
+/* --- Berichte: Nachweis und Vorschau ------------------------------------ */
+.kopfdaten { display: grid; grid-template-columns: max-content 1fr; gap: .2rem 1.5rem; margin: 0 0 1.5rem; }
+.kopfdaten dt { color: var(--leise); font-size: .85rem; }
+.kopfdaten dd { margin: 0; }
+.bereichsblock { margin-bottom: 1.75rem; break-inside: avoid; }
+.zeitraumwahl { display: flex; gap: .75rem; align-items: end; flex-wrap: wrap; margin-bottom: 2rem; }
+.zeitraumwahl label { font-size: .85rem; color: var(--leise); }
+.zeitraumwahl input { padding: .4rem; font: inherit; background: var(--grund); color: var(--text);
+                      border: 1px solid var(--linie); border-radius: .3rem; }
+.druckhinweis { color: var(--leise); font-size: .82rem; }
+
+/* Feste Spaltenbreiten: Sonst wandert die Tätigkeit je nach Inhalt der
+   Nachbarspalten quer über die Seite. */
+.bericht .liste { table-layout: fixed; }
+.bericht .liste .datum { width: 7em; }
+.bericht .liste .wer { width: 11em; }
+.bericht .liste .kosten { width: 7em; text-align: right; }
+.bericht .liste .status { width: 9em; }
+.bericht .liste .tat { width: auto; }
+
+/* Der Browser erzeugt daraus die PDF-Datei -- deshalb keine PDF-Bibliothek. */
+@media print {
+  .kopf, .fuss, .nicht-drucken { display: none !important; }
+  body { background: #fff; color: #000; }
+  main { max-width: none; padding: 0; }
+  .bericht h1 { font-size: 1.3rem; }
+  .bericht h2 { font-size: 1rem; border-bottom: 1px solid #999; padding-bottom: .2rem; }
+  .liste td { border-bottom: 1px solid #ddd; }
+  .liste .bereich, .kopfdaten dt { color: #444; }
+  .marke-status { border-color: #999 !important; color: #000 !important; }
+  a { color: #000; text-decoration: none; }
+}

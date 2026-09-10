@@ -22,7 +22,7 @@ from django.utils.translation import gettext as _
 
 from django.conf import settings
 
-from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, uebersicht
+from .faelligkeit import VORSCHAU_TAGE, Status, bewerten, monate_addieren, uebersicht
 from .kalender import feed
 from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm, UnterlageForm
 from .mail import adresse, senden
@@ -33,6 +33,7 @@ from .sichtbarkeit import (
     bereich_oder_404,
     darf_sehen,
     ereignis_oder_404,
+    objekt_oder_404,
     sichtbare_objekte,
 )
 from .models.zugang import GUELTIGKEIT_ANMELDUNG
@@ -555,3 +556,99 @@ def _faelligkeit_ohne(ereignis, heute):
         .first()
     )
     return bewerten(ereignis.aufgabe, letzte, heute)
+
+
+# --- Auswertungen ---------------------------------------------------------
+
+#: Wie weit die Jahresvorschau reicht. Was danach kommt, gehört nicht hinein.
+VORSCHAU_MONATE = 12
+
+
+def _zeitpunkt(request, name):
+    roh = request.GET.get(name)
+    if not roh:
+        return None
+    try:
+        return dt.date.fromisoformat(roh)
+    except ValueError:
+        # Unsinn im Adressfeld soll die Seite nicht zerreißen.
+        return None
+
+
+@login_required
+def nachweis(request, pk):
+    """Was an einem Objekt geschah — zusammenhängend und weitergebbar.
+
+    Nach Bereich gegliedert, innerhalb chronologisch: Wer das Dokument in die
+    Hand bekommt, fragt "was ist mit dem Dach?", nicht "was war im März".
+    """
+    objekt = objekt_oder_404(request.user, pk)
+    von, bis = _zeitpunkt(request, "von"), _zeitpunkt(request, "bis")
+
+    ereignisse = (
+        Ereignis.objects.filter(bereich__objekt=objekt)
+        .select_related("bereich__typ", "taetigkeit", "erfasst_von")
+        .prefetch_related("anhaenge")
+        .order_by("bereich__typ__sortierung", "bereich__bezeichnung", "datum")
+    )
+    if von:
+        ereignisse = ereignisse.filter(datum__gte=von)
+    if bis:
+        ereignisse = ereignisse.filter(datum__lte=bis)
+
+    gruppen, reihenfolge = {}, []
+    gesamt = 0
+    for ereignis in ereignisse:
+        if ereignis.bereich_id not in gruppen:
+            reihenfolge.append(ereignis.bereich_id)
+            gruppen[ereignis.bereich_id] = {"bereich": ereignis.bereich, "zeilen": []}
+        gruppen[ereignis.bereich_id]["zeilen"].append(ereignis)
+        gesamt += ereignis.kosten or 0
+
+    return render(
+        request,
+        "wartung/nachweis.html",
+        {
+            "objekt": objekt,
+            "gruppen": [gruppen[nummer] for nummer in reihenfolge],
+            "anzahl": len(ereignisse),
+            "gesamtkosten": gesamt,
+            "von": von,
+            "bis": bis,
+            "heute": timezone.localdate(),
+        },
+    )
+
+
+@login_required
+def jahresvorschau(request):
+    """Was in den nächsten zwölf Monaten ansteht, nach Monat gruppiert.
+
+    Überfälliges steht als eigener Block oben — sonst ginge es zwischen den
+    Monaten unter.
+    """
+    heute = stichtag(request)
+    grenze = monate_addieren(heute, VORSCHAU_MONATE)
+
+    eintraege = uebersicht(heute=heute, fuer=request.user)
+    drängend = [e for e in eintraege if e.faellig_am <= heute]
+    kommend = [e for e in eintraege if heute < e.faellig_am <= grenze]
+
+    monate, reihenfolge = {}, []
+    for eintrag in kommend:
+        schluessel = (eintrag.faellig_am.year, eintrag.faellig_am.month)
+        if schluessel not in monate:
+            reihenfolge.append(schluessel)
+            monate[schluessel] = {"erster": eintrag.faellig_am.replace(day=1), "zeilen": []}
+        monate[schluessel]["zeilen"].append(eintrag)
+
+    return render(
+        request,
+        "wartung/jahresvorschau.html",
+        {
+            "draengend": drängend,
+            "monate": [monate[s] for s in sorted(reihenfolge)],
+            "heute": heute,
+            "bis": grenze,
+        },
+    )

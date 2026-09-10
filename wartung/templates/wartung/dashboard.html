@@ -7,6 +7,10 @@
   {% if not alle_zeigen %}<span class="horizont">{% blocktranslate with tage=horizont %}nächste {{ tage }} Tage{% endblocktranslate %}</span>{% endif %}
 </h1>
 
+<p class="berichtswege">
+  <a class="knopf knopf-leise" href="{% url 'wartung:jahresvorschau' %}">{% translate "Jahresvorschau" %}</a>
+</p>
+
 {% if not gruppen %}
   <p class="hinweis">{% translate "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt." %}</p>
 {% endif %}
@@ -26,6 +30,7 @@
       {% if not eintraege.0.wird_gemeldet %}
         <span class="marke-status marke-ruht">{% translate "ruht" %}</span>
       {% endif %}
+      <a class="nebenweg" href="{% url 'wartung:nachweis' objekt.pk %}">{% translate "Nachweis" %}</a>
     </h2>
 
     <table class="liste">

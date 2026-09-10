@@ -214,17 +214,20 @@ class WaechterTest(ZweiObjekte):
     eingetragen -- der Test besteht darauf.
     """
 
-    #: Routenname -> Feld dieses Tests, dessen fremdes Objekt eingesetzt wird.
+    #: Routenname -> (fremdes Feld, eigenes Feld) dieses Tests.
+    #: Ausdrücklich als Paar statt per Namensableitung: Eine Ersetzung wie
+    #: "sommer" -> "haus" verhält sich bei "sommerhaus" anders als gedacht.
     ROUTEN_MIT_OBJEKTBEZUG = {
-        "anhang_neu": "bereich_sommer",
-        "aufgabe_aufnehmen": "aufgabe_sommer",
-        "aufgabe_loeschen": "aufgabe_sommer",
-        "aufgabe_stilllegen": "aufgabe_sommer",
-        "bereich": "bereich_sommer",
-        "ereignis_loeschen": "ereignis_sommer",
-        "aufgaben_ergaenzen": "bereich_sommer",
-        "ereignis_neu": "bereich_sommer",
-        "erledigen": "aufgabe_sommer",
+        "anhang_neu": ("bereich_sommer", "bereich_haus"),
+        "aufgabe_aufnehmen": ("aufgabe_sommer", "aufgabe_haus"),
+        "aufgabe_loeschen": ("aufgabe_sommer", "aufgabe_haus"),
+        "aufgabe_stilllegen": ("aufgabe_sommer", "aufgabe_haus"),
+        "aufgaben_ergaenzen": ("bereich_sommer", "bereich_haus"),
+        "bereich": ("bereich_sommer", "bereich_haus"),
+        "ereignis_loeschen": ("ereignis_sommer", "ereignis_haus"),
+        "ereignis_neu": ("bereich_sommer", "bereich_haus"),
+        "erledigen": ("aufgabe_sommer", "aufgabe_haus"),
+        "nachweis": ("sommerhaus", "haus"),
     }
 
     #: Routen ohne Objektbezug -- sie brauchen diese Prüfung nicht.
@@ -235,6 +238,7 @@ class WaechterTest(ZweiObjekte):
         "anhang_loeschen",
         "anhang_vorschau",
         "dashboard",
+        "jahresvorschau",
         "profil",
         "anmelden",
         "anmelden_mit_marke",
@@ -259,8 +263,8 @@ class WaechterTest(ZweiObjekte):
         )
 
     def test_fremdes_objekt_kommt_nirgends_durch(self):
-        for route, feld in self.ROUTEN_MIT_OBJEKTBEZUG.items():
-            fremdes = getattr(self, feld)
+        for route, (fremd, _eigen) in self.ROUTEN_MIT_OBJEKTBEZUG.items():
+            fremdes = getattr(self, fremd)
             adresse = reverse(f"wartung:{route}", args=[fremdes.pk])
             with self.subTest(route=route, methode="GET"):
                 antwort = self.client.get(adresse)
@@ -274,8 +278,8 @@ class WaechterTest(ZweiObjekte):
 
     def test_ohne_zuweisung_kommt_auch_eigenes_nicht_durch(self):
         self.betreuer.zugewiesene_objekte.clear()
-        for route, feld in self.ROUTEN_MIT_OBJEKTBEZUG.items():
-            eigenes = getattr(self, feld.replace("sommer", "haus"))
+        for route, (_fremd, eigen) in self.ROUTEN_MIT_OBJEKTBEZUG.items():
             with self.subTest(route=route):
+                eigenes = getattr(self, eigen)
                 antwort = self.client.get(reverse(f"wartung:{route}", args=[eigenes.pk]))
                 self.assertIn(antwort.status_code, (404, 405))

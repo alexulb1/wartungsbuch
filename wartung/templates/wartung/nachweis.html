@@ -1,0 +1,61 @@
+{% extends "wartung/basis.html" %}
+{% load i18n %}
+
+{% block titel %}{% blocktranslate with name=objekt.name %}Wartungsnachweis {{ name }}{% endblocktranslate %}{% endblock %}
+
+{% block pfad %}
+<p class="pfad nicht-drucken"><a href="{% url 'wartung:dashboard' %}">{% translate "Übersicht" %}</a> › {{ objekt.name }}</p>
+{% endblock %}
+
+{% block inhalt %}
+<div class="bericht">
+  <h1>{% translate "Wartungsnachweis" %}</h1>
+
+  <dl class="kopfdaten">
+    <dt>{% translate "Objekt" %}</dt><dd>{{ objekt.name }} <span class="typ">{{ objekt.typ.name }}</span></dd>
+    <dt>{% translate "Zeitraum" %}</dt>
+    <dd>
+      {% if von or bis %}
+        {% if von %}{{ von|date:"SHORT_DATE_FORMAT" }}{% else %}…{% endif %} – {% if bis %}{{ bis|date:"SHORT_DATE_FORMAT" }}{% else %}…{% endif %}
+      {% else %}{% translate "gesamter Bestand" %}{% endif %}
+    </dd>
+    <dt>{% translate "Vorgänge" %}</dt><dd>{{ anzahl }}</dd>
+    <dt>{% translate "Kosten gesamt" %}</dt><dd>{{ gesamtkosten }}</dd>
+    <dt>{% translate "Erstellt am" %}</dt><dd>{{ heute|date:"SHORT_DATE_FORMAT" }}</dd>
+  </dl>
+
+  <form method="get" class="zeitraumwahl nicht-drucken">
+    <label>{% translate "von" %} <input type="date" name="von" value="{{ von|date:'Y-m-d' }}"></label>
+    <label>{% translate "bis" %} <input type="date" name="bis" value="{{ bis|date:'Y-m-d' }}"></label>
+    <button type="submit" class="knopf knopf-leise">{% translate "Zeitraum anwenden" %}</button>
+    <span class="druckhinweis">{% translate "Zum Weitergeben: drucken und als PDF sichern." %}</span>
+  </form>
+
+  {% for gruppe in gruppen %}
+    <section class="bereichsblock">
+      <h2>{{ gruppe.bereich }}</h2>
+      <table class="liste">
+        <tbody>
+        {% for ereignis in gruppe.zeilen %}
+          <tr>
+            <td class="datum">{{ ereignis.datum|date:"SHORT_DATE_FORMAT" }}</td>
+            <td class="tat">{{ ereignis.bezeichnung }}
+              {% if ereignis.notiz %}<span class="bereich">{{ ereignis.notiz }}</span>{% endif %}
+              {% if ereignis.anhaenge.all %}
+                <span class="bereich">{% translate "Anhänge:" %}
+                  {% for anhang in ereignis.anhaenge.all %}{{ anhang.dateiname }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </span>
+              {% endif %}
+            </td>
+            <td class="wer">{{ ereignis.ausgefuehrt_von }}</td>
+            <td class="kosten">{% if ereignis.kosten %}{{ ereignis.kosten }}{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </section>
+  {% empty %}
+    <p class="hinweis">{% translate "In diesem Zeitraum ist nichts eingetragen." %}</p>
+  {% endfor %}
+</div>
+{% endblock %}

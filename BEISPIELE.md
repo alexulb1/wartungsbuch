@@ -178,6 +178,25 @@ Aus „Bedienungsanleitung Vaillant" wird
 die Datei nur nach dem Bereich — im Ordner findest du sie dann schlechter
 wieder, und der Ordner ist genau der Ort, an dem du in zehn Jahren suchst.
 
+## Einen Nachweis zum Weitergeben
+
+Auf der Übersicht steht neben jedem Objekt **Nachweis**. Die Seite zeigt alles,
+was an diesem Haus geschah — nach Bereich gegliedert, mit Kopfdaten,
+Gesamtkosten und den Namen der Anhänge.
+
+**Daraus wird eine PDF-Datei über den Druckdialog deines Browsers:** *Drucken →
+Ziel: Als PDF sichern*. Navigation, Kopf- und Fußzeile werden dabei
+ausgeblendet, das Blatt ist weiß. Schalte im Druckdialog noch „Kopf- und
+Fußzeilen" ab, dann steht keine Adresse und kein Datum des Browsers darauf.
+
+Mit dem Zeitraumfeld grenzt du ein — etwa auf ein Kalenderjahr, wenn du nur die
+Vorgänge eines Jahres brauchst.
+
+**Die Jahresvorschau** erreichst du über den Knopf oben auf der Übersicht: die
+nächsten zwölf Monate nach Monat sortiert, Überfälliges zuoberst. Nützlich, um
+Fahrten zu bündeln und grob zu überschlagen, was das Jahr kostet — und ebenso
+druckbar.
+
 ## Wenn du dich wieder anmelden musst
 
 Nach zwei Tagen ohne Benutzung läuft die Anmeldung ab, und beim nächsten Aufruf

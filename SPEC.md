@@ -132,6 +132,15 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   vorher nach und nennt dabei, wie viele Ereignisse stehenbleiben — in einer
   Aufgabe steckt eine Festlegung, die man nicht in zehn Sekunden
   wiederherstellt. **Die Ereignisse bleiben in beiden Fällen**
+- **Wartungsnachweis je Objekt**: alles, was an einem Objekt geschah, nach
+  Bereich gegliedert und innerhalb chronologisch, mit Kopfdaten und
+  Gesamtkosten, wahlweise auf einen Zeitraum eingegrenzt. Zum Weitergeben
+  gedacht — deshalb nach Bereich: Wer das Dokument bekommt, fragt nach dem
+  Dach, nicht nach dem März. Anhänge stehen mit Namen darin, nicht als Bild
+- **Jahresvorschau**: die nächsten zwölf Monate nach Monat gruppiert,
+  Überfälliges als eigener Block oben
+- **Beide als Druckseite, nicht als erzeugtes PDF.** Der Browser macht daraus
+  die Datei; das Ergebnis ist dasselbe, ohne eine Bibliothek auf zehn Jahre
 - **Einzelne Ereignisse löschen** in der Historie, mit Rückfrage. Sie nennt die
   Zahl der mitgehenden Anhänge und **rechnet die Folge für die Fälligkeit vorher
   aus**: Wer die jüngste Erledigung löscht, verschiebt den nächsten Termin
@@ -225,4 +234,8 @@ noch laufen und die Daten von 2026 enthalten.
 | Upload über den Abhak-Link aus der Mail | Unangemeldeter Schreibzugriff auf den Speicher |
 | Aufgaben mit einem Klick löschen, ohne Rückfrage | In einer Aufgabe steckt Intervall, Modus und Termin — anders als bei einem Anhang stellt man das nicht in zehn Sekunden wieder her |
 | Stillgelegte Aufgaben ganz ausblenden | Dann wären sie nirgends mehr erreichbar und ließen sich nie zurückholen |
+| PDF-Bibliothek für den Nachweis (WeasyPrint, ReportLab) | Der Browser liefert dieselbe Datei. WeasyPrint zöge Systembibliotheken nach, die bei Aktualisierungen erfahrungsgemäß brechen; ReportLab hieße, das Layout von Hand statt in CSS zu bauen |
+| Fotos im Nachweis abdrucken | Bläht das Dokument auf, und wer es in die Hand bekommt, kann sie ohnehin nicht öffnen — der Dateiname sagt ihm, dass es sie gibt |
+| Auswertung nach Handwerksfirma | „Ausgeführt von" ist Freitext; beim vierten Mal steht dort „Berg GmbH" statt „Fa. Berg" und nichts gruppiert sich. Bräuchte erst einen Katalog |
+| Kostenauswertung nach Jahren | Weiterhin zurückgestellt: Sie beantwortet erst mit drei, vier Jahren Daten etwas |
 | Bereiche und Objekte samt Historie löschbar machen | Ein versehentlicher Klick soll nicht zehn Jahre Dokumentation mitreißen |

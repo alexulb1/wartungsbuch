@@ -55,3 +55,9 @@ def ereignis_oder_404(benutzer, pk) -> Ereignis:
         ).filter(bereich__objekt__in=sichtbare_objekte(benutzer)),
         pk=pk,
     )
+
+
+def objekt_oder_404(benutzer, pk) -> Objekt:
+    return get_object_or_404(
+        sichtbare_objekte(benutzer).select_related("typ"), pk=pk
+    )

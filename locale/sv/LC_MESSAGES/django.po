@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 22:01+0200\n"
+"POT-Creation-Date: 2026-09-10 07:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -480,6 +480,10 @@ msgstr "Vad som är aktuellt"
 msgid "nächste %(tage)s Tage"
 msgstr "närmaste %(tage)s dagarna"
 
+#| msgid "Vorschau"
+msgid "Jahresvorschau"
+msgstr "Årsöversikt"
+
 msgid "Noch nichts angelegt. Objekte und Bereiche werden in der Verwaltung gepflegt."
 msgstr "Inget upplagt ännu. Fastigheter och byggnadsdelar hanteras i administrationen."
 
@@ -491,6 +495,10 @@ msgstr "Visa bara det närmaste"
 
 msgid "ruht"
 msgstr "vilar"
+
+#| msgid "Schwedisch"
+msgid "Nachweis"
+msgstr "Intyg"
 
 #, python-format
 msgid "Eine weitere Aufgabe ist später fällig."
@@ -544,6 +552,19 @@ msgid "Zum Wartungsbuch"
 msgstr "Till underhållsboken"
 
 #, python-format
+msgid "Was zwischen %(von)s und %(bis)s ansteht."
+msgstr "Vad som är aktuellt mellan %(von)s och %(bis)s."
+
+msgid "Zum Weitergeben: drucken und als PDF sichern."
+msgstr "För att dela: skriv ut och spara som PDF."
+
+msgid "Jetzt fällig oder überfällig"
+msgstr "Aktuellt eller försenat"
+
+msgid "In den nächsten zwölf Monaten steht nichts an."
+msgstr "Inget är aktuellt de närmaste tolv månaderna."
+
+#, python-format
 msgid "Hallo %(name)s,"
 msgstr "Hej %(name)s,"
 
@@ -591,6 +612,47 @@ msgstr "Länken har gått ut eller har redan använts. Inloggningslänkar funger
 
 msgid "Neuen Link anfordern"
 msgstr "Begär en ny länk"
+
+#, python-format
+msgid "Wartungsnachweis %(name)s"
+msgstr "Underhållsintyg %(name)s"
+
+#| msgid "Wartungsbuch"
+msgid "Wartungsnachweis"
+msgstr "Underhållsintyg"
+
+msgid "Zeitraum"
+msgstr "Period"
+
+msgid "gesamter Bestand"
+msgstr "hela beståndet"
+
+msgid "Vorgänge"
+msgstr "Åtgärder"
+
+#| msgid "Kosten"
+msgid "Kosten gesamt"
+msgstr "Total kostnad"
+
+msgid "Erstellt am"
+msgstr "Skapat den"
+
+msgid "von"
+msgstr "från"
+
+msgid "bis"
+msgstr "till"
+
+msgid "Zeitraum anwenden"
+msgstr "Använd period"
+
+#| msgid "Anhänge"
+msgid "Anhänge:"
+msgstr "Bilagor:"
+
+#| msgid "Noch nichts eingetragen."
+msgid "In diesem Zeitraum ist nichts eingetragen."
+msgstr "Inget registrerat under den här perioden."
 
 msgid "Profil"
 msgstr "Profil"
