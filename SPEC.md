@@ -150,6 +150,12 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   rückwärts. Ohne diesen Hinweis wundert man sich über eine Wochenmail, die man
   nicht erwartet hat — die Kehrseite davon, dass Fälligkeit berechnet und nie
   gespeichert wird
+- **Sperre gegen doppeltes Absenden**, in zwei Schichten. Im Browser nimmt ein
+  abgeschicktes Formular keinen zweiten Klick an. Auf dem Server trägt jedes
+  angezeigte Formular eine Einmal-Kennung, die die Datenbank nur einmal zulässt —
+  das hält ohne JavaScript und bei sich überholenden Anfragen. Doppelt ist nur,
+  was mit derselben Kennung, vom selben Urheber und mit demselben Inhalt kommt:
+  Wer mit „Zurück" bewusst einen weiteren Eintrag erfasst, wird nicht verschluckt
 
 ### Bewusst nicht in Version 1
 

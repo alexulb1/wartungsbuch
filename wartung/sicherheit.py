@@ -1,7 +1,8 @@
 """Content-Security-Policy (SPEC 8).
 
-Von Hand statt per Zusatzpaket: Die Anwendung laedt nichts aus fremden Quellen
-und kommt ohne eigenes JavaScript aus, deshalb genuegen wenige Zeilen.
+Von Hand statt per Zusatzpaket: Die Anwendung laedt nichts aus fremden Quellen,
+und ihr einziges Skript (die Absendesperre) liegt als eigene Datei vor -- kein
+eingebettetes JavaScript. Deshalb genuegen wenige Zeilen.
 """
 
 RICHTLINIE = "; ".join(

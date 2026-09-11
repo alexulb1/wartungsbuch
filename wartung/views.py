@@ -29,6 +29,7 @@ from .forms import AnmeldeForm, EreignisForm, ErledigenForm, ProfilForm, Unterla
 from .mail import adresse, senden
 from .models import Anhang, Aufgabe, Benutzer, Bereich, Ereignis, Zugangsmarke, Zweck
 from .anhaenge import anhaenge_speichern
+from .einmalig import einmal_speichern
 from .sichtbarkeit import (
     aufgabe_oder_404,
     bereich_oder_404,
@@ -146,10 +147,11 @@ def erledigen(request, pk):
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=request.user)
         formular = ErledigenForm(request.POST, request.FILES, instance=entwurf)
         if formular.is_valid():
-            ereignis = formular.save()
-            anhaenge_speichern(
-                formular.cleaned_data["anhaenge"], aufgabe.bereich, request.user, ereignis
-            )
+            ereignis, neu = einmal_speichern(formular)
+            if neu:
+                anhaenge_speichern(
+                    formular.cleaned_data["anhaenge"], aufgabe.bereich, request.user, ereignis
+                )
             return redirect("wartung:bereich", pk=aufgabe.bereich_id)
     else:
         formular = ErledigenForm(initial=vorbelegung(request.user, heute))
@@ -195,10 +197,11 @@ def ereignis_neu(request, pk):
         entwurf = Ereignis(bereich=bereich, erfasst_von=request.user)
         formular = EreignisForm(request.POST, request.FILES, instance=entwurf, bereich=bereich)
         if formular.is_valid():
-            ereignis = formular.save()
-            anhaenge_speichern(
-                formular.cleaned_data["anhaenge"], bereich, request.user, ereignis
-            )
+            ereignis, neu = einmal_speichern(formular)
+            if neu:
+                anhaenge_speichern(
+                    formular.cleaned_data["anhaenge"], bereich, request.user, ereignis
+                )
             return redirect("wartung:bereich", pk=bereich.pk)
     else:
         formular = EreignisForm(initial=vorbelegung(request.user, heute), bereich=bereich)
@@ -302,7 +305,9 @@ def erledigt_mit_marke(request, marke):
         entwurf = Ereignis(aufgabe=aufgabe, erfasst_von=eingeloest.benutzer)
         formular = ErledigenForm(request.POST, instance=entwurf, mit_anhaengen=False)
         if formular.is_valid():
-            ereignis = formular.save()
+            # Die Marke ist schon verbraucht, eine zweite Anfrage käme gar
+            # nicht bis hierher -- die Kennung schadet trotzdem nicht.
+            ereignis, _neu = einmal_speichern(formular)
             with translation.override(eingeloest.benutzer.sprache):
                 return render(request, "wartung/erledigt_danke.html", {"ereignis": ereignis})
         # Ungueltige Eingabe: die Marke ist verbraucht, also eine neue ausgeben,

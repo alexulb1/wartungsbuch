@@ -1,5 +1,7 @@
 """Formulare der Oberflaeche."""
 
+import uuid
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
@@ -46,6 +48,12 @@ def _anhangfeld():
     )
 
 
+def _absendekennung():
+    """Einmal-Kennung je angezeigtem Formular, gegen doppeltes Absenden
+    (einmalig.py). Das initial ist aufrufbar, also bei jeder Anzeige neu."""
+    return forms.UUIDField(required=False, widget=forms.HiddenInput, initial=uuid.uuid4)
+
+
 def _geprueft(dateien):
     from .dateipruefung import pruefe_datei
 
@@ -62,6 +70,7 @@ class ErledigenForm(forms.ModelForm):
     """
 
     anhaenge = _anhangfeld()
+    absendekennung = _absendekennung()
 
     def __init__(self, *args, mit_anhaengen=True, **kwargs):
         super().__init__(*args, **kwargs)
@@ -85,6 +94,7 @@ class EreignisForm(forms.ModelForm):
     """Ein Vorgang ohne wiederkehrende Aufgabe -- etwa eine Renovierung."""
 
     anhaenge = _anhangfeld()
+    absendekennung = _absendekennung()
 
     def clean_anhaenge(self):
         return _geprueft(self.cleaned_data.get("anhaenge"))

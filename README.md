@@ -9,7 +9,7 @@ gilt die Spezifikation, nicht der Code.
 **Im Betrieb.** Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md). Was man
 eintragen kann: [BEISPIELE.md](BEISPIELE.md).
 
-über 300 Tests · 8 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
+über 300 Tests · 9 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
 Gunicorn, Pillow)
 
 **Version 1** — in fünf Schritten gebaut:
@@ -34,6 +34,7 @@ Gunicorn, Pillow)
 | Einzelne Ereignisse löschen | — |
 | Sitzungsablauf bei Untätigkeit | — |
 | Wartungsnachweis und Jahresvorschau | — |
+| Sperre gegen doppeltes Absenden | — |
 
 ## Entwicklung
 
@@ -117,6 +118,7 @@ wartung/versandplan.py       Wann die Wochenmail rausgeht
 wartung/dateipruefung.py     Größe und Typ hochgeladener Dateien
 wartung/vorschau.py          Vorschaubilder
 wartung/anhaenge.py          Hochgeladene Dateien ablegen
+wartung/einmalig.py          Doppelt abgeschickte Formulare abfangen
 wartung/kalender.py          ICS-Feed
 wartung/mail.py              Mailversand in der Sprache des Empfängers
 ```
@@ -132,6 +134,7 @@ wartung/middleware.py        Sprache aus dem Benutzerprofil
 wartung/sicherheit.py        Content-Security-Policy
 wartung/checks.py            Startprüfungen (Ablageordner beschreibbar?)
 wartung/templates/wartung/   Vorlagen der Oberfläche
+wartung/static/wartung/      Stil und Absendesperre (das einzige Skript)
 locale/{en,sv}/              Übersetzungen (Deutsch ist die Quellsprache)
 ```
 

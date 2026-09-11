@@ -58,6 +58,9 @@ class Ereignis(models.Model):
         verbose_name=_("erfasst von"),
     )
     erfasst_am = models.DateTimeField(auto_now_add=True)
+    # Kennung des Formulars, aus dem der Eintrag stammt: Kommt dasselbe
+    # Formular noch einmal an, entsteht nichts Neues (einmalig.py).
+    absendekennung = models.UUIDField(null=True, blank=True, unique=True, editable=False)
 
     class Meta:
         verbose_name = _("Ereignis")

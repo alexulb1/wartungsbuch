@@ -85,6 +85,8 @@ h2 { font-size: 1.05rem; margin: 2rem 0 .5rem; display: flex; align-items: cente
 }
 .knopf-leise { background: transparent; color: var(--akzent); border: 1px solid var(--akzent); }
 .abbruch { margin-left: 1rem; color: var(--leise); font-size: .9rem; }
+/* Nach dem ersten Absenden (absenden.js): sichtbar, dass es läuft. */
+form.wird-gesendet button { opacity: .6; cursor: progress; }
 
 .formular { max-width: 26rem; }
 .formular p { margin: 0 0 1rem; }
