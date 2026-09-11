@@ -34,7 +34,8 @@
 
 <form method="post" class="formular">
   {% csrf_token %}
+  <input type="hidden" name="zurueck" value="{{ rueckweg }}">
   <button type="submit" class="knopf knopf-gefahr">{% translate "Endgültig löschen" %}</button>
-  <a class="abbruch" href="{% url 'wartung:bereich' ereignis.bereich.pk %}">{% translate "Abbrechen" %}</a>
+  <a class="abbruch" href="{{ rueckweg }}">{% translate "Abbrechen" %}</a>
 </form>
 {% endblock %}

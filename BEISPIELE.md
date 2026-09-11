@@ -265,7 +265,13 @@ weiter in der Historie, nur ohne Regel dahinter. Die Zwischenseite sagt dir
 vorher, wie viele Ereignisse das betrifft.
 
 **Einzelne Einträge in der Historie** löschst du dort, wo sie stehen: auf der
-Bereichsseite steht neben jeder Zeile ein „Löschen".
+Bereichsseite und im **Nachweis** steht neben jeder Zeile ein „Löschen". Wer
+im Nachweis einen Testeintrag oder eine doppelte Erfassung entdeckt, räumt sie
+also gleich dort weg und landet danach wieder im Nachweis, mit demselben
+Zeitraum. Beim Drucken bzw. als PDF erscheint der Link nicht.
+
+Löschen darf, wer dem Objekt zugewiesen ist — dieselbe Berechtigung wie zum
+Eintragen.
 
 Auch hier fragt die Anwendung vorher — und rechnet dabei etwas aus, das man
 leicht übersieht: **Löschst du die jüngste Erledigung, verschiebt sich der

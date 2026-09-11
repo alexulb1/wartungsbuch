@@ -141,7 +141,10 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   Überfälliges als eigener Block oben
 - **Beide als Druckseite, nicht als erzeugtes PDF.** Der Browser macht daraus
   die Datei; das Ergebnis ist dasselbe, ohne eine Bibliothek auf zehn Jahre
-- **Einzelne Ereignisse löschen** in der Historie, mit Rückfrage. Sie nennt die
+- **Einzelne Ereignisse löschen** in der Historie und aus dem Nachweis heraus
+  (dort nicht mitgedruckt; danach zurück in denselben Nachweis — als Rückweg
+  gilt nur der Nachweis desselben Objekts, sonst wäre es eine offene
+  Weiterleitung). Berechtigt ist, wer das Objekt sieht. Mit Rückfrage. Sie nennt die
   Zahl der mitgehenden Anhänge und **rechnet die Folge für die Fälligkeit vorher
   aus**: Wer die jüngste Erledigung löscht, verschiebt den nächsten Termin
   rückwärts. Ohne diesen Hinweis wundert man sich über eine Wochenmail, die man

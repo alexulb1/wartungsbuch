@@ -8,6 +8,7 @@ reproduzierbar, ohne an der Systemuhr zu drehen.
 import csv
 import datetime as dt
 from collections import defaultdict
+from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -527,12 +528,12 @@ def ereignis_loeschen(request, pk):
     aus, sonst wundert man sich hinterher über eine Wochenmail.
     """
     ereignis = ereignis_oder_404(request.user, pk)
+    rueckweg = _rueckweg(request, ereignis)
 
     if request.method == "POST":
-        bereich_nummer = ereignis.bereich_id
         # Anhänge wandern über das post_delete-Signal in den Papierkorb.
         ereignis.delete()
-        return redirect("wartung:bereich", pk=bereich_nummer)
+        return redirect(rueckweg)
 
     return render(
         request,
@@ -541,8 +542,34 @@ def ereignis_loeschen(request, pk):
             "ereignis": ereignis,
             "anzahl_anhaenge": ereignis.anhaenge.count(),
             "danach": _faelligkeit_ohne(ereignis, stichtag(request)),
+            "rueckweg": rueckweg,
         },
     )
+
+
+def _rueckweg(request, ereignis):
+    """Wohin es nach dem Löschen oder Abbrechen geht.
+
+    Nur zurück in den Nachweis desselben Objekts, samt Zeitraum — alles andere
+    führt zur Bereichsseite. Ein frei wählbares Ziel wäre eine offene
+    Weiterleitung: Ein präparierter Link schickte einen danach sonstwohin.
+    """
+    angabe = request.POST.get("zurueck") or request.GET.get("zurueck") or ""
+    teile = urlsplit(angabe)
+    nachweis = reverse("wartung:nachweis", args=[ereignis.bereich.objekt_id])
+    if teile.scheme or teile.netloc or teile.path != nachweis:
+        return reverse("wartung:bereich", args=[ereignis.bereich_id])
+
+    zeitraum = []
+    for name, wert in parse_qsl(teile.query):
+        if name not in ("von", "bis"):
+            continue
+        try:
+            dt.date.fromisoformat(wert)
+        except ValueError:
+            continue
+        zeitraum.append((name, wert))
+    return nachweis + ("?" + urlencode(zeitraum) if zeitraum else "")
 
 
 def _faelligkeit_ohne(ereignis, heute):
@@ -616,6 +643,8 @@ def nachweis(request, pk):
             "von": von,
             "bis": bis,
             "heute": timezone.localdate(),
+            # Damit das Löschen einer Zeile hierher zurückführt, Zeitraum inklusive.
+            "hier": request.get_full_path(),
         },
     )
 

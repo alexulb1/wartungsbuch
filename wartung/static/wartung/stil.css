@@ -173,6 +173,7 @@ h2 .nebenweg:hover { text-decoration: underline; }
 .bericht .liste .kosten { width: 7em; text-align: right; }
 .bericht .liste .status { width: 9em; }
 .bericht .liste .tat { width: auto; }
+.bericht .liste .aktion { width: 6em; text-align: right; }
 
 /* Der Browser erzeugt daraus die PDF-Datei -- deshalb keine PDF-Bibliothek. */
 @media print {

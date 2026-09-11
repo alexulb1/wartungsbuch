@@ -49,6 +49,7 @@
             </td>
             <td class="wer">{{ ereignis.ausgefuehrt_von }}</td>
             <td class="kosten">{% if ereignis.kosten %}{{ ereignis.kosten }}{% endif %}</td>
+            <td class="aktion nicht-drucken"><a class="loeschen" href="{% url 'wartung:ereignis_loeschen' ereignis.pk %}?zurueck={{ hier|urlencode }}">{% translate "Löschen" %}</a></td>
           </tr>
         {% endfor %}
         </tbody>

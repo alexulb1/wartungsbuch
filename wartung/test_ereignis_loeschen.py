@@ -163,6 +163,81 @@ class BereichsseiteTest(Bestand):
         self.assertContains(antwort, self.adresse(self.aelter))
 
 
+class AusDemNachweisTest(Bestand):
+    """Wer im Nachweis einen Fehleintrag sieht, soll ihn dort auch loswerden --
+    und danach wieder im Nachweis landen, nicht auf irgendeiner Bereichsseite."""
+
+    def nachweis(self, objekt=None):
+        return reverse("wartung:nachweis", args=[(objekt or self.objekt).pk])
+
+    def test_jede_nachweiszeile_hat_einen_loeschweg(self):
+        antwort = self.client.get(self.nachweis())
+        self.assertContains(antwort, self.adresse(self.juengstes))
+        self.assertContains(antwort, self.adresse(self.aelter))
+
+    def test_der_loeschweg_erscheint_nicht_im_druck(self):
+        """Das Dokument geht an Dritte -- ein Knopf hat darin nichts verloren."""
+        inhalt = self.client.get(self.nachweis()).content.decode()
+        self.assertRegex(
+            inhalt,
+            r'class="[^"]*nicht-drucken[^"]*">\s*<a[^>]*href="'
+            + self.adresse(self.juengstes),
+        )
+
+    def test_nach_dem_loeschen_zurueck_in_den_nachweis(self):
+        antwort = self.client.post(
+            self.adresse(self.juengstes), {"zurueck": self.nachweis()}
+        )
+        self.assertRedirects(antwort, self.nachweis(), fetch_redirect_response=False)
+        self.assertFalse(Ereignis.objects.filter(pk=self.juengstes.pk).exists())
+
+    def test_der_zeitraum_bleibt_erhalten(self):
+        ziel = self.nachweis() + "?von=2026-01-01&bis=2026-12-31"
+        antwort = self.client.post(self.adresse(self.juengstes), {"zurueck": ziel})
+        self.assertRedirects(antwort, ziel, fetch_redirect_response=False)
+
+    def test_die_rueckfrage_fuehrt_beim_abbrechen_in_den_nachweis(self):
+        antwort = self.client.get(
+            self.adresse(self.juengstes), {"zurueck": self.nachweis()}
+        )
+        self.assertContains(antwort, f'class="abbruch" href="{self.nachweis()}"')
+        self.assertContains(antwort, f'name="zurueck" value="{self.nachweis()}"')
+
+    def test_ohne_angabe_weiter_zur_bereichsseite(self):
+        antwort = self.client.post(self.adresse(self.juengstes))
+        self.assertRedirects(
+            antwort,
+            reverse("wartung:bereich", args=[self.bereich.pk]),
+            fetch_redirect_response=False,
+        )
+
+    def test_fremde_ziele_werden_nicht_angesteuert(self):
+        """Ein frei wählbares Ziel wäre eine offene Weiterleitung: Ein
+        präparierter Link schickte einen nach dem Löschen sonst wohin."""
+        bereichsseite = reverse("wartung:bereich", args=[self.bereich.pk])
+        for ziel in (
+            "https://boese.example/",
+            "//boese.example" + self.nachweis(),
+            "https://boese.example" + self.nachweis(),
+            "/\\boese.example/",
+            self.nachweis(self.fremdes),  # Nachweis eines anderen Objekts
+            reverse("wartung:dashboard"),
+        ):
+            with self.subTest(ziel=ziel):
+                ereignis = Ereignis.objects.create(
+                    bereich=self.bereich, beschreibung="Test", datum=dt.date(2026, 5, 1)
+                )
+                antwort = self.client.post(self.adresse(ereignis), {"zurueck": ziel})
+                self.assertRedirects(antwort, bereichsseite, fetch_redirect_response=False)
+
+    def test_nur_der_zeitraum_wird_mitgenommen(self):
+        ziel = self.nachweis() + "?von=2026-01-01&weiter=https://boese.example&bis=unfug"
+        antwort = self.client.post(self.adresse(self.juengstes), {"zurueck": ziel})
+        self.assertRedirects(
+            antwort, self.nachweis() + "?von=2026-01-01", fetch_redirect_response=False
+        )
+
+
 class EinzigeErledigungTest(Bestand):
     """Löscht man die einzige Erledigung, gibt es keine davorliegende — dann
     darf die Seite auch nicht behaupten, ab einer solchen zu rechnen."""
