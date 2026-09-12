@@ -101,6 +101,8 @@ def dashboard(request):
             "spaeter": spaeter,
             "alle_zeigen": alle_zeigen,
             "horizont": horizont,
+            # Damit das Abhaken hierher zurückführt, Ausschnitt inklusive.
+            "hier": request.get_full_path(),
         },
     )
 
@@ -140,6 +142,10 @@ def bereich(request, pk):
 def erledigen(request, pk):
     aufgabe = aufgabe_oder_404(request.user, pk)
     heute = stichtag(request)
+    # Wer aus dem Arbeitsvorrat kommt, will danach die nächste Aufgabe
+    # aussuchen und nicht auf der Bereichsseite stehen.
+    bereichsseite = reverse("wartung:bereich", args=[aufgabe.bereich_id])
+    rueckweg = _rueckweg(request, [reverse("wartung:dashboard"), bereichsseite], bereichsseite)
 
     if request.method == "POST":
         # Aufgabe und Urheber gehoeren an das Ereignis, bevor validiert wird:
@@ -152,12 +158,14 @@ def erledigen(request, pk):
                 anhaenge_speichern(
                     formular.cleaned_data["anhaenge"], aufgabe.bereich, request.user, ereignis
                 )
-            return redirect("wartung:bereich", pk=aufgabe.bereich_id)
+            return redirect(rueckweg)
     else:
         formular = ErledigenForm(initial=vorbelegung(request.user, heute))
 
     return render(
-        request, "wartung/erledigen.html", {"aufgabe": aufgabe, "formular": formular, "heute": heute}
+        request,
+        "wartung/erledigen.html",
+        {"aufgabe": aufgabe, "formular": formular, "heute": heute, "rueckweg": rueckweg},
     )
 
 
@@ -533,7 +541,11 @@ def ereignis_loeschen(request, pk):
     aus, sonst wundert man sich hinterher über eine Wochenmail.
     """
     ereignis = ereignis_oder_404(request.user, pk)
-    rueckweg = _rueckweg(request, ereignis)
+    rueckweg = _rueckweg(
+        request,
+        [reverse("wartung:nachweis", args=[ereignis.bereich.objekt_id])],
+        reverse("wartung:bereich", args=[ereignis.bereich_id]),
+    )
 
     if request.method == "POST":
         # Anhänge wandern über das post_delete-Signal in den Papierkorb.
@@ -552,29 +564,45 @@ def ereignis_loeschen(request, pk):
     )
 
 
-def _rueckweg(request, ereignis):
-    """Wohin es nach dem Löschen oder Abbrechen geht.
+def _ist_datum(wert: str) -> bool:
+    try:
+        dt.date.fromisoformat(wert)
+    except ValueError:
+        return False
+    return True
 
-    Nur zurück in den Nachweis desselben Objekts, samt Zeitraum — alles andere
-    führt zur Bereichsseite. Ein frei wählbares Ziel wäre eine offene
-    Weiterleitung: Ein präparierter Link schickte einen danach sonstwohin.
+
+#: Welche Abfrageparameter ein Rückweg mitnehmen darf und was als Wert gilt.
+#: Alles andere fällt weg -- sonst trüge der Rückweg mit, was ihm jemand
+#: untergeschoben hat.
+RUECKWEG_PARAMETER = {
+    "von": _ist_datum,
+    "bis": _ist_datum,
+    "stichtag": _ist_datum,
+    "horizont": lambda wert: wert == "alle",
+}
+
+
+def _rueckweg(request, ziele, standard):
+    """Wohin es nach dem Speichern, Löschen oder Abbrechen geht.
+
+    Nur zu einer der ausdrücklich genannten Seiten, und nur mit bekannten
+    Abfrageparametern -- so bleibt der Ausschnitt erhalten, aus dem man kam
+    (Zeitraum des Nachweises, "alles anzeigen" der Übersicht). Ein frei
+    wählbares Ziel wäre eine offene Weiterleitung: Ein präparierter Link
+    schickte einen danach sonstwohin.
     """
     angabe = request.POST.get("zurueck") or request.GET.get("zurueck") or ""
     teile = urlsplit(angabe)
-    nachweis = reverse("wartung:nachweis", args=[ereignis.bereich.objekt_id])
-    if teile.scheme or teile.netloc or teile.path != nachweis:
-        return reverse("wartung:bereich", args=[ereignis.bereich_id])
+    if teile.scheme or teile.netloc or teile.path not in ziele:
+        return standard
 
-    zeitraum = []
-    for name, wert in parse_qsl(teile.query):
-        if name not in ("von", "bis"):
-            continue
-        try:
-            dt.date.fromisoformat(wert)
-        except ValueError:
-            continue
-        zeitraum.append((name, wert))
-    return nachweis + ("?" + urlencode(zeitraum) if zeitraum else "")
+    behalten = [
+        (name, wert)
+        for name, wert in parse_qsl(teile.query)
+        if name in RUECKWEG_PARAMETER and RUECKWEG_PARAMETER[name](wert)
+    ]
+    return teile.path + ("?" + urlencode(behalten) if behalten else "")
 
 
 def _faelligkeit_ohne(ereignis, heute):

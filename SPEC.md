@@ -165,6 +165,13 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   führende: Er ist Pflicht, er entscheidet über Eindeutigkeit je Objekt und
   über die Sortierung, und er springt ein, wo eine Übersetzung fehlt
 
+- **Nach dem Abhaken zurück in den Arbeitsvorrat.** Wer aus der Übersicht
+  kommt, landet nach dem Speichern wieder dort — samt Ausschnitt („Alles
+  anzeigen", abweichender Stichtag) — und sucht sich die nächste Aufgabe.
+  Wer auf der Bereichsseite abhakt, bleibt dort. Das Ziel steht in der
+  Adresse, angesteuert wird aber nur eine der genannten Seiten mit bekannten
+  Parametern; alles andere führt zur Bereichsseite
+
 ### Bewusst nicht in Version 1
 
 Kostenauswertungen · Push-Benachrichtigungen ·

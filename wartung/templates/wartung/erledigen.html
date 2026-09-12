@@ -13,8 +13,9 @@
 
 <form method="post" class="formular" enctype="multipart/form-data">
   {% csrf_token %}
+  <input type="hidden" name="zurueck" value="{{ rueckweg }}">
   {{ formular.as_p }}
   <button type="submit" class="knopf">{% translate "Als erledigt eintragen" %}</button>
-  <a class="abbruch" href="{% url 'wartung:bereich' aufgabe.bereich.pk %}">{% translate "Abbrechen" %}</a>
+  <a class="abbruch" href="{{ rueckweg }}">{% translate "Abbrechen" %}</a>
 </form>
 {% endblock %}

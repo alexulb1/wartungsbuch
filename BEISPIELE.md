@@ -185,6 +185,18 @@ Aus „Bedienungsanleitung Vaillant" wird
 die Datei nur nach dem Bereich — im Ordner findest du sie dann schlechter
 wieder, und der Ordner ist genau der Ort, an dem du in zehn Jahren suchst.
 
+## Abhaken im Alltag
+
+Die Übersicht ist dein Arbeitsvorrat: Dort steht, was ansteht. Du wählst eine
+Aufgabe, trägst Datum, Kosten und Notiz ein, speicherst — und **stehst wieder
+in der Übersicht**, um dir die nächste zu nehmen. Der Ausschnitt bleibt dabei
+erhalten: Hattest du „Alles anzeigen" eingeschaltet, ist es danach immer noch
+an.
+
+Hakst du dagegen unten auf der **Bereichsseite** ab, bleibst du dort — wer sich
+gerade durch die Historie eines Bauteils arbeitet, will nicht bei jedem Eintrag
+nach oben geworfen werden.
+
 ## Einen Nachweis zum Weitergeben
 
 Auf der Übersicht steht neben jedem Objekt **Nachweis**. Die Seite zeigt alles,

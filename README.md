@@ -36,6 +36,7 @@ Gunicorn, Pillow)
 | Wartungsnachweis und Jahresvorschau | — |
 | Sperre gegen doppeltes Absenden | — |
 | Bereichsbezeichnung dreisprachig | — |
+| Nach dem Abhaken zurück in den Arbeitsvorrat | — |
 
 ## Entwicklung
 
@@ -193,6 +194,10 @@ docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
 - **Berichte druckt der Browser.** Der Wartungsnachweis ist eine Seite mit
   Druckbild, kein erzeugtes PDF — das Ergebnis ist dieselbe Datei, ohne eine
   Bibliothek, die zehn Jahre mitgetragen werden müsste.
+- **Rückwege sind aufgezählt, nicht frei.** Wohin es nach dem Speichern oder
+  Löschen geht, steht in der Adresse — angesteuert wird aber nur, was die
+  View ausdrücklich als Ziel nennt, mit einer festen Liste erlaubter
+  Abfrageparameter. Sonst wäre der Rückweg eine offene Weiterleitung.
 - **Fremdes ergibt 404, nie 403.** Eine Berechtigungsmeldung bestätigt, dass es
   das Objekt gibt.
 - **Was nur einmal wirken darf, hängt nie an einem GET.** Abhaken und Löschen
