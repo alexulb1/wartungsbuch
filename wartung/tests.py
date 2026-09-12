@@ -82,7 +82,7 @@ class EreignisTest(TestCase):
         self.objekt = Objekt.objects.create(name="Haupthaus", typ=objekt_typ)
         self.bereich = Bereich.objects.create(objekt=self.objekt, typ=bereichs_typ)
         self.anderer_bereich = Bereich.objects.create(
-            objekt=self.objekt, typ=bereichs_typ, bezeichnung="Nebengebäude"
+            objekt=self.objekt, typ=bereichs_typ, bezeichnung_de="Nebengebäude"
         )
         self.aufgabe = Aufgabe.objects.create(
             bereich=self.bereich,
@@ -130,7 +130,7 @@ class AufgabeTest(TestCase):
         self.taetigkeit = Taetigkeit.objects.create(schluessel="streichen", name_de="Streichen")
         self.objekt = Objekt.objects.create(name="Haupthaus", typ=objekt_typ)
         self.bereich = Bereich.objects.create(
-            objekt=self.objekt, typ=self.bereichs_typ, bezeichnung="Nord"
+            objekt=self.objekt, typ=self.bereichs_typ, bezeichnung_de="Nord"
         )
 
     def test_kalendermodus_ohne_monat_wird_beanstandet(self):
@@ -161,7 +161,7 @@ class AufgabeTest(TestCase):
 
     def test_seiten_werden_ueber_die_bezeichnung_unterschieden(self):
         sued = Bereich.objects.create(
-            objekt=self.objekt, typ=self.bereichs_typ, bezeichnung="Süd"
+            objekt=self.objekt, typ=self.bereichs_typ, bezeichnung_de="Süd"
         )
         self.assertNotEqual(str(self.bereich), str(sued))
         self.assertEqual(str(sued), "Fassade Süd")

@@ -2,9 +2,10 @@
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
-from .basis import Einheit, Modus
+from .basis import Einheit, Modus, Sprache
 from .katalog import BereichsTyp, ObjektTyp, Taetigkeit
 
 
@@ -80,6 +81,11 @@ class Bereich(models.Model):
 
     Der Typ kommt aus dem Katalog ("Fassade"), die Bezeichnung unterscheidet
     gleichartige Bereiche voneinander ("Nord", "Sued", "OG").
+
+    Beides steht in allen drei Sprachen da: Ein Bereich heisst in der
+    englischen Oberflaeche "Facade East", nicht "Facade Ost". Fehlt eine
+    Uebersetzung, gilt die Regel des Katalogs -- lieber der deutsche Begriff
+    als eine leere Zelle (SPEC 3).
     """
 
     objekt = models.ForeignKey(
@@ -88,23 +94,37 @@ class Bereich(models.Model):
     typ = models.ForeignKey(
         BereichsTyp, on_delete=models.PROTECT, related_name="bereiche", verbose_name=_("Typ")
     )
-    bezeichnung = models.CharField(
-        _("Bezeichnung"),
+    bezeichnung_de = models.CharField(
+        _("Bezeichnung (Deutsch)"),
         max_length=80,
         blank=True,
         help_text=_('Zusatz zur Unterscheidung, z. B. "Nord" oder "OG".'),
     )
+    bezeichnung_en = models.CharField(_("Bezeichnung (Englisch)"), max_length=80, blank=True)
+    bezeichnung_sv = models.CharField(_("Bezeichnung (Schwedisch)"), max_length=80, blank=True)
     notiz = models.TextField(_("Notiz"), blank=True)
 
     class Meta:
         verbose_name = _("Bereich")
         verbose_name_plural = _("Bereiche")
-        ordering = ["objekt__name", "typ__sortierung", "bezeichnung"]
+        # Sortiert wird nach dem deutschen Text: Sonst staende dieselbe Liste
+        # je nach Anzeigesprache in anderer Reihenfolge da.
+        ordering = ["objekt__name", "typ__sortierung", "bezeichnung_de"]
         constraints = [
             models.UniqueConstraint(
-                fields=["objekt", "typ", "bezeichnung"], name="bereich_je_objekt_eindeutig"
+                fields=["objekt", "typ", "bezeichnung_de"], name="bereich_je_objekt_eindeutig"
             )
         ]
+
+    def bezeichnung_in(self, sprache: str | None) -> str:
+        """Der unterscheidende Zusatz in dieser Sprache, sonst der deutsche."""
+        code = (sprache or Sprache.DEUTSCH)[:2]
+        return getattr(self, f"bezeichnung_{code}", "") or self.bezeichnung_de
+
+    @property
+    def bezeichnung(self) -> str:
+        """Zusatz in der aktuell aktiven Sprache."""
+        return self.bezeichnung_in(get_language())
 
     def __str__(self) -> str:
         return f"{self.typ.name} {self.bezeichnung}".strip()

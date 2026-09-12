@@ -9,7 +9,7 @@ gilt die Spezifikation, nicht der Code.
 **Im Betrieb.** Einrichtung und Pflege: [BETRIEB.md](BETRIEB.md). Was man
 eintragen kann: [BEISPIELE.md](BEISPIELE.md).
 
-über 300 Tests · 9 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
+über 300 Tests · 10 Migrationen · 5 Abhängigkeiten (Django, psycopg, WhiteNoise,
 Gunicorn, Pillow)
 
 **Version 1** — in fünf Schritten gebaut:
@@ -35,6 +35,7 @@ Gunicorn, Pillow)
 | Sitzungsablauf bei Untätigkeit | — |
 | Wartungsnachweis und Jahresvorschau | — |
 | Sperre gegen doppeltes Absenden | — |
+| Bereichsbezeichnung dreisprachig | — |
 
 ## Entwicklung
 
@@ -154,7 +155,9 @@ docs/superpowers/            Entwürfe und Umsetzungspläne der Erweiterungen
   jüngsten Ereignis plus Intervall. Es gibt keinen Status, der veralten kann.
 - **Katalogdaten werden ausgewählt, Freitext bleibt Freitext.** Nur so ist
   Mehrsprachigkeit möglich und nur so sind Auswertungen über Objekte hinweg
-  überhaupt beantwortbar.
+  überhaupt beantwortbar. Einzige Ausnahme ist der unterscheidende Zusatz am
+  Bereich („Ost", „EG"): Er ist Freitext, lässt sich aber in allen drei
+  Sprachen hinterlegen — sonst stünde „Facade Ost" auf der englischen Seite.
 - **Wenige Abhängigkeiten.** Die Anwendung soll in zehn Jahren noch laufen.
 - **Zwei Klassen von Zugangsmarken.** Der Anmeldelink erzeugt eine Sitzung, der
   Abhaklink nicht. Ein abgefangener Abhaklink hakt genau eine Aufgabe ab.

@@ -110,7 +110,7 @@ class BetreuerInline(admin.TabularInline):
 class BereichInline(admin.TabularInline):
     model = Bereich
     extra = 0
-    fields = ["typ", "bezeichnung", "notiz"]
+    fields = ["typ", "bezeichnung_de", "bezeichnung_en", "bezeichnung_sv", "notiz"]
 
 
 @admin.register(Objekt)
@@ -146,7 +146,13 @@ class AufgabeInline(admin.TabularInline):
 class BereichAdmin(admin.ModelAdmin):
     list_display = ["__str__", "objekt", "typ"]
     list_filter = ["objekt", "typ"]
-    search_fields = ["bezeichnung", "objekt__name", "typ__name_de"]
+    search_fields = [
+        "bezeichnung_de",
+        "bezeichnung_en",
+        "bezeichnung_sv",
+        "objekt__name",
+        "typ__name_de",
+    ]
     autocomplete_fields = ["objekt", "typ"]
     inlines = [AufgabeInline]
 
@@ -155,7 +161,7 @@ class BereichAdmin(admin.ModelAdmin):
 class AufgabeAdmin(admin.ModelAdmin):
     list_display = ["taetigkeit", "bereich", "intervall_wert", "intervall_einheit", "modus", "aktiv"]
     list_filter = ["aktiv", "modus", "bereich__objekt", "intervall_einheit"]
-    search_fields = ["taetigkeit__name_de", "bereich__bezeichnung", "bereich__objekt__name"]
+    search_fields = ["taetigkeit__name_de", "bereich__bezeichnung_de", "bereich__objekt__name"]
     autocomplete_fields = ["bereich", "taetigkeit"]
 
 

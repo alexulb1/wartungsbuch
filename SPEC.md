@@ -33,13 +33,16 @@ Drei Textsorten, unterschiedlich behandelt:
 |---------------|-----------------------------------------------------------------------|--------------------|
 | Oberfläche    | Knöpfe, Spaltenüberschriften, Mailtexte                                | dreisprachig       |
 | Katalogdaten  | Objekttyp „Haus", Bereichstyp „Wärmepumpe", Tätigkeit „Luftfilter wechseln" | dreisprachig gepflegt |
+| Bereichszusatz | „Ost", „EG" — unterscheidet gleichartige Bereiche                     | dreisprachig eingebbar, Rückfall auf Deutsch |
 | Freitext      | Objektname „Sommerhaus Åhus", Firmenname, Notiz                        | bleibt wie eingegeben |
 
 **Konsequenz fürs Datenmodell:** Objekttypen, Bereichstypen und Tätigkeiten
 werden **aus Katalogen ausgewählt statt frei getippt**. Das ist die
 Voraussetzung für Mehrsprachigkeit und macht zugleich Auswertungen über beide
 Objekte hinweg möglich. Freitext bleibt für Eigennamen und Notizen — also für
-das, was man ohnehin nicht übersetzt.
+das, was man ohnehin nicht übersetzt. Der unterscheidende Zusatz am Bereich
+ist der Zwischenfall: selbst getippt, aber übersetzbar, weil er zusammen mit
+dem Bereichstyp gelesen wird („Facade East", nicht „Facade Ost").
 
 Ausgangssprache ist Deutsch; Englisch und Schwedisch werden übersetzt. Die
 schwedische Fassung der Fachbegriffe wird vom Eigentümer gegengelesen.
@@ -156,6 +159,11 @@ unter `docs/superpowers/specs/`, wo auch die verworfenen Alternativen stehen.
   das hält ohne JavaScript und bei sich überholenden Anfragen. Doppelt ist nur,
   was mit derselben Kennung, vom selben Urheber und mit demselben Inhalt kommt:
   Wer mit „Zurück" bewusst einen weiteren Eintrag erfasst, wird nicht verschluckt
+
+- **Bereichsbezeichnung dreisprachig.** Der Zusatz, der gleichartige Bereiche
+  unterscheidet, steht in allen drei Sprachen. Der deutsche Text bleibt der
+  führende: Er ist Pflicht, er entscheidet über Eindeutigkeit je Objekt und
+  über die Sortierung, und er springt ein, wo eine Übersetzung fehlt
 
 ### Bewusst nicht in Version 1
 

@@ -298,7 +298,7 @@ def _aufgabe(
             "aktiv_bis_monat": aktiv_bis_monat,
         },
     )
-    bereich, _ = Bereich.objects.get_or_create(objekt=objekt, typ=bereichs_typ, bezeichnung="")
+    bereich, _ = Bereich.objects.get_or_create(objekt=objekt, typ=bereichs_typ, bezeichnung_de="")
     aufgabe = Aufgabe(
         bereich=bereich,
         taetigkeit=taetigkeit,

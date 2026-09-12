@@ -59,7 +59,7 @@ class Grunddaten(TestCase):
         # Seit Einführung der Berechtigungen sieht man nur Zugewiesenes (SPEC 2).
         self.benutzer.zugewiesene_objekte.add(self.haus)
         self.wp = Bereich.objects.create(objekt=self.haus, typ=self.wp_typ)
-        self.nord = Bereich.objects.create(objekt=self.haus, typ=self.fassade_typ, bezeichnung="Nord")
+        self.nord = Bereich.objects.create(objekt=self.haus, typ=self.fassade_typ, bezeichnung_de="Nord")
         self.aufgabe = Aufgabe.objects.create(
             bereich=self.wp,
             taetigkeit=self.filter,

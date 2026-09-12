@@ -621,7 +621,7 @@ def nachweis(request, pk):
         Ereignis.objects.filter(bereich__objekt=objekt)
         .select_related("bereich__typ", "taetigkeit", "erfasst_von")
         .prefetch_related("anhaenge")
-        .order_by("bereich__typ__sortierung", "bereich__bezeichnung", "datum")
+        .order_by("bereich__typ__sortierung", "bereich__bezeichnung_de", "datum")
     )
     if von:
         ereignisse = ereignisse.filter(datum__gte=von)

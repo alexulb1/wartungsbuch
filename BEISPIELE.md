@@ -35,6 +35,13 @@ Sie unterscheidet gleichartige Bereiche voneinander:
 | Wärmepumpe | *(leer)* | Wärmepumpe |
 | Klimagerät | Schlafzimmer | Klimagerät Schlafzimmer |
 
+**Die Bezeichnung kannst du in allen drei Sprachen hinterlegen** — in der
+Verwaltung stehen dafür drei Felder: Deutsch, Englisch, Schwedisch. Deutsch ist
+Pflicht, die anderen beiden sind freiwillig. Trägst du „Ost / East / Öster"
+ein, heißt der Bereich in der englischen Oberfläche „Facade East". Lässt du
+eine Übersetzung weg, erscheint dort der deutsche Text — lieber ein deutsches
+Wort als eine leere Stelle.
+
 **Faustregel:** Ein eigener Bereich lohnt sich, sobald du für die eine Hälfte
 ein anderes Datum merken willst als für die andere. Die Nordseite wird eher
 grün als die Südseite — also zwei Bereiche. Ein Bad, in dem alles gleichzeitig
