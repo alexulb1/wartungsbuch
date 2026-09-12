@@ -220,6 +220,13 @@ die Datenbank wandert beim Start von selbst fort.
 > `:latest` inzwischen auf ein neueres Abbild zeigt. Man aktualisiert dann
 > scheinbar erfolgreich und schaut weiter auf den alten Stand.
 
+**Zwischenversionen darfst du überspringen.** Beim Start spielt der
+Webcontainer alle noch offenen Migrationen der Reihe nach ein — es zählt nur,
+was in der Datenbank vermerkt ist, nicht welches Abbild zuletzt lief. Wer drei
+Versionen ausgelassen hat, holt sie mit einem Deploy nach. Nur der
+Webcontainer wandert die Datenbank fort, der Planer ausdrücklich nicht; es ist
+also gleichgültig, welcher von beiden zuerst hochkommt.
+
 Welche Fassung tatsächlich läuft, verrät die letzte Migration:
 
 ```bash

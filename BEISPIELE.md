@@ -197,6 +197,12 @@ Hakst du dagegen unten auf der **Bereichsseite** ab, bleibst du dort — wer sic
 gerade durch die Historie eines Bauteils arbeitet, will nicht bei jedem Eintrag
 nach oben geworfen werden.
 
+**Ein zweiter Klick auf „Speichern" schadet nicht.** Der Knopf wird nach dem
+ersten Klick blass und nimmt nichts mehr an; und selbst wenn das Formular
+zweimal ankommt — weil das Netz hängt oder der Browser es erneut schickt —
+entsteht nur ein Eintrag. Wolltest du dagegen bewusst einen zweiten Eintrag
+mit anderem Datum erfassen, wird der ganz normal gespeichert.
+
 ## Einen Nachweis zum Weitergeben
 
 Auf der Übersicht steht neben jedem Objekt **Nachweis**. Die Seite zeigt alles,

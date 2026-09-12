@@ -193,6 +193,13 @@ Fester Bestandteil, nicht optional:
   Abhak-Link aus der Wochenmail **nicht**. Wer einen Abhak-Link abfängt, kann
   genau eine Aufgabe abhaken und sonst nichts. Beide einmalig verwendbar und
   kurzlebig.
+- **Keine offenen Weiterleitungen.** Wohin es nach dem Speichern oder Löschen
+  zurückgeht, steht in der Adresse — angesteuert wird aber nur, was die
+  jeweilige Seite ausdrücklich als Ziel nennt, mit einer festen Liste
+  erlaubter Abfrageparameter
+- **Das einzige JavaScript liegt als eigene Datei vor** (die Sperre gegen
+  doppeltes Absenden). Nichts ist eingebettet, nichts kommt von fremden
+  Servern — die Content-Security-Policy bleibt dadurch streng
 - Ratenbegrenzung auf der Anmeldeseite
 - Postgres ohne Portfreigabe, nur im internen Container-Netz erreichbar
 - Zugangsdaten ausschließlich als Umgebungsvariablen, nie im Image
